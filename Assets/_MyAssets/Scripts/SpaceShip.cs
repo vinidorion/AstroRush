@@ -19,7 +19,7 @@ public class SpaceShip : MonoBehaviour
     [SerializeField] Rigidbody rb = default;
 
     // variables pour détection du sol
-	[SerializeField] private LayerMask _layersToHit;    // 
+	[SerializeField] private LayerMask _layersToHit;    // dans l'inspecteur mettre la layer "track"
 	private float _maxDist = 5f;                        // distance maximale du raycast
 	private Vector3 _rayDir = new Vector3(0, 0, -1);    // par défaut cherche vers le bas
 
@@ -28,7 +28,7 @@ public class SpaceShip : MonoBehaviour
         CheckForGround();
     }
 
-    // méthode privée qui trouve la normale du sol
+    // méthode privée qui trouve la direction de la gravité
 	private void CheckForGround()
 	{
 		Ray ray = new Ray(transform.position, _rayDir);
