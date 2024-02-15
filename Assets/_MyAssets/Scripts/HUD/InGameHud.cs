@@ -24,6 +24,12 @@ public class InGameHud : MonoBehaviour
 
 	}
 
+	// lap time et total time
+	private void Time()
+	{
+		
+	}
+
 	// draw l'icone de l'item du joueur
 	private void Item()
 	{

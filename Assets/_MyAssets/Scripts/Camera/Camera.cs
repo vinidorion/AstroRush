@@ -45,7 +45,20 @@ public class Camera : MonoBehaviour
 	private void ThirdPerson() {}
 	private void Spectate() {
 		//transform.LookAt(target); // target = player
-		// TODO: .LookAt() regarde directement vers l'argument target, smooth angles, cinematic mode
+
+		// TODO: .LookAt() regarde directement vers l'argument target, changer pour que ça smooth, comme le cinematic mode dans minecraft
+		/* -- comme ceci:
+		 *		var targetObj : GameObject;
+		 *		var speed : int = 5;
+		 *
+		 *		// doit être called dans Update()
+		 *		function Update() {
+		 *			var targetRotation = Quaternion.LookRotation(targetObj.transform.position - transform.position);
+		 *
+		 *			// smoothly rotate towards the target point.
+		 *			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
+		 *		}
+		*/
 	}
 	
 }
