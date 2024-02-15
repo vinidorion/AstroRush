@@ -18,8 +18,29 @@ public class SpaceShip : MonoBehaviour
 
     [SerializeField] Rigidbody rb = default;
 
+    // variables pour détection du sol
+	[SerializeField] private LayerMask _layersToHit;    // 
+	private float _maxDist = 5f;                        // distance maximale du raycast
+	private Vector3 _rayDir = new Vector3(0, 0, -1);    // par défaut cherche vers le bas
 
+    void FixedUpdate()
+    {
+        CheckForGround();
+    }
 
+    // méthode privée qui trouve la normale du sol
+	private void CheckForGround()
+	{
+		Ray ray = new Ray(transform.position, _rayDir);
+		if(Physics.Raycast(ray, out RaycastHit hit, _maxDist, _layersToHit, QueryTriggerInteraction.Ignore)) {
+			//Debug.Log("found ground");
+			_rayDir = -hit.normal;
+			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);
+			Debug.DrawLine(transform.position, transform.position + (hit.normal * 0.3f), Color.blue, Time.fixedDeltaTime);
+		} else {
+			//Debug.Log("ground not found");
+		}
+	}
 
     void Forward()
     {
