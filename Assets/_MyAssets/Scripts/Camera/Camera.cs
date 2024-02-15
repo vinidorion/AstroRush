@@ -27,8 +27,8 @@ public class Camera : MonoBehaviour
 			case CameraMode.Spectate:
 				Spectate();
 				break;
-			}
 		}
+	}
 
 	// enum CameraMode:
 		// Intro
