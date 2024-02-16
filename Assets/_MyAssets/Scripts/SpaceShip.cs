@@ -10,7 +10,7 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float max_speed = default;
 	[SerializeField] private float acceleration = default;
 	[SerializeField] private float airbrake_power = default;
-	[SerializeField] private int hp = default;
+	[SerializeField] private int max_hp = default;
 	[SerializeField] private float weigth = default;
 	[SerializeField] private float agility = default;
 
@@ -21,6 +21,8 @@ public class SpaceShip : MonoBehaviour
 
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.2f;
+
+	public int GetLife() { return max_hp; }
 
 	/********************************************
 					SYSTÈME PID
