@@ -49,7 +49,7 @@ public class Bot : MonoBehaviour
     void Update()
     {
         target = waypoints[passedtargets];
-        if (Vector3.Magnitude(transform.position - target.transform.position) < 0.5f)
+        if (Vector3.Magnitude(transform.position - target.transform.position) < 1f)
         {
             passedtargets += 1;
         }
