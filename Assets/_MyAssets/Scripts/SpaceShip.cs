@@ -76,6 +76,8 @@ public class SpaceShip : MonoBehaviour
 	void Update()
 	{
 		current_speed = _rb.velocity;
+		_rb.velocity = transform.forward * _rb.velocity.magnitude;
+		
 		//Debug.Log(_rb.velocity.magnitude);
 	}
 
@@ -138,7 +140,7 @@ public class SpaceShip : MonoBehaviour
 	{
 		if (!_isFrozen && current_speed.y < max_speed)
 		{
-			Vector3 force = new Vector3(-1 * acceleration, 0, 0);
+			Vector3 force = transform.forward * acceleration;
 			_rb.AddForce(force);
 		}
 	}
