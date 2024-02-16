@@ -8,7 +8,8 @@ public class Camera : MonoBehaviour
 
 	void Start()
 	{
-		_currentMode = CameraMode.Intro;
+		//_currentMode = CameraMode.Intro;
+		_currentMode = CameraMode.Spectate; // pour tester
 	}
 
 	void Update()
@@ -40,10 +41,19 @@ public class Camera : MonoBehaviour
 		_currentMode = mode;
 	}
 
+	// avant que la course commence, la caméra montre la map
 	private void Intro() {}
+
+	// caméra attaché juste devant le spaceship
 	private void FirstPerson() {}
+
+	// caméra attaché derrière le spaceship en hauteur
+	// mouvement latéral? https://github.com/phoboslab/wipeout-rewrite/blob/90702ce17115484b6cfc1155dd4617b5fa3762cd/src/wipeout/camera.c#L42
 	private void ThirdPerson() {}
-	private void Spectate() {
+	
+	// quand la course est fini
+	private void Spectate()
+	{
 		//transform.LookAt(target); // target = player
 
 		// TODO: .LookAt() regarde directement vers l'argument target, changer pour que ça smooth, comme le cinematic mode dans minecraft
@@ -59,6 +69,12 @@ public class Camera : MonoBehaviour
 		 *			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
 		 *		}
 		*/
+	}
+
+	// méthode public pour faire shaker la caméra
+	public void Shake()
+	{
+
 	}
 	
 }
