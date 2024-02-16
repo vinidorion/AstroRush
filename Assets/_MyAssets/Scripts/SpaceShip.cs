@@ -6,10 +6,6 @@ public class SpaceShip : MonoBehaviour
 {
 	public static SpaceShip Instance;
 
-	private bool _isFrozen = false;
-	private Vector3 current_speed = Vector3.zero;
-	private int current_pu = 0;
-
 	[Header("Stats")]
 	[SerializeField] private float max_speed = default;
 	[SerializeField] private float acceleration = default;
@@ -18,6 +14,9 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float weigth = default;
 	[SerializeField] private float agility = default;
 
+	private bool _isFrozen = false;
+	private Vector3 current_speed = Vector3.zero;
+	private int _currentPU = 0;
 	private Rigidbody _rb;
 
 	private Vector3 _dragForce;
@@ -28,7 +27,7 @@ public class SpaceShip : MonoBehaviour
 	*********************************************/
 	/****** CONSTANTES ******/
 	private float GRAVITY = 9.81f;							// constante gravité
-	private const float MAX_DIST = 0.5f;						// distance maximale du raycast
+	private const float MAX_DIST = 0.5f;					// distance maximale du raycast
 	private const float HAUTEUR_TARGET = MAX_DIST * 0.7f;	// hauteur que le PID vise (70% la distance maximale du raycast)
 
 	/* (P) PROPORTIONAL
@@ -77,7 +76,7 @@ public class SpaceShip : MonoBehaviour
 	void Update()
 	{
 		current_speed = _rb.velocity;
-		Debug.Log(_rb.velocity.magnitude);
+		//Debug.Log(_rb.velocity.magnitude);
 	}
 
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
@@ -191,8 +190,9 @@ public class SpaceShip : MonoBehaviour
 
 	}
 
-	void AddPU()
+	public void GivePU()
 	{
-
+		Debug.Log("RECEIVED PU");
+		
 	}
 }
