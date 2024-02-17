@@ -8,9 +8,9 @@ public class SpaceShip : MonoBehaviour
 
 	[Header("Stats")]
 	[SerializeField] private float max_speed = default;
-	[SerializeField] private float acceleration = default;
+	[SerializeField] private float _accel = default;
 	[SerializeField] private float airbrake_power = default;
-	[SerializeField] private int hp = default;
+	[SerializeField] private int max_hp = default;
 	[SerializeField] private float weigth = default;
 	[SerializeField] private float agility = default;
 
@@ -19,8 +19,14 @@ public class SpaceShip : MonoBehaviour
 	private int _currentPU = 0;
 	private Rigidbody _rb;
 
+	// pour trouver position
+	private int _lap = 0;
+	private int _checkpoint = 0; // next checkpoint serait juste _checkpoint +1, sauf si _checkpoint == dernierCheckpoint: c'est 0
+
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.2f;
+
+	public int GetLife() { return max_hp; }
 
 	/********************************************
 					SYSTÈME PID
@@ -59,6 +65,9 @@ public class SpaceShip : MonoBehaviour
 	private float _PIDForce = 0f;							// force verticale à appliquer pour faire léviter le spaceship (PID)
 	private bool _onGround = false;							// si le ray touche le sol (et donc si le PID est active)
 
+	// comment ignorer angular impulse des collisions en gardant la capacité d'appliquer .AddTorq()
+	// https://forum.unity.com/threads/how-to-stop-the-rotation-of-a-rigidbody-but-for-specific-collisions.1189615/#:~:text=I%20finally%20find,you%27re%20awesome%20guys
+
 
 	// Awake(), Start(), Update() et FixedUpdate() sont tous private implicitement, pas besoin de mettre private devant
 
@@ -84,10 +93,11 @@ public class SpaceShip : MonoBehaviour
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
 	void FixedUpdate()
 	{
-		AirResistance();
-		CheckForGround();
-		PID();
-		ApplyVerticalForce();
+		if (!_isFrozen) {
+			AirResistance();
+			CheckForGround();
+			ApplyVerticalForce();
+		}
 	}
 
 	// méthode privée qui trouve la direction de la gravité
@@ -98,6 +108,7 @@ public class SpaceShip : MonoBehaviour
 			_rayDir = -hit.normal;
 			_onGround = true;
 			_hauteur = hit.distance;
+			PID();
 			//Debug.Log("found ground");
 			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
 			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime);	// normale de la surface (inverse de la direction de la gravité)
@@ -114,6 +125,10 @@ public class SpaceShip : MonoBehaviour
 	{
 		_diffHauteur = HAUTEUR_TARGET - _hauteur;							// trouve delta distance
 		_deriveeHauteur = _diffHauteur - _lastDiffHauteur;					// trouve la derivee
+		// pas de division par deltaTime, c'est toujours 0.02s (FixedUpdate())
+		// donc on fait le calcul directement sur KP, KD et KI
+		// pour éviter de faire le calcul à chaque frame
+		// c'est pourquoi ces constantes ont des valeurs si hautes
 		_PIDForce = _diffHauteur * PID_KP + _deriveeHauteur * PID_KD;		// force PID qu'il faudrait appliquer
 		_lastDiffHauteur = _diffHauteur;									// enregistre le delta distance de la frame actuelle pour l'utiliser comme _lastDiffHauteur dans la prochaine frame
 	}
@@ -138,10 +153,10 @@ public class SpaceShip : MonoBehaviour
 
 	public void Forward()
 	{
-		if (!_isFrozen && current_speed.y < max_speed)
+		if (!_isFrozen /*&& current_speed.y < max_speed*/)
 		{
-			Vector3 force = transform.forward * acceleration;
-			_rb.AddForce(force);
+			//Vector3 force = new Vector3(-1 * acceleration, 0, 0);
+			_rb.AddForce(transform.forward * _accel, ForceMode.Acceleration);
 		}
 	}
 
@@ -195,6 +210,17 @@ public class SpaceShip : MonoBehaviour
 	public void GivePU()
 	{
 		Debug.Log("RECEIVED PU");
-		
+		// random ici pour choisir le PU
+		// plus on est dernier, meilleur sont nos PU, vice versa
+	}
+
+	public int GetLap()
+	{
+		return _lap;
+	}
+
+	public int GetCheckpoint()
+	{
+		return _checkpoint;
 	}
 }

@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private float _speed = 10;
+    [SerializeField] private float _lifeTime = 3;
 
-    // Update is called once per frame
+    private float timer = 0;
+
     void Update()
     {
-        
+        transform.Translate(Vector3.forward * Time.deltaTime * _speed * ((timer * timer) + 1));
+        Timer();
+    }
+
+    private void Timer()
+    {
+        timer = timer + 1 * Time.deltaTime;
+        if (timer > _lifeTime) Destroy(gameObject);
     }
 }
