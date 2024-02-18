@@ -137,10 +137,14 @@ public class SpaceShip : MonoBehaviour
 	private void ApplyVerticalForce()
 	{
 		if(_onGround) {
-			_rb.AddForce(_rayDir * -_PIDForce, ForceMode.Acceleration);	// ForceMode.Acceleration ignore la masse et applique directement l'accèleration
-		} else {
+            _rb.AddForce(_rayDir * -_PIDForce, ForceMode.Acceleration); // ForceMode.Acceleration ignore la masse et applique directement l'accèleration
+			//Debug.Log(_rayDir);
+			//transform.up = -_rayDir;
+        } else {
 			_rb.AddForce(_rayDir * GRAVITY, ForceMode.Acceleration);
 		}
+
+		
 	}
 
 	private void AirResistance()
@@ -153,10 +157,10 @@ public class SpaceShip : MonoBehaviour
 
 	public void Forward()
 	{
-		if (!_isFrozen /*&& current_speed.y < max_speed*/)
+		if (!_isFrozen/* && current_speed.x < max_speed*/)
 		{
 			//Vector3 force = new Vector3(-1 * acceleration, 0, 0);
-			_rb.AddForce(transform.forward * _accel, ForceMode.Acceleration);
+			_rb.AddForce(transform.forward * _accel);
 		}
 	}
 

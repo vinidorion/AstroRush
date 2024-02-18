@@ -61,24 +61,25 @@ public class Bot : MonoBehaviour
         float angle = Vector3.SignedAngle(transform.forward, direction, transform.up);
         Debug.Log(angle);
         SpaceShip.Instance.Forward();
-        if (angle > 0.1f)
-        {
-            transform.Rotate(0f, 40f * Time.deltaTime, 0f);
-        }
-        if (angle < -0.1f)
-        {
-            transform.Rotate(0f, -40f * Time.deltaTime, 0f);
-        }
         if (angle > (7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude))
         {
             SpaceShip.Instance.AirBrake(false);
             transform.Rotate(0f, 70f * Time.deltaTime, 0f);
         }
-        if (angle < (-7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude))
+        else if (angle < (-7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude))
         {
             SpaceShip.Instance.AirBrake(true);
             transform.Rotate(0f, -70f * Time.deltaTime, 0f);
         }
-
+        else if (angle > 0.1f)
+        {
+            transform.Rotate(0f, 40f * Time.deltaTime, 0f);
+        }
+        else if (angle < -0.1f)
+        {
+            transform.Rotate(0f, -40f * Time.deltaTime, 0f);
+        }
+       
+        
     }
 }
