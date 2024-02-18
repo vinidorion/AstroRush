@@ -21,7 +21,7 @@ public class SpaceShip : MonoBehaviour
 
 	// pour trouver position
 	private int _lap = 0;
-	private int _checkpoint = 0; // next checkpoint serait juste _checkpoint +1, sauf si _checkpoint == dernierCheckpoint: c'est 0
+	private int _waypoint = 0;
 
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.2f;
@@ -31,6 +31,7 @@ public class SpaceShip : MonoBehaviour
 	/********************************************
 					SYSTÈME PID
 	*********************************************/
+
 	/****** CONSTANTES ******/
 	private float GRAVITY = 9.81f;							// constante gravité
 	private const float MAX_DIST = 0.5f;					// distance maximale du raycast
@@ -95,6 +96,7 @@ public class SpaceShip : MonoBehaviour
 			AirResistance();
 			CheckForGround();
 			ApplyVerticalForce();
+			Waypoints();
 		}
 	}
 
@@ -138,6 +140,33 @@ public class SpaceShip : MonoBehaviour
 			_rb.AddForce(_rayDir * -_PIDForce, ForceMode.Acceleration);	// ForceMode.Acceleration ignore la masse et applique directement l'accèleration
 		} else {
 			_rb.AddForce(_rayDir * GRAVITY, ForceMode.Acceleration);
+		}
+	}
+
+	// trouve le waypoint du spaceship
+	private void Waypoints()
+	{
+		Vector3 waypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint);			// position du current waypoint
+		Vector3 nextwaypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint + 1);	// position du next waypoint
+
+		//Debug.Log("waypointPos: " + waypointPos);
+		//Debug.Log("nextwaypointPos: " + nextwaypointPos);
+
+		// pour visualiser à quel waypoint le spaceship est rendu
+		Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
+		Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
+
+		// sqrt inutile ici, on compare deux distances
+		float distCurrWaypoint = (transform.position - waypointPos).sqrMagnitude;
+		float distNextWaypoint = (transform.position - nextwaypointPos).sqrMagnitude;
+
+		if(distNextWaypoint < distCurrWaypoint) {
+			_waypoint++;
+			if(WaypointManager.Instance.IsFinalWaypoint(_waypoint)) {
+				_waypoint = 0;
+				_lap++;
+				// check ici si _lap atteint le nombre de lap, si oui c'est la fin du jeu
+			}
 		}
 	}
 
@@ -217,8 +246,10 @@ public class SpaceShip : MonoBehaviour
 		return _lap;
 	}
 
-	public int GetCheckpoint()
+	public int GetWaypoint()
 	{
-		return _checkpoint;
+		return _waypoint;
 	}
+
+	// ne pas faire de "public Vector3 GetVecGrav() return _rayDir", juste prendre le transform.up du vehicle
 }

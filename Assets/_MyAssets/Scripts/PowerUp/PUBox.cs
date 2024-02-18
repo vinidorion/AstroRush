@@ -7,7 +7,7 @@ public class PUBox : MonoBehaviour
 	private const float COOLDOWN = 2f;
 	private bool _isActive = true;
 
-	private void OnTriggerEnter(Collider other)
+	void OnTriggerEnter(Collider other)
 	{
 		SpaceShip spaceship = other.GetComponent<SpaceShip>();
 		if (spaceship != null && _isActive) {
