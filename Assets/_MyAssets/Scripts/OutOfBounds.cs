@@ -27,9 +27,9 @@ public class OutOfBounds : MonoBehaviour
 		Vector3 respawnPos = WaypointManager.Instance.GetWaypointPos(shipWayptIndex);
 		Vector3 nextWaypoint = WaypointManager.Instance.GetWaypointPos(shipWayptIndex + 1);
 
-        Rigidbody rb = spaceship.GetComponent<Rigidbody>();
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+		Rigidbody rb = spaceship.GetComponent<Rigidbody>();
+		rb.velocity = Vector3.zero;
+		rb.angularVelocity = Vector3.zero;
 
 		spaceship.transform.position = respawnPos;
 		spaceship.transform.rotation = Quaternion.LookRotation(nextWaypoint - respawnPos);
