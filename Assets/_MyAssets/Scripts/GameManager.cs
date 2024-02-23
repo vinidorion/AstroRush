@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 			if (Input.anyKeyDown) { // tout ce qui est dans ce block est called sur une seule frame (une seule fois)
 				Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
 				_isIntro = false;
+				// call CountdownCoroutine() ici
 			} else {
 				// intro camera movement here
 			}
