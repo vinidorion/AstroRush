@@ -23,6 +23,12 @@ public class SpaceShip : MonoBehaviour
 	private int _lap = 0;
 	private int _waypoint = 0;
 
+	// le Time.time quand le lap est complété
+	// faire _listLapTime[0] - _startTime pour le temps du premier lap
+	// faire _listLapTime[n] - _listLapTime[n - 1] pour le temps de lap autre que le premier
+	// faire _listLapTime[_listLapTime.Count - 1] - _startTime pour le temps total (quand le dernier lap est complété)
+	private List<float> _listLapTime = new List<float>(); 
+
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.2f;
 
@@ -69,8 +75,6 @@ public class SpaceShip : MonoBehaviour
 	// comment ignorer angular impulse des collisions en gardant la capacité d'appliquer .AddTorq()
 	// https://forum.unity.com/threads/how-to-stop-the-rotation-of-a-rigidbody-but-for-specific-collisions.1189615/#:~:text=I%20finally%20find,you%27re%20awesome%20guys
 
-
-	// Awake(), Start(), Update() et FixedUpdate() sont tous private implicitement, pas besoin de mettre private devant
 
 	void Awake()
 	{
@@ -133,7 +137,7 @@ public class SpaceShip : MonoBehaviour
 		_lastDiffHauteur = _diffHauteur;									// enregistre le delta distance de la frame actuelle pour l'utiliser comme _lastDiffHauteur dans la prochaine frame
 	}
 
-	// "vertical" est relatif au spaceship ici, c'est l'axe Z local, non global
+	// "vertical" est relatif au spaceship ici, c'est par rapport à _rayDir (direction de la gravité)
 	private void ApplyVerticalForce()
 	{
 		if(_onGround) {
@@ -164,8 +168,16 @@ public class SpaceShip : MonoBehaviour
 			_waypoint++;
 			if(WaypointManager.Instance.IsFinalWaypoint(_waypoint)) {
 				_waypoint = 0;
-				_lap++;
-				// check ici si _lap atteint le nombre de lap, si oui c'est la fin du jeu
+				_lap++; // et changer lap dans le hud
+
+				// check ici si _lap atteint le nombre de lap total, si oui c'est la fin du jeu
+
+				_listLapTime.Add(Time.time);
+				if(_listLapTime.Count == 1) {
+					InGameHud.Instance.TimeComp(_listLapTime[0] - GameManager.Instance.GetStartTime());
+				} else {
+					InGameHud.Instance.TimeComp(_listLapTime[_listLapTime.Count - 1] - _listLapTime[_listLapTime.Count - 2]);
+				}
 			}
 		}
 	}
@@ -234,6 +246,7 @@ public class SpaceShip : MonoBehaviour
 
 	}
 
+	// méthode publique qui donne un item au spaceship
 	public void GivePU()
 	{
 		Debug.Log("RECEIVED PU");
@@ -241,15 +254,26 @@ public class SpaceShip : MonoBehaviour
 		// plus on est dernier, meilleur sont nos PU, vice versa
 	}
 
+	// méthode publique qui retourne le nombre de lap du spaceship
 	public int GetLap()
 	{
 		return _lap;
 	}
 
+	// méthode publique qui retourne l'index du waypoint actuel du spaceship
 	public int GetWaypoint()
 	{
 		return _waypoint;
 	}
 
-	// ne pas faire de "public Vector3 GetVecGrav() return _rayDir", juste prendre le transform.up du vehicle
+	// temporaire
+	public Vector3 GetVecGrav(){
+		return _rayDir;
+	}
+
+	// méthode publique qui permet de freeze/unfreeze le spaceship
+	public void Freeze(bool isFrozen)
+	{
+		_isFrozen = isFrozen;
+	}
 }

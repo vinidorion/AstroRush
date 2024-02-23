@@ -4,9 +4,20 @@ using UnityEngine;
 
 public class Camera : MonoBehaviour
 {
+	public static Camera Instance; // Singleton
+
 	private CameraMode _currentMode;
 	private Player[] _plyArray;
 	private Transform _plyPos;
+
+	void Awake()
+	{
+		if (Instance == null) {
+			Instance = this;
+		} else {
+			Destroy(this.gameObject);
+		}
+	}
 
 	void Start()
 	{

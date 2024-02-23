@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class OutOfBounds : MonoBehaviour
 {
+	private const float DELAY = 1f;
+
 	void Awake()
 	{
 		GetComponent<MeshRenderer>().enabled = false;
@@ -14,14 +16,14 @@ public class OutOfBounds : MonoBehaviour
 		SpaceShip spaceship = other.GetComponent<SpaceShip>();
 
 		if (spaceship != null) {
-			StartCoroutine(Respawn(spaceship));
+			StartCoroutine(RespawnCoroutine(spaceship));
 		}
 	}
 
-	IEnumerator Respawn(SpaceShip spaceship)
+	IEnumerator RespawnCoroutine(SpaceShip spaceship)
 	{
 		// fade to black ici
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(DELAY);
 
 		int shipWayptIndex = spaceship.GetWaypoint();
 		Vector3 respawnPos = WaypointManager.Instance.GetWaypointPos(shipWayptIndex);

@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class InGameHud : MonoBehaviour
 {
+	public static InGameHud Instance; // Singleton
+
+	void Awake()
+	{
+		if (Instance == null) {
+			Instance = this;
+		} else {
+			Destroy(this.gameObject);
+		}
+	}
+
 	void Update()
 	{
 		
@@ -52,9 +63,11 @@ public class InGameHud : MonoBehaviour
 	// s'affiche pendant quelques secondes
 	// rouge si plus lent (ex: +00:01:00 si une seconde plus long que le meilleur score)
 	// vert si plus rapide (ex: -00:01:00 si une seconde plus court que le meilleur score)
-	private void TimeComp()
+	public void TimeComp(float timeDiff)
 	{
-
+		Debug.Log("Lap time: " + timeDiff);
+		// faire timeDiff - son best lap time pour trouver la comparaison
+		// si > 0, color = red, si < 0, color = green, etc
 	}
 
 }
