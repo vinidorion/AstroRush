@@ -6,17 +6,7 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private GameObject waypoint1;
-    [SerializeField] private GameObject waypoint2;
-    [SerializeField] private GameObject waypoint3;
-    [SerializeField] private GameObject waypoint4;
-    [SerializeField] private GameObject waypoint5;
-    [SerializeField] private GameObject waypoint6;
-    [SerializeField] private GameObject waypoint7;
-    [SerializeField] private GameObject waypoint8;
-    [SerializeField] private GameObject waypoint9;
-    [SerializeField] private GameObject waypoint10;
-    [SerializeField] private GameObject waypoint11;
+    [SerializeField] private GameObject listeWaypoint;
 
     [SerializeField] private GameObject target2;
 
@@ -31,18 +21,11 @@ public class Bot : MonoBehaviour
 
     private void Start()
     {
-        waypoints.Add(waypoint1);
-        waypoints.Add(waypoint2);
-        waypoints.Add(waypoint3);
-        waypoints.Add(waypoint4);
-        waypoints.Add(waypoint5);
-        waypoints.Add(waypoint6);
-        waypoints.Add(waypoint7);
-        waypoints.Add(waypoint8);
-        waypoints.Add(waypoint9);
-        waypoints.Add(waypoint10);
-        waypoints.Add(waypoint11);
-
+        //GameObject[] allChildren = new GameObject[listeWaypoint.transform.childCount];
+        foreach (Transform child in listeWaypoint.transform)
+        {
+            waypoints.Add(child.gameObject);
+        }
     }
 
     // Update is called once per frame
