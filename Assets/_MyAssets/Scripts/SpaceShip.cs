@@ -21,7 +21,13 @@ public class SpaceShip : MonoBehaviour
 
 	// pour trouver position
 	private int _lap = 0;
-	private int _checkpoint = 0; // next checkpoint serait juste _checkpoint +1, sauf si _checkpoint == dernierCheckpoint: c'est 0
+	private int _waypoint = 0;
+
+	// le Time.time quand le lap est complété
+	// faire _listLapTime[0] - _startTime pour le temps du premier lap
+	// faire _listLapTime[n] - _listLapTime[n - 1] pour le temps de lap autre que le premier
+	// faire _listLapTime[_listLapTime.Count - 1] - _startTime pour le temps total (quand le dernier lap est complété)
+	private List<float> _listLapTime = new List<float>(); 
 
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.2f;
@@ -31,6 +37,7 @@ public class SpaceShip : MonoBehaviour
 	/********************************************
 					SYSTÈME PID
 	*********************************************/
+
 	/****** CONSTANTES ******/
 	private float GRAVITY = 9.81f;							// constante gravité
 	private const float MAX_DIST = 0.5f;					// distance maximale du raycast
@@ -69,8 +76,6 @@ public class SpaceShip : MonoBehaviour
 	// https://forum.unity.com/threads/how-to-stop-the-rotation-of-a-rigidbody-but-for-specific-collisions.1189615/#:~:text=I%20finally%20find,you%27re%20awesome%20guys
 
 
-	// Awake(), Start(), Update() et FixedUpdate() sont tous private implicitement, pas besoin de mettre private devant
-
 	void Awake()
 	{
 		Instance = this; //associe l'instance de Player au script
@@ -97,6 +102,7 @@ public class SpaceShip : MonoBehaviour
 			AirResistance();
 			CheckForGround();
 			ApplyVerticalForce();
+			Waypoints();
 		}
 	}
 
@@ -133,7 +139,7 @@ public class SpaceShip : MonoBehaviour
 		_lastDiffHauteur = _diffHauteur;									// enregistre le delta distance de la frame actuelle pour l'utiliser comme _lastDiffHauteur dans la prochaine frame
 	}
 
-	// "vertical" est relatif au spaceship ici, c'est l'axe Z local, non global
+	// "vertical" est relatif au spaceship ici, c'est par rapport à _rayDir (direction de la gravité)
 	private void ApplyVerticalForce()
 	{
 		if(_onGround) {
@@ -145,6 +151,41 @@ public class SpaceShip : MonoBehaviour
 		}
 
 		
+	}
+
+	// trouve le waypoint du spaceship
+	private void Waypoints()
+	{
+		Vector3 waypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint);			// position du current waypoint
+		Vector3 nextwaypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint + 1);	// position du next waypoint
+
+		//Debug.Log("waypointPos: " + waypointPos);
+		//Debug.Log("nextwaypointPos: " + nextwaypointPos);
+
+		// pour visualiser à quel waypoint le spaceship est rendu
+		Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
+		Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
+
+		// sqrt inutile ici, on compare deux distances
+		float distCurrWaypoint = (transform.position - waypointPos).sqrMagnitude;
+		float distNextWaypoint = (transform.position - nextwaypointPos).sqrMagnitude;
+
+		if(distNextWaypoint < distCurrWaypoint) {
+			_waypoint++;
+			if(WaypointManager.Instance.IsFinalWaypoint(_waypoint)) {
+				_waypoint = 0;
+				_lap++; // et changer lap dans le hud
+
+				// check ici si _lap atteint le nombre de lap total, si oui c'est la fin du jeu
+
+				_listLapTime.Add(Time.time);
+				if(_listLapTime.Count == 1) {
+					InGameHud.Instance.TimeComp(_listLapTime[0] - GameManager.Instance.GetStartTime());
+				} else {
+					InGameHud.Instance.TimeComp(_listLapTime[_listLapTime.Count - 1] - _listLapTime[_listLapTime.Count - 2]);
+				}
+			}
+		}
 	}
 
 	private void AirResistance()
@@ -211,6 +252,7 @@ public class SpaceShip : MonoBehaviour
 
 	}
 
+	// méthode publique qui donne un item au spaceship
 	public void GivePU()
 	{
 		Debug.Log("RECEIVED PU");
@@ -218,13 +260,26 @@ public class SpaceShip : MonoBehaviour
 		// plus on est dernier, meilleur sont nos PU, vice versa
 	}
 
+	// méthode publique qui retourne le nombre de lap du spaceship
 	public int GetLap()
 	{
 		return _lap;
 	}
 
-	public int GetCheckpoint()
+	// méthode publique qui retourne l'index du waypoint actuel du spaceship
+	public int GetWaypoint()
 	{
-		return _checkpoint;
+		return _waypoint;
+	}
+
+	// temporaire
+	public Vector3 GetVecGrav(){
+		return _rayDir;
+	}
+
+	// méthode publique qui permet de freeze/unfreeze le spaceship
+	public void Freeze(bool isFrozen)
+	{
+		_isFrozen = isFrozen;
 	}
 }
