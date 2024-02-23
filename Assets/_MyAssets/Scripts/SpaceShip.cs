@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class SpaceShip : MonoBehaviour
 {
-	public static SpaceShip Instance;
-
 	[Header("Stats")]
 	[SerializeField] private float max_speed = default;
 	[SerializeField] private float _accel = default;
@@ -78,8 +76,8 @@ public class SpaceShip : MonoBehaviour
 
 	void Awake()
 	{
-		Instance = this; //associe l'instance de Player au script
 		_rb = GetComponent<Rigidbody>();
+		_rb.angularDrag = 0.5f;
 	}
 
 	void Start()
@@ -91,6 +89,7 @@ public class SpaceShip : MonoBehaviour
 	{
 		current_speed = _rb.velocity;
 		//Debug.Log(_rb.velocity.magnitude);
+
 	}
 
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
@@ -203,13 +202,14 @@ public class SpaceShip : MonoBehaviour
 	{
 		if (!_isFrozen)
 		{
-			if (left)
-			{
-				float rotation = agility - current_speed.y;
-			}
-			if (!left)
-			{
-				float rotation = (agility - current_speed.y) * -1;
+			if (left) {
+				Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
+				//float rotation = agility - current_speed.y;
+				_rb.AddTorque(transform.up * /*_rb.angularDrag **/ 10000f, ForceMode.Acceleration);
+				//_rb.angularVelocity = new Vector3(0f, 6f, 0f);
+			} else {
+				Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
+				//float rotation = (agility - current_speed.y) * -1;
 			}
 		}
 	}

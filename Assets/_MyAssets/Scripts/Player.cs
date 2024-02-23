@@ -15,9 +15,16 @@ public class Player : MonoBehaviour
 	private float timer_atk = 0;
 	private int laser_uses = 0;
 
+	private SpaceShip _spaceship;
+
+	void Awake()
+	{
+		_spaceship = GetComponent<SpaceShip>();
+	}
+
 	void Start()
 	{
-		hp = SpaceShip.Instance.GetLife();
+		hp = _spaceship.GetLife();
 	}
 
 	void Update()
@@ -30,11 +37,11 @@ public class Player : MonoBehaviour
 	{
 		inputx = Input.GetAxis("Horizontal");
 		inputz = Input.GetAxis("Vertical");
-		if (inputz > 0) SpaceShip.Instance.Forward();
-		if (inputx > 0) SpaceShip.Instance.Turn(false);
-		if (inputx < 0) SpaceShip.Instance.Turn(true);
-		if (Input.GetKey(KeyCode.Mouse0)) SpaceShip.Instance.AirBrake(true);
-		if (Input.GetKey(KeyCode.Mouse1)) SpaceShip.Instance.AirBrake(false);
+		if (inputz > 0) _spaceship.Forward();
+		if (inputx > 0) _spaceship.Turn(false);
+		if (inputx < 0) _spaceship.Turn(true);
+		if (Input.GetKey(KeyCode.Mouse0)) _spaceship.AirBrake(true);
+		if (Input.GetKey(KeyCode.Mouse1)) _spaceship.AirBrake(false);
 	}
 
 	private void UsePU()
