@@ -37,7 +37,7 @@ public class SpaceShip : MonoBehaviour
 	*********************************************/
 
 	/****** CONSTANTES ******/
-	private float GRAVITY = 9.81f;							// constante gravité
+	private const float GRAVITY = 9.81f;					// constante gravité
 	private const float MAX_DIST = 0.5f;					// distance maximale du raycast
 	private const float HAUTEUR_TARGET = MAX_DIST * 0.7f;	// hauteur que le PID vise (70% la distance maximale du raycast)
 
@@ -61,7 +61,7 @@ public class SpaceShip : MonoBehaviour
 	private const float PID_KD = 500f;
 
 	/****** VARIABLES ******/
-	[SerializeField] private LayerMask _layersToHit;		// dans l'inspecteur mettre la layer "track". TODO: trouver comment faire sans l'inspecteur, la layer sera toujours "track"
+	private LayerMask _layersToHit;							// la seule layer que le Raycast du PID touche
 	private Vector3 _rayDir = Vector3.down;					// direction de la gravité, par défaut vers le bas, toujours normalisé
 	private float _hauteur = 0f;							// hauteur actuelle
 	private float _diffHauteur = 0f;						// difference (delta distance) entre la hauteur actuelle et la hauteur que le PID vise
@@ -78,6 +78,7 @@ public class SpaceShip : MonoBehaviour
 	{
 		_rb = GetComponent<Rigidbody>();
 		_rb.angularDrag = 0.5f;
+		_layersToHit = 1 << LayerMask.NameToLayer("track");
 	}
 
 	void Start()
