@@ -109,7 +109,7 @@ public class SpaceShip : MonoBehaviour
 	// méthode privée qui trouve la direction de la gravité
 	private void CheckForGround()
 	{
-		Ray ray = new Ray(transform.position, _rayDir);
+        Ray ray = new Ray(transform.position, _rayDir);
 		if(Physics.Raycast(ray, out RaycastHit hit, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore)) {
 			_rayDir = -hit.normal;
 			_onGround = true;
@@ -118,7 +118,7 @@ public class SpaceShip : MonoBehaviour
 			//Debug.Log("found ground");
 			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
 			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime); // normale de la surface (inverse de la direction de la gravité)
-			transform.up = hit.normal;
+			transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 		} else {
 			//Debug.Log("ground not found");
 			Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)

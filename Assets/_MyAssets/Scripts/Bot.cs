@@ -7,12 +7,15 @@ public class Bot : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] private GameObject listeWaypoint;
-
+    [SerializeField] private GameObject listeOptiWaypoint;
     [SerializeField] private GameObject target2;
+    [SerializeField] private LayerMask _layersToHit;
+    [SerializeField] private float difficulty = 1;
 
     private List<GameObject> waypoints = new List<GameObject>();
+    private List<GameObject> optiWaypoints = new List<GameObject>();
     private int passedtargets = 0;
-    private GameObject target;
+    [SerializeField] private GameObject target;
     public Plane Plane
     {
         private set;
@@ -21,20 +24,24 @@ public class Bot : MonoBehaviour
 
     private void Start()
     {
-        //GameObject[] allChildren = new GameObject[listeWaypoint.transform.childCount];
         foreach (Transform child in listeWaypoint.transform)
         {
             waypoints.Add(child.gameObject);
         }
+        foreach (Transform child in listeOptiWaypoint.transform)
+        {
+            optiWaypoints.Add(child.gameObject);
+        }
+        target.transform.position = Vector3.Lerp(waypoints[passedtargets].transform.position, optiWaypoints[passedtargets].transform.position, difficulty);
     }
 
     // Update is called once per frame
     void Update()
     {
-        target = waypoints[passedtargets];
         if (Vector3.Magnitude(transform.position - target.transform.position) < 1f)
         {
             passedtargets += 1;
+            target.transform.position = Vector3.Lerp(waypoints[passedtargets].transform.position, optiWaypoints[passedtargets].transform.position, difficulty);
         }
 
         Plane = new Plane(transform.up, transform.position);
@@ -43,7 +50,10 @@ public class Bot : MonoBehaviour
 
         float angle = Vector3.SignedAngle(transform.forward, direction, transform.up);
         Debug.Log(angle);
-        SpaceShip.Instance.Forward();
+        if (angle > -(7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude) && angle < (7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude))
+        {
+            SpaceShip.Instance.Forward();
+        }
         if (angle > (7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude))
         {
             SpaceShip.Instance.AirBrake(false);
@@ -62,7 +72,5 @@ public class Bot : MonoBehaviour
         {
             transform.Rotate(0f, -40f * Time.deltaTime, 0f);
         }
-       
-        
     }
 }
