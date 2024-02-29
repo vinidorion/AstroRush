@@ -255,6 +255,14 @@ public class SpaceShip : MonoBehaviour
 		// plus on est dernier, meilleur sont nos PU, vice versa
 	}
 
+	public void GiveHP()
+	{
+		// give HP au spaceship, utilisé dans la classe PitStop
+		// mettre une petite valeur car OnTriggerStay() dans PitStop est called
+		// sur le physic timer, au chaque 0.02s
+		Debug.Log("RECEIVED HP");
+	}
+
 	// méthode publique qui retourne le nombre de lap du spaceship
 	public int GetLap()
 	{
@@ -268,7 +276,8 @@ public class SpaceShip : MonoBehaviour
 	}
 
 	// temporaire
-	public Vector3 GetVecGrav(){
+	public Vector3 GetVecGrav()
+	{
 		return _rayDir;
 	}
 

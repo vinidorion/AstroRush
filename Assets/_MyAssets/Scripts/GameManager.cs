@@ -81,10 +81,7 @@ public class GameManager : MonoBehaviour
 	// méthode publique qui permet de freeze/unfreeze tous les spaceship
 	public void FreezeAll(bool freeze)
 	{
-		SpaceShip[] allSpaceships = FindObjectsOfType<SpaceShip>();
-
-		foreach (SpaceShip spaceship in allSpaceships)
-		{
+		foreach (SpaceShip spaceship in FindObjectsOfType<SpaceShip>()) {
 			spaceship.Freeze(freeze);
 		}
 	}

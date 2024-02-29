@@ -67,9 +67,14 @@ public class VolumeManager : MonoBehaviour
 	// ou qu'on change le volume
 	public void UpdateVolume()
 	{
-		// loop through all audio sources,
-		// if tag is SFX: set .volume to _GlobalVolSFX
-		// if tag is MUS: set .volume to _GlobalVolMUS
-		// else: Debug.Log(audiosource + " n'a pas de tag SFX/MUS")
+		foreach (AudioSource audioSource in FindObjectsOfType<AudioSource>()) {
+			if(audioSource.tag == "SFX") {
+				audioSource.volume = (float)_GlobalVolSFX / 10f;
+			} else if(audioSource.tag == "MUS") {
+				audioSource.volume = (float)_GlobalVolMUS / 10f;
+			} else {
+				Debug.Log(audioSource + " HAS NO TAG");
+			}
+		}
 	}
 }
