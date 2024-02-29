@@ -9,8 +9,10 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float _accel = default;
 	[SerializeField] private float airbrake_power = default;
 	[SerializeField] private int max_hp = default;
-	[SerializeField] private float weigth = default;
+    [SerializeField] private int _hp = default;
+    [SerializeField] private float weigth = default;
 	[SerializeField] private float agility = default;
+	[SerializeField] private float _slower = default;
 
 	private bool _isFrozen = false;
 	private Vector3 current_speed = Vector3.zero;
@@ -31,6 +33,8 @@ public class SpaceShip : MonoBehaviour
 	private const float COEF_DRAG = -0.2f;
 
 	public int GetLife() { return max_hp; }
+	public int GetCurrentLife() { return _hp; }
+	public void SetCurrentLife(int life) { _hp = life; }
 
 	/********************************************
 					SYSTÈME PID
@@ -187,7 +191,7 @@ public class SpaceShip : MonoBehaviour
 		//Vector3 force = new Vector3(-max_speed * (current_speed.x / max_speed), -max_speed * (current_speed.y / max_speed), -max_speed * (current_speed.z / max_speed))/2;
 		
 		_dragForce = _rb.velocity * COEF_DRAG;
-		_rb.AddForce(_dragForce, ForceMode.Acceleration);
+		_rb.AddForce((_dragForce * _slower), ForceMode.Acceleration);
 	}
 
 	public void Forward()
@@ -285,5 +289,18 @@ public class SpaceShip : MonoBehaviour
 	public void Freeze(bool isFrozen)
 	{
 		_isFrozen = isFrozen;
+	}
+
+	// méthode publique qui permet de ralentir le spaceship (par les PU)
+	public void Slow(float slow, float slowTime)
+	{
+        _slower = slow;
+        StartCoroutine(SlowTime(slowTime));
+	}
+
+	IEnumerator SlowTime(float slowTime) 
+	{ 
+		yield return new WaitForSeconds(slowTime);
+		_slower = 0;
 	}
 }
