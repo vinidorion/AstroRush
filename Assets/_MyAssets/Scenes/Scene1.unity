@@ -246,14 +246,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max_speed: 10
-  acceleration: 5
+  _accel: 0
   airbrake_power: 5
   max_hp: 0
+  _hp: 0
   weigth: 5
   agility: 5
-  _layersToHit:
-    serializedVersion: 2
-    m_Bits: 64
+  _slower: 0
+  _maxBoost: 0
+  _boost: 0
+  _currentPU: 1
 --- !u!114 &670556618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,13 +268,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f05d0b2bcf3bcf4380c7a5eadba38e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PU:
-  - {fileID: 3703964190820158794, guid: ae222949c1465694d92600c7986f1213, type: 3}
-  - {fileID: 2479250365173377866, guid: 81919021e10b90e4c81464dafab8c920, type: 3}
-  - {fileID: 1400835273673732990, guid: c2cba2e189869bd4bbe7745b846818f8, type: 3}
   gunPosition: {x: 2.3, y: -0.5, z: 0}
   canonPosition: {x: 0, y: -0.5, z: 5}
-  current_PU: 2
 --- !u!1001 &1137649581
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -424,6 +421,90 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1796898202
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1796898205}
+  - component: {fileID: 1796898204}
+  - component: {fileID: 1796898203}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!81 &1796898203
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796898202}
+  m_Enabled: 1
+--- !u!20 &1796898204
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796898202}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &1796898205
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796898202}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -40.836586, y: -11.931718, z: -20.33271}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2097745765
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,6 +517,7 @@ GameObject:
   - component: {fileID: 2097745768}
   - component: {fileID: 2097745767}
   - component: {fileID: 2097745766}
+  - component: {fileID: 2097745770}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -522,3 +604,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2097745770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097745765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 295a325c6b1a1b44db10edc54ba193ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PUs:
+  - {fileID: 3703964190820158794, guid: ae222949c1465694d92600c7986f1213, type: 3}

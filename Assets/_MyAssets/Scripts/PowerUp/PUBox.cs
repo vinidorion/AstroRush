@@ -11,7 +11,7 @@ public class PUBox : MonoBehaviour
 	{
 		SpaceShip spaceship = other.GetComponent<SpaceShip>();
 		if (spaceship != null && _isActive) {
-			spaceship.GivePU();
+            spaceship.GivePU();
 			_isActive = false;
 			StartCoroutine(PUBoxCooldownCoroutine());
 		}

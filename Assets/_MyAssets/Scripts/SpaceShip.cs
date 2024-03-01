@@ -13,11 +13,14 @@ public class SpaceShip : MonoBehaviour
     [SerializeField] private float weigth = default;
 	[SerializeField] private float agility = default;
 	[SerializeField] private float _slower = default;
+    [SerializeField] private float _maxBoost = default;
+    [SerializeField] private float _boost = default;
 
 	private bool _isFrozen = false;
 	private Vector3 current_speed = Vector3.zero;
-	private int _currentPU = 0;
+    [SerializeField] private int _currentPU = 0;
 	private Rigidbody _rb;
+	private GameManager _gm;
 
 	// pour trouver position
 	private int _lap = 0;
@@ -34,7 +37,9 @@ public class SpaceShip : MonoBehaviour
 
 	public int GetLife() { return max_hp; }
 	public int GetCurrentLife() { return _hp; }
-	public void SetCurrentLife(int life) { _hp = life; }
+	public void SetCurrentLife(int life) { _hp = life; if (_hp > max_hp) _hp = max_hp; }
+	public float GetBoost() { return _boost; }
+	public void SetBoost(float boost) { _boost = boost; if (_boost > _maxBoost) _boost = _maxBoost; } 
 
 	/********************************************
 					SYSTÈME PID
@@ -80,6 +85,7 @@ public class SpaceShip : MonoBehaviour
 
 	void Awake()
 	{
+		_gm = GameManager.Instance;
 		_rb = GetComponent<Rigidbody>();
 		_rb.angularDrag = 0.5f;
 		_layersToHit = 1 << LayerMask.NameToLayer("track");
@@ -87,8 +93,8 @@ public class SpaceShip : MonoBehaviour
 
 	void Start()
 	{
-
-	}
+        _gm = GameManager.Instance;
+    }
 
 	void Update()
 	{
@@ -198,8 +204,7 @@ public class SpaceShip : MonoBehaviour
 	{
 		if (!_isFrozen /*&& current_speed.y < max_speed*/)
 		{
-			//Vector3 force = new Vector3(-1 * acceleration, 0, 0);
-			_rb.AddForce(transform.forward * _accel, ForceMode.Acceleration);
+			_rb.AddForce(transform.forward * _accel * _slower, ForceMode.Acceleration);
 		}
 	}
 
@@ -210,12 +215,13 @@ public class SpaceShip : MonoBehaviour
 			if (left) {
 				Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
 				//float rotation = agility - current_speed.y;
-				_rb.AddTorque(transform.up * /*_rb.angularDrag **/ 10000f, ForceMode.Acceleration);
+				_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
 				//_rb.angularVelocity = new Vector3(0f, 6f, 0f);
 			} else {
 				Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
-				//float rotation = (agility - current_speed.y) * -1;
-			}
+                _rb.AddTorque(transform.up * /*_rb.angularDrag **/ agility, ForceMode.Acceleration);
+                //float rotation = (agility - current_speed.y) * -1;
+            }
 		}
 	}
 
@@ -242,21 +248,24 @@ public class SpaceShip : MonoBehaviour
 	{
 		if (!_isFrozen)
 		{
-
+			Debug.Log(_currentPU);
+			Instantiate(_gm.PUManager(_currentPU), transform.position + new Vector3(1, 0, 0), _gm.PUManager(_currentPU).transform.rotation);
 		}
 	}
 
 	void RemovePU()
 	{
-
-	}
+		_currentPU = 0;
+    }
 
 	// méthode publique qui donne un item au spaceship
 	public void GivePU()
 	{
-		Debug.Log("RECEIVED PU");
 		// random ici pour choisir le PU
 		// plus on est dernier, meilleur sont nos PU, vice versa
+
+		_currentPU = 1;
+
 	}
 
 	public void GiveHP()

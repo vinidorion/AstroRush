@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 	// les animations de camera pour l'intro
 	private const float INTRO_TIME = 1f;
 
+    [SerializeField] private GameObject[] PUs = default;
+
 	private float _startTime = 0f; // Time.time when the race starts
 
 	void Awake()
@@ -84,5 +86,10 @@ public class GameManager : MonoBehaviour
 		foreach (SpaceShip spaceship in FindObjectsOfType<SpaceShip>()) {
 			spaceship.Freeze(freeze);
 		}
+	}
+
+	public GameObject PUManager(int PU)
+	{
+		return PUs[PU];
 	}
 }

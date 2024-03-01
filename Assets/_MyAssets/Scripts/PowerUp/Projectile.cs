@@ -5,23 +5,22 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private float _speed = default;
-    private float _acceleration = default;
+    [SerializeField] private float _speed = default;
+    [SerializeField] private float _acceleration = default;
     private SpaceShip _ship = default;
     private GameObject _target = null;
     private PU _pu;
     private int _wayPoint = default;
-    private int _dmg = default;
-    private float _slow = default;
-    private float _slowTime = default;
+    [SerializeField] private int _dmg = default;
+    [SerializeField] private float _slow = default;
+    [SerializeField] private float _slowTime = default;
+    [SerializeField] private int _aim = default;
 
-    public void SetSpeed(float speed) {_speed = speed;}
-    public void Acceleration(float acceleration) {_acceleration = acceleration;}
 
     private void Awake()
     {
         _pu = GetComponent<PU>();
-        _ship = GetComponent<SpaceShip>(); //besoin de la liste de spaceship dans l'ordre. Ceci est temporaire
+        _ship = transform.parent.GetComponent<SpaceShip>();
         _wayPoint = _ship.GetWaypoint();
     }
 
@@ -63,6 +62,22 @@ public class Projectile : MonoBehaviour
             _shipTouche.SetCurrentLife(_shipTouche.GetCurrentLife() - _dmg);
             _shipTouche.Slow(_slow, _slowTime);
         }
-        Destroy(this);
+        Destroy(transform.parent.gameObject);
+    }
+
+    private void SetTarget()
+    {
+        if (_aim == 0)
+        {
+            _target = null;
+        }
+        if (_aim == 1)
+        {
+            _target = _ship.gameObject;
+        }
+        if (_aim == 2)
+        {
+            //_target = next spaceship
+        }
     }
 }
