@@ -84,16 +84,8 @@ public class SpaceShip : MonoBehaviour
 
 	void Start()
 	{
-
-	}
-
-	void Update()
-	{
-		current_speed = _rb.velocity;
-		_rb.velocity = transform.forward * _rb.velocity.magnitude;
-		
-		//Debug.Log(_rb.velocity.magnitude);
-	}
+		_rb.velocity = new Vector3(0, 0, 0);
+    }
 
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
 	void FixedUpdate()
@@ -103,7 +95,9 @@ public class SpaceShip : MonoBehaviour
 			CheckForGround();
 			ApplyVerticalForce();
 			Waypoints();
-		}
+            current_speed = _rb.velocity;
+            _rb.velocity = transform.forward * _rb.velocity.magnitude;
+        }
 	}
 
 	// méthode privée qui trouve la direction de la gravité
@@ -118,7 +112,6 @@ public class SpaceShip : MonoBehaviour
 			//Debug.Log("found ground");
 			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
 			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime); // normale de la surface (inverse de la direction de la gravité)
-			transform.rotation = Quaternion.FromToRotation(Vector3.up, hit.normal);
 		} else {
 			//Debug.Log("ground not found");
 			Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
