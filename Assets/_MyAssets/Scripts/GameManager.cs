@@ -7,14 +7,14 @@ public class GameManager : MonoBehaviour
 	public static GameManager Instance; // Singleton
 
 	private bool _isIntro = true;
-	// 1s pour tester plus rapidement
+	// 1s pour tester plus rapidement,
 	// on mettra plus quand on aura fait
 	// les animations de camera pour l'intro
 	private const float INTRO_TIME = 1f;
-
-    [SerializeField] private GameObject[] PUs = default;
-
 	private float _startTime = 0f; // Time.time when the race starts
+
+	[SerializeField] private GameObject[] PUs = default;
+	private Object[] _arrPUs;
 
 	void Awake()
 	{
@@ -22,6 +22,15 @@ public class GameManager : MonoBehaviour
 			Instance = this;
 		} else {
 			Destroy(this.gameObject);
+		}
+
+		// get les PUs sans utiliser SerializeField,
+		// les PUs dans l'array seront dans le même ordre
+		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
+		_arrPUs = Resources.LoadAll("PUs/", typeof(GameObject));
+
+		foreach (Object pu in _arrPUs) {
+			Debug.Log(pu);
 		}
 	}
 
@@ -48,7 +57,13 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator IntroCoroutine()
 	{
-		yield return new WaitForSeconds(INTRO_TIME);
+		// on a pas d'intro pour le moment, donc j'enlève temporairement le délai
+		//yield return new WaitForSeconds(INTRO_TIME);
+		
+		// donc return null à la coroutine
+		// (ne pas oublier de l'enlever)
+		yield return null;
+
 		Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
 		_isIntro = false;
 	}
@@ -91,5 +106,12 @@ public class GameManager : MonoBehaviour
 	public GameObject PUManager(int PU)
 	{
 		return PUs[PU];
+	}
+
+	// get le nombre de PUs,
+	// sera utile pour trouver un PU random
+	public int GetNumPUs()
+	{
+		return _arrPUs.Length;
 	}
 }
