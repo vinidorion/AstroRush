@@ -70,6 +70,8 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator CountdownCoroutine()
 	{
+		// draw le in game hud ici
+
 		yield return new WaitForSeconds(2f);
 		// 3
 
@@ -89,7 +91,7 @@ public class GameManager : MonoBehaviour
 		_startTime = Time.time;
 	}
 
-	// retourne le Time.time quand la course a commencé
+	// méthode publique qui retourne le Time.time quand la course a commencé
 	public float GetStartTime()
 	{
 		return _startTime;
@@ -108,7 +110,18 @@ public class GameManager : MonoBehaviour
 		return PUs[PU];
 	}
 
-	// get le nombre de PUs,
+	// méthode publique qui retourne le GameObject PU en fonction de l'index
+	public GameObject GetGameObjectPU(int index)
+	{
+		if (index >= 0 && < _arrPUs.Length) {
+			return _arrPUs[index];
+		} else {
+			Debug.Log("PU INDEX OUT OF RANGE OF THE PU ARRAY");
+			return _arrPUs[0]; // il faut retourner qqch, donc retourner le premier par défaut
+		}
+	}
+
+	// méthode publique qui get le nombre de PUs,
 	// sera utile pour trouver un PU random
 	public int GetNumPUs()
 	{
