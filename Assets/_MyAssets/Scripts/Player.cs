@@ -38,28 +38,6 @@ public class Player : MonoBehaviour
 		if (Input.GetKey(KeyCode.Space))
 		{
 			_spaceship.UsePU();
-
-			//if (current_PU == 0)
-			//{
-			//	if (timer_atk > 0.2f)
-			//	{
-			//		Instantiate(PU[current_PU], new Vector3(transform.position.x + gunPosition.x, transform.position.y + gunPosition.y, transform.position.z + gunPosition.z), transform.rotation * Quaternion.Euler(90, 0, 0), transform);
-			//		Instantiate(PU[current_PU], new Vector3(transform.position.x - gunPosition.x, transform.position.y + gunPosition.y, transform.position.z + gunPosition.z), transform.rotation * Quaternion.Euler(90, 0, 0), transform);
-			//		timer_atk = 0;
-			//		laser_uses++;
-			//		if (laser_uses >= 5) current_PU = -1;
-			//	}
-			//}
-			//else if (current_PU == 1)
-			//{
-			//	Instantiate(PU[current_PU], new Vector3(transform.position.x + canonPosition.x, transform.position.y + canonPosition.y, transform.position.z + canonPosition.z), transform.rotation * Quaternion.Euler(90, 0, 0), transform);
-			//	current_PU = -1;
-			//}
-			//else if (current_PU == 2)
-			//{
-			//	Instantiate(PU[current_PU], new Vector3(transform.position.x + canonPosition.x, transform.position.y + canonPosition.y, transform.position.z + canonPosition.z), transform.rotation * Quaternion.Euler(0, 0, 0), transform);
-			//	current_PU = -1;
-			//}
 		}
 	}
 

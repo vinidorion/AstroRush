@@ -36,7 +36,7 @@ public class PU : MonoBehaviour
     private void Timer()
     {
         _timer = _timer + 1 * Time.deltaTime;
-        if (_timer > _lifeTime) Destroy(transform.parent.gameObject);
+        if (_timer > _lifeTime) Destroy(transform.gameObject);
     }
 
     

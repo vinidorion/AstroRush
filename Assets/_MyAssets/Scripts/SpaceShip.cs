@@ -290,6 +290,93 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
+<<<<<<< Updated upstream
+=======
+	private void AirResistance()
+	{
+		//Vector3 force = new Vector3(-max_speed * (current_speed.x / max_speed), -max_speed * (current_speed.y / max_speed), -max_speed * (current_speed.z / max_speed))/2;
+		
+		_dragForce = _rb.velocity * COEF_DRAG;
+		_rb.AddForce((_dragForce * _slower), ForceMode.Acceleration);
+	}
+
+	public void Forward()
+	{
+		if (!_isFrozen /*&& current_speed.y < max_speed*/)
+		{
+			_rb.AddForce(transform.forward * _accel * _slower, ForceMode.Acceleration);
+		}
+	}
+
+	public void Turn(bool left)
+	{
+		if (!_isFrozen)
+		{
+			if (left) {
+				Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
+				//float rotation = agility - current_speed.y;
+				_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
+				//_rb.angularVelocity = new Vector3(0f, 6f, 0f);
+			} else {
+				Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
+                _rb.AddTorque(transform.up * /*_rb.angularDrag **/ agility, ForceMode.Acceleration);
+                //float rotation = (agility - current_speed.y) * -1;
+            }
+		}
+	}
+
+	public void AirBrake(bool left)
+	{
+		if (!_isFrozen)
+		{
+			if (left)
+			{
+				float rotation = agility - current_speed.y + airbrake_power;
+				Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
+				_rb.AddForce(force);
+			}
+			if (!left)
+			{
+				float rotation = (agility - current_speed.y + airbrake_power) * -1;
+				Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
+				_rb.AddForce(force);
+			}
+		}
+	}
+
+	public void UsePU()
+	{
+		if (!_isFrozen)
+		{
+			Debug.Log(_currentPU);
+			Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + new Vector3(1, 0, 0), _gm.PUManager(_currentPU).transform.rotation, transform);
+		}
+	}
+
+	void RemovePU()
+	{
+		_currentPU = 0;
+    }
+
+	// méthode publique qui donne un item au spaceship
+	public void GivePU()
+	{
+		// random ici pour choisir le PU
+		// plus on est dernier, meilleur sont nos PU, vice versa
+
+		_currentPU = 1;
+
+	}
+
+	public void GiveHP()
+	{
+		// give HP au spaceship, utilisé dans la classe PitStop
+		// mettre une petite valeur car OnTriggerStay() dans PitStop est called
+		// sur le physic timer, au chaque 0.02s
+		Debug.Log("RECEIVED HP");
+	}
+
+>>>>>>> Stashed changes
 	// méthode publique qui retourne le nombre de lap du spaceship
 	public int GetLap()
 	{

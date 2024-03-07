@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
 
@@ -14,8 +15,7 @@ public class GameManager : MonoBehaviour
 	private const float INTRO_TIME = 1f;
 	private float _startTime = 0f; // Time.time when the race starts
 
-	[SerializeField] private GameObject[] PUs = default;
-	private GameObject[] _arrPUs;
+	private List<GameObject> _arrPUs = new List<GameObject>();
 
 	void Awake()
 	{
@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
 		} else {
 			Destroy(this.gameObject);
 		}
+<<<<<<< Updated upstream
 
 		// get les PUs sans utiliser SerializeField,
 		// les PUs dans l'array seront dans le même ordre
@@ -39,13 +40,24 @@ public class GameManager : MonoBehaviour
 		foreach (GameObject pu in _arrPUs) {
 			Debug.Log(pu);
 		}
+=======
+>>>>>>> Stashed changes
 	}
 
 	void Start()
 	{
 		Camera.Instance.SetCameraMode(CameraMode.Intro);
 		StartCoroutine(IntroCoroutine());
-	}
+
+		// get les PUs sans utiliser SerializeField,
+		// les PUs dans l'array seront dans le même ordre
+		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
+		Object[] loadedObjects = Resources.LoadAll("PUs");
+        foreach (Object Object in loadedObjects)
+        {
+            _arrPUs.Add(Object as GameObject);
+        }
+    }
 
 	void Update()
 	{
@@ -114,13 +126,13 @@ public class GameManager : MonoBehaviour
 
 	public GameObject PUManager(int PU)
 	{
-		return PUs[PU];
+		return _arrPUs[PU];
 	}
 
 	// méthode publique qui retourne le GameObject PU en fonction de l'index
 	public GameObject GetGameObjectPU(int index)
 	{
-		if (index >= 0 && index < _arrPUs.Length) {
+		if (index >= 0 && index < _arrPUs.Count) {
 			return _arrPUs[index];
 		} else {
 			Debug.Log("PU INDEX OUT OF RANGE OF THE PU ARRAY");
@@ -132,6 +144,6 @@ public class GameManager : MonoBehaviour
 	// sera utile pour trouver un PU random
 	public int GetNumPUs()
 	{
-		return _arrPUs.Length;
+		return _arrPUs.Count;
 	}
 }

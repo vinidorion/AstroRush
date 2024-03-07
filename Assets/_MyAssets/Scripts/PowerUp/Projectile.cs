@@ -10,18 +10,28 @@ public class Projectile : MonoBehaviour
     private SpaceShip _ship = default;
     private GameObject _target = null;
     private PU _pu;
-    private int _wayPoint = default;
+    private int _wayPoint;
+    private int debug = 0;
     [SerializeField] private int _dmg = default;
     [SerializeField] private float _slow = default;
     [SerializeField] private float _slowTime = default;
-    [SerializeField] private int _aim = default;
-
+    [SerializeField] private int _aim = default; //0 =droit, 1 = nous meme, 2 = prochain ship
 
     private void Awake()
+    {
+        debug++;
+        _pu = GetComponent<PU>();
+        Debug.Log(transform.parent + " this is the parent");
+        Debug.Log(debug + " this is the debug");
+    }
+
+    private void Start()
     {
         _pu = GetComponent<PU>();
         _ship = transform.parent.GetComponent<SpaceShip>();
         _wayPoint = _ship.GetWaypoint();
+        transform.SetParent(null, true);
+        Debug.Log(transform.parent + " this is the parent");
     }
 
     void Update()
