@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,13 +28,15 @@ public class GameManager : MonoBehaviour
 		// get les PUs sans utiliser SerializeField,
 		// les PUs dans l'array seront dans le même ordre
 		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
-        var loadedObjects = Resources.LoadAll("PUs/");
-        foreach (var loadedObject in loadedObjects)
-        {
+		var loadedObjects = Resources.LoadAll("PUs/");
+		foreach (var loadedObject in loadedObjects)
+		{
 			_arrPUs[_arrPUs.Length] = (loadedObject as GameObject);
-        }
+		}
 
-        foreach (Object pu in _arrPUs) {
+		//_arrPUs = Resources.LoadAll("PUs/", typeof(GameObject)).Cast<GameObject>().ToArray();
+
+		foreach (GameObject pu in _arrPUs) {
 			Debug.Log(pu);
 		}
 	}
@@ -115,7 +118,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	// méthode publique qui retourne le GameObject PU en fonction de l'index
-	public Object GetGameObjectPU(int index)
+	public GameObject GetGameObjectPU(int index)
 	{
 		if (index >= 0 && index < _arrPUs.Length) {
 			return _arrPUs[index];

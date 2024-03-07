@@ -16,8 +16,10 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
-		move();
-		UsePU();
+		if(!_spaceship.isFrozen()) {
+			move();
+			UsePU();
+		}
 	}
 
 	private void move()

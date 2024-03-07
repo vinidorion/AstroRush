@@ -380,8 +380,12 @@ MonoBehaviour:
   _accel: 1
   airbrake_power: 0
   max_hp: 0
+  _hp: 0
   weigth: 0
   agility: 0
+  _slower: 0
+  _maxBoost: 0
+  _currentPU: 0
 --- !u!65 &200272821
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5602,8 +5606,13 @@ MonoBehaviour:
   _accel: 1
   airbrake_power: 0
   max_hp: 0
+  _hp: 0
   weigth: 0
   agility: 0
+  _slower: 0
+  _maxBoost: 0
+  _boost: 0
+  _currentPU: 0
 --- !u!65 &502237045
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5940,8 +5949,13 @@ MonoBehaviour:
   _accel: 1
   airbrake_power: 0
   max_hp: 0
+  _hp: 0
   weigth: 0
   agility: 0
+  _slower: 0
+  _maxBoost: 0
+  _boost: 0
+  _currentPU: 0
 --- !u!65 &987917729
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6196,8 +6210,13 @@ MonoBehaviour:
   _accel: 1
   airbrake_power: 0
   max_hp: 0
+  _hp: 0
   weigth: 0
   agility: 0
+  _slower: 0
+  _maxBoost: 0
+  _boost: 0
+  _currentPU: 0
 --- !u!65 &1515247651
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6326,8 +6345,13 @@ MonoBehaviour:
   _accel: 1
   airbrake_power: 0
   max_hp: 0
+  _hp: 0
   weigth: 0
-  agility: 0
+  agility: 5
+  _slower: 0
+  _maxBoost: 0
+  _boost: 0
+  _currentPU: 0
 --- !u!65 &1587733996
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6434,10 +6458,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f05d0b2bcf3bcf4380c7a5eadba38e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PU: []
-  gunPosition: {x: 0, y: 0, z: 0}
-  canonPosition: {x: 0, y: 0, z: 0}
-  current_PU: -1
 --- !u!1 &1664649689
 GameObject:
   m_ObjectHideFlags: 0
@@ -6467,6 +6487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 295a325c6b1a1b44db10edc54ba193ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PUs: []
 --- !u!4 &1664649691
 Transform:
   m_ObjectHideFlags: 0
@@ -6690,8 +6711,13 @@ MonoBehaviour:
   _accel: 1
   airbrake_power: 0
   max_hp: 0
+  _hp: 0
   weigth: 0
   agility: 0
+  _slower: 0
+  _maxBoost: 0
+  _boost: 0
+  _currentPU: 0
 --- !u!65 &1784292767
 BoxCollider:
   m_ObjectHideFlags: 0
