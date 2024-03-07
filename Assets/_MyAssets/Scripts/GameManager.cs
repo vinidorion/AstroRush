@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 	private float _startTime = 0f; // Time.time when the race starts
 
 	[SerializeField] private GameObject[] PUs = default;
-	private Object[] _arrPUs;
+	private GameObject[] _arrPUs;
 
 	void Awake()
 	{
@@ -27,9 +27,13 @@ public class GameManager : MonoBehaviour
 		// get les PUs sans utiliser SerializeField,
 		// les PUs dans l'array seront dans le même ordre
 		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
-		_arrPUs = Resources.LoadAll("PUs/", typeof(GameObject));
+        var loadedObjects = Resources.LoadAll("PUs/");
+        foreach (var loadedObject in loadedObjects)
+        {
+			_arrPUs[_arrPUs.Length] = (loadedObject as GameObject);
+        }
 
-		foreach (Object pu in _arrPUs) {
+        foreach (Object pu in _arrPUs) {
 			Debug.Log(pu);
 		}
 	}
@@ -113,7 +117,7 @@ public class GameManager : MonoBehaviour
 	// méthode publique qui retourne le GameObject PU en fonction de l'index
 	public GameObject GetGameObjectPU(int index)
 	{
-		if (index >= 0 && < _arrPUs.Length) {
+		if (index >= 0 && index < _arrPUs.Length) {
 			return _arrPUs[index];
 		} else {
 			Debug.Log("PU INDEX OUT OF RANGE OF THE PU ARRAY");
