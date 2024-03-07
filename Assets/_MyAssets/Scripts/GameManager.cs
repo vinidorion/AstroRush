@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
 	// méthode publique qui retourne le GameObject PU en fonction de l'index
 	public GameObject GetGameObjectPU(int index)
 	{
-		if (index >= 0 && < _arrPUs.Length) {
+		if (index >= 0 && index < _arrPUs.Length) {
 			return _arrPUs[index];
 		} else {
 			Debug.Log("PU INDEX OUT OF RANGE OF THE PU ARRAY");
