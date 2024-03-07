@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	// méthode publique qui retourne le GameObject PU en fonction de l'index
-	public GameObject GetGameObjectPU(int index)
+	public Object GetGameObjectPU(int index)
 	{
 		if (index >= 0 && index < _arrPUs.Length) {
 			return _arrPUs[index];
