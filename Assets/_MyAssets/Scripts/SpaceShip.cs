@@ -17,7 +17,7 @@ public class SpaceShip : MonoBehaviour
 	private bool _isFrozen = false;
 	private Vector3 current_speed = Vector3.zero;
 	private int _currentPU = 0;
-	private Rigidbody _rb;
+	public Rigidbody _rb;
 
 	// pour trouver position
 	private int _lap = 0;
@@ -79,7 +79,6 @@ public class SpaceShip : MonoBehaviour
 	void Awake()
 	{
 		Instance = this; //associe l'instance de Player au script
-		_rb = GetComponent<Rigidbody>();
 	}
 
 	void Start()
@@ -111,10 +110,10 @@ public class SpaceShip : MonoBehaviour
 			PID();
 			//Debug.Log("found ground");
 			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
-			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime); // normale de la surface (inverse de la direction de la gravité)
+			//Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime); // normale de la surface (inverse de la direction de la gravité)
 		} else {
 			//Debug.Log("ground not found");
-			Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
+			//Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
 			_onGround = false;
 		}
 	}
@@ -139,12 +138,9 @@ public class SpaceShip : MonoBehaviour
 		if(_onGround) {
             _rb.AddForce(_rayDir * -_PIDForce, ForceMode.Acceleration); // ForceMode.Acceleration ignore la masse et applique directement l'accèleration
 			//Debug.Log(_rayDir);
-			//transform.up = -_rayDir;
         } else {
 			_rb.AddForce(_rayDir * GRAVITY, ForceMode.Acceleration);
 		}
-
-		
 	}
 
 	// trouve le waypoint du spaceship
@@ -192,7 +188,7 @@ public class SpaceShip : MonoBehaviour
 
 	public void Forward()
 	{
-		if (!_isFrozen/* && current_speed.x < max_speed*/)
+		if (!_isFrozen && current_speed.magnitude < max_speed)
 		{
 			//Vector3 force = new Vector3(-1 * acceleration, 0, 0);
 			_rb.AddForce(transform.forward * _accel);

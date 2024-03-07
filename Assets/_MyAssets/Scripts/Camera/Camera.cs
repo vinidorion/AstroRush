@@ -38,7 +38,7 @@ public class Camera : MonoBehaviour
 				FirstPerson();
 				break;
 			case CameraMode.ThirdPerson:
-				ThirdPerson();
+				//ThirdPerson();
 				break;
 			case CameraMode.Spectate:
 				Spectate();

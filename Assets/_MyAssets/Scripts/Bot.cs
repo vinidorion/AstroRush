@@ -14,6 +14,7 @@ public class Bot : MonoBehaviour
 
     private List<GameObject> waypoints = new List<GameObject>();
     private List<GameObject> optiWaypoints = new List<GameObject>();
+    private List<GameObject> listeBots = new List<GameObject>();
     private int passedtargets = 0;
     [SerializeField] private GameObject target;
     Vector3 DirectionRight;
@@ -54,18 +55,18 @@ public class Bot : MonoBehaviour
 
         float angle = Vector3.SignedAngle(transform.forward, direction, transform.up);
         Debug.Log(angle);
+
+        SpaceShip.Instance._rb.AddForce(transform.forward * 1);
         
-        if (angle > -(7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude) && angle < (7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude))
-        {
-            SpaceShip.Instance.Forward();
-        }
-        if (angle > (7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude))
+        //SpaceShip.Instance.Forward();
+
+        if (angle > (7 / gameObject.GetComponent<Rigidbody>().velocity.magnitude))
         {
             SpaceShip.Instance.AirBrake(false);
             transform.Rotate(0f, 100f * Time.deltaTime, 0f);
             DirectionRight = Quaternion.AngleAxis(100f * Time.deltaTime, transform.up) * DirectionRight;
         }
-        else if (angle < (-7 * gameObject.GetComponent<Rigidbody>().velocity.magnitude))
+        else if (angle < (-7 / gameObject.GetComponent<Rigidbody>().velocity.magnitude))
         {
             SpaceShip.Instance.AirBrake(true);
             transform.Rotate(0f, -100f * Time.deltaTime, 0f);
@@ -84,7 +85,13 @@ public class Bot : MonoBehaviour
 
         Ray ray = new Ray(transform.position, -transform.up);
         Physics.Raycast(ray, out RaycastHit hit, 1, _layersToHit, QueryTriggerInteraction.Ignore);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.Cross(hit.normal, DirectionRight), hit.normal),
+
+        if (hit.normal != Vector3.up)
+        {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(Vector3.Cross(hit.normal, DirectionRight), hit.normal),
             90 * Time.deltaTime);
+        }
+
+        
     }
 }
