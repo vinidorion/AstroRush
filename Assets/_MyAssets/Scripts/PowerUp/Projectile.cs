@@ -11,18 +11,18 @@ public class Projectile : MonoBehaviour
     private GameObject _target = null;
     private PU _pu;
     private int _wayPoint;
-    private int debug = 0;
     [SerializeField] private int _dmg = default;
     [SerializeField] private float _slow = default;
     [SerializeField] private float _slowTime = default;
     [SerializeField] private int _aim = default; //0 =droit, 1 = nous meme, 2 = prochain ship
+    private GameManager _gm;
+
+
 
     private void Awake()
     {
-        debug++;
         _pu = GetComponent<PU>();
-        Debug.Log(transform.parent + " this is the parent");
-        Debug.Log(debug + " this is the debug");
+        _gm = GameManager.Instance;
     }
 
     private void Start()
@@ -31,7 +31,7 @@ public class Projectile : MonoBehaviour
         _ship = transform.parent.GetComponent<SpaceShip>();
         _wayPoint = _ship.GetWaypoint();
         transform.SetParent(null, true);
-        Debug.Log(transform.parent + " this is the parent");
+        SetTarget();
     }
 
     void Update()
@@ -44,7 +44,7 @@ public class Projectile : MonoBehaviour
         Vector3 direction = Vector3.zero;
         if (_target == null)
         {
-            direction = Vector3.forward;
+            direction = transform.forward;
         }
         else
         {
@@ -87,7 +87,19 @@ public class Projectile : MonoBehaviour
         }
         if (_aim == 2)
         {
-            //_target = next spaceship
+            if (_ship.GetPosition() != 0)
+            {
+                _target = _gm.GetShipFormPosition(_ship.GetPosition() - 1).gameObject;
+            }
+            else
+            {
+                _target = _gm.GetShipFormPosition(_ship.GetPosition() + 1).gameObject;
+            }
         }
+    }
+
+    public void SetWaypoint(int waypoint)
+    {
+        _wayPoint = waypoint;
     }
 }

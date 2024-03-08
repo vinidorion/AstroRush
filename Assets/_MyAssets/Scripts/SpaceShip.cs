@@ -21,6 +21,7 @@ public class SpaceShip : MonoBehaviour
     [SerializeField] private int _currentPU = 0;
 	private Rigidbody _rb;
 	private GameManager _gm;
+	private int _position;
 
 	// pour trouver position
 	private int _lap = 0;
@@ -85,7 +86,6 @@ public class SpaceShip : MonoBehaviour
 
 	void Awake()
 	{
-		_gm = GameManager.Instance;
 		_rb = GetComponent<Rigidbody>();
 		_rb.angularDrag = 0.5f;
 		_layersToHit = 1 << LayerMask.NameToLayer("track");
@@ -94,6 +94,7 @@ public class SpaceShip : MonoBehaviour
 	void Start()
 	{
         _gm = GameManager.Instance;
+		_gm.AddShipToList(this);
     }
 
 	void Update()
@@ -171,7 +172,7 @@ public class SpaceShip : MonoBehaviour
 		_rb.AddForce((_dragForce * _slower), ForceMode.Acceleration);
 	}
 
-	private void LateralStability()
+    private void LateralStability()
 	{
 		float lateralSpeed = transform.InverseTransformDirection(_rb.velocity).x;
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
@@ -189,10 +190,12 @@ public class SpaceShip : MonoBehaviour
 
 	public void Forward()
 	{
-		_rb.AddForce(transform.forward * _accel /** _slower*/, ForceMode.Acceleration);
+		_rb.AddForce(transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
 	}
 
-	public void Turn(bool left)
+
+
+    public void Turn(bool left)
 	{
 		if (left) {
 			Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
@@ -206,7 +209,7 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
-	public void AirBrake(bool left)
+    public void AirBrake(bool left)
 	{
 		if (left)
 		{
@@ -222,15 +225,19 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
-	public void UsePU()
-	{
-		Debug.Log(_currentPU);
-		Instantiate(_gm.PUManager(_currentPU), transform.position + new Vector3(1, 0, 0), _gm.PUManager(_currentPU).transform.rotation);
+    public void UsePU()
+    {
+        if (!_isFrozen && _currentPU != -1)
+        {
+            Debug.Log(_currentPU);
+			Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + transform.forward, transform.rotation, transform);
+			//RemovePU();
+		}
 	}
 
-	void RemovePU()
+    void RemovePU()
 	{
-		_currentPU = 0;
+		_currentPU = -1;
     }
 
 	// méthode publique qui donne un item au spaceship
@@ -290,132 +297,50 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
-<<<<<<< Updated upstream
-=======
-	private void AirResistance()
+	public void AddLap()
 	{
-		//Vector3 force = new Vector3(-max_speed * (current_speed.x / max_speed), -max_speed * (current_speed.y / max_speed), -max_speed * (current_speed.z / max_speed))/2;
-		
-		_dragForce = _rb.velocity * COEF_DRAG;
-		_rb.AddForce((_dragForce * _slower), ForceMode.Acceleration);
-	}
+        _lap++; // et changer lap dans le hud
 
-	public void Forward()
-	{
-		if (!_isFrozen /*&& current_speed.y < max_speed*/)
-		{
-			_rb.AddForce(transform.forward * _accel * _slower, ForceMode.Acceleration);
-		}
-	}
+        // check ici si _lap atteint le nombre de lap total, si oui c'est la fin du jeu
 
-	public void Turn(bool left)
-	{
-		if (!_isFrozen)
-		{
-			if (left) {
-				Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
-				//float rotation = agility - current_speed.y;
-				_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
-				//_rb.angularVelocity = new Vector3(0f, 6f, 0f);
-			} else {
-				Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
-                _rb.AddTorque(transform.up * /*_rb.angularDrag **/ agility, ForceMode.Acceleration);
-                //float rotation = (agility - current_speed.y) * -1;
-            }
-		}
-	}
-
-	public void AirBrake(bool left)
-	{
-		if (!_isFrozen)
-		{
-			if (left)
-			{
-				float rotation = agility - current_speed.y + airbrake_power;
-				Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
-				_rb.AddForce(force);
-			}
-			if (!left)
-			{
-				float rotation = (agility - current_speed.y + airbrake_power) * -1;
-				Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
-				_rb.AddForce(force);
-			}
-		}
-	}
-
-	public void UsePU()
-	{
-		if (!_isFrozen)
-		{
-			Debug.Log(_currentPU);
-			Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + new Vector3(1, 0, 0), _gm.PUManager(_currentPU).transform.rotation, transform);
-		}
-	}
-
-	void RemovePU()
-	{
-		_currentPU = 0;
+        _listLapTime.Add(Time.time);
+        if (_listLapTime.Count == 1)
+        {
+            InGameHud.Instance.TimeComp(_listLapTime[0] - GameManager.Instance.GetStartTime());
+        }
+        else
+        {
+            InGameHud.Instance.TimeComp(_listLapTime[_listLapTime.Count - 1] - _listLapTime[_listLapTime.Count - 2]);
+        }
     }
 
-	// méthode publique qui donne un item au spaceship
-	public void GivePU()
-	{
-		// random ici pour choisir le PU
-		// plus on est dernier, meilleur sont nos PU, vice versa
-
-		_currentPU = 1;
-
-	}
-
-	public void GiveHP()
-	{
-		// give HP au spaceship, utilisé dans la classe PitStop
-		// mettre une petite valeur car OnTriggerStay() dans PitStop est called
-		// sur le physic timer, au chaque 0.02s
-		Debug.Log("RECEIVED HP");
-	}
-
->>>>>>> Stashed changes
 	// méthode publique qui retourne le nombre de lap du spaceship
-	public int GetLap()
-	{
-		return _lap;
-	}
+	public int GetLap() { return _lap; }
 
 	// méthode publique qui retourne l'index du waypoint actuel du spaceship
-	public int GetWaypoint()
-	{
-		return _waypoint;
-	}
+	public int GetWaypoint() { return _waypoint; }
+
+	public void SetWaypoint(int point) { _waypoint = point; }
+
+	public void SetPosition(int pos) { _position = pos; }
+
+	public int GetPosition() { return _position;}
 
 	// cette valeur représente la "position" du spaceship
 	// plus haute = premier
 	// plus basse = dernier
 	// faut juste sort en ordre décroissant pour trouver l'ordre des spaceships
 	// la multiplication par 1000 ici implique qu'on ne peut avoir que 1000 waypoints max
-	public int GetPosValue()
-	{
-		return (_lap * 1000) + _waypoint;
-	}
+	public int GetPosValue() { return (_lap * 1000) + _waypoint; }
 
 	// temporaire
-	public Vector3 GetVecGrav()
-	{
-		return _rayDir;
-	}
+	public Vector3 GetVecGrav() { return _rayDir; }
 
 	// méthode publique qui permet de freeze/unfreeze le spaceship
-	public void Freeze(bool isFrozen)
-	{
-		_isFrozen = isFrozen;
-	}
+	public void Freeze(bool isFrozen) { _isFrozen = isFrozen; }
 
 	// méthode publique pour savoir si le spaceship est frozen
-	public bool isFrozen()
-	{
-		return _isFrozen;
-	}
+	public bool isFrozen() { return _isFrozen; }
 
 	// méthode publique qui permet de ralentir le spaceship (par les PU)
 	public void Slow(float slow, float slowTime)

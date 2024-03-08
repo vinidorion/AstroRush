@@ -78,7 +78,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 152490, guid: e3212aa3cff9c9745bd1a8f4def6ad1c, type: 3}
   m_PrefabInstance: {fileID: 1400835273673842900}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-6818207923139215036
+--- !u!114 &5685200502313067365
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,8 +87,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1400835273673732990}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca02cf63635c87f45be7ab8e1a7844b6, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b01c2eae46b931428cfdd12a3ec4cbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 10
-  _lifeTime: 3
+  _lifeTime: 10
+  PUtype: 2
+--- !u!114 &7112887204163089439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400835273673732990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8763abfae818dec439a84747eaafbf42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 1
+  _acceleration: 20
+  _dmg: 10
+  _slow: 10
+  _slowTime: 10
+  _aim: 0
