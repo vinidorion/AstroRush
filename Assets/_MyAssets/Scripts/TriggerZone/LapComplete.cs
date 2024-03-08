@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class LapComplete : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	void Awake()
+	{
+		GetComponent<MeshRenderer>().enabled = false;
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	void OnTriggerEnter(Collider other)
+	{
+		SpaceShip spaceship = other.GetComponent<SpaceShip>();
+
+		if (spaceship != null) {
+			// check if le spaceship a fait au moins 3/4 des waypoints
+			// utiliser méthode qui _lap++ sur le spaceship
+		}
+	}
 }
