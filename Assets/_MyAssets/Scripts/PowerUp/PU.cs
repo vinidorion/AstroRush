@@ -11,7 +11,7 @@ public class PU : MonoBehaviour
 
     public float GetTimer() { return _timer; }
 
-    private void Awake()
+    void Awake()
     {
         _ship = transform.parent.GetComponent<SpaceShip>();
     }
@@ -20,7 +20,7 @@ public class PU : MonoBehaviour
     {
         if (PUtype == 0)
         {
-            _ship.SetCurrentLife(_ship.GetCurrentLife() + 10);
+            _ship.SetCurrentLife(_ship.GetHP() + 10);
         }
         else if (PUtype == 1)
         {
@@ -28,7 +28,9 @@ public class PU : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    // FixedUpdate() est called à intervalle régulière (50x par seconde)
+    // multiplier par Time.deltaTime se fait seulement dans Update()
+    void Update() 
     {
         Timer();
     }

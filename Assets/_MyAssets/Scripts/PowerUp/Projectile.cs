@@ -14,10 +14,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private int _dmg = default;
     [SerializeField] private float _slow = default;
     [SerializeField] private float _slowTime = default;
-    [SerializeField] private int _aim = default; //0 =droit, 1 = nous meme, 2 = prochain ship
+    [SerializeField] private int _aim = default; //0 = droit, 1 = nous meme, 2 = prochain ship
     private GameManager _gm;
-
-
 
     private void Awake()
     {
@@ -69,7 +67,7 @@ public class Projectile : MonoBehaviour
         SpaceShip _shipTouche = collision.gameObject.GetComponent<SpaceShip>();
         if (_shipTouche != null) 
         { 
-            _shipTouche.SetCurrentLife(_shipTouche.GetCurrentLife() - _dmg);
+            _shipTouche.SetCurrentLife(_shipTouche.GetHP() - _dmg);
             _shipTouche.Slow(_slow, _slowTime);
         }
         Destroy(transform.parent.gameObject);
@@ -89,11 +87,11 @@ public class Projectile : MonoBehaviour
         {
             if (_ship.GetPosition() != 0)
             {
-                _target = _gm.GetShipFormPosition(_ship.GetPosition() - 1).gameObject;
+                _target = PosManager.Instance.GetShipFromPos(_ship.GetPosition() - 1).gameObject;
             }
             else
             {
-                _target = _gm.GetShipFormPosition(_ship.GetPosition() + 1).gameObject;
+                _target = PosManager.Instance.GetShipFromPos(_ship.GetPosition() + 1).gameObject;
             }
         }
     }

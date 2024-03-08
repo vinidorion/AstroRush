@@ -15,9 +15,9 @@ public class GameManager : MonoBehaviour
 	private const float INTRO_TIME = 1f;
 	private float _startTime = 0f; // Time.time when the race starts
 
-	private List<GameObject> _arrPUs = new List<GameObject>();
+	private GameObject[] _arrPUs;
 
-	private List<SpaceShip> _position = new List<SpaceShip>();
+	// private List<SpaceShip> _position = new List<SpaceShip>(); -- voir la classe PosManager
 
 	void Awake()
 	{
@@ -26,22 +26,23 @@ public class GameManager : MonoBehaviour
 		} else {
 			Destroy(this.gameObject);
 		}
+
+		// get les PUs sans utiliser SerializeField,
+		// les PUs dans l'array seront dans le même ordre
+		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
+		_arrPUs = Resources.LoadAll("PUs/", typeof(GameObject)).Cast<GameObject>().ToArray();
+
+		// print la liste de PU pour debug
+		foreach (GameObject pu in _arrPUs) {
+			Debug.Log(pu);
+		}
 	}
 
 	void Start()
 	{
 		Camera.Instance.SetCameraMode(CameraMode.Intro);
 		StartCoroutine(IntroCoroutine());
-
-		// get les PUs sans utiliser SerializeField,
-		// les PUs dans l'array seront dans le même ordre
-		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
-		Object[] loadedObjects = Resources.LoadAll("PUs");
-        foreach (Object Object in loadedObjects)
-        {
-            _arrPUs.Add(Object as GameObject);
-        }
-    }
+	}
 
 	void Update()
 	{
@@ -56,9 +57,10 @@ public class GameManager : MonoBehaviour
 		} else {
 			// game
 		}
-		OrderPosition();
+		//OrderPosition();
 	}
 
+	/* -- voir la classe PosManager
 	private void OrderPosition()
 	{
 		for (int i = 1; i < _position.Count; i++)
@@ -70,14 +72,15 @@ public class GameManager : MonoBehaviour
 				_position[i - 1] = tmp;
 				_position[i - 1].SetPosition(i - 1);
 				_position[i].SetPosition(i);
-            }
+			}
 		}
-	}
+	} */
 
+	/* -- voir la classe PosManager
 	public SpaceShip GetShipFormPosition(int pos)
 	{
 		return _position[pos];
-	}
+	} */
 
 	IEnumerator IntroCoroutine()
 	{
@@ -129,15 +132,10 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	public GameObject PUManager(int PU)
-	{
-		return _arrPUs[PU];
-	}
-
 	// méthode publique qui retourne le GameObject PU en fonction de l'index
 	public GameObject GetGameObjectPU(int index)
 	{
-		if (index >= 0 && index < _arrPUs.Count) {
+		if (index >= 0 && index < _arrPUs.Length) {
 			return _arrPUs[index];
 		} else {
 			Debug.Log("PU INDEX OUT OF RANGE OF THE PU ARRAY");
@@ -149,11 +147,12 @@ public class GameManager : MonoBehaviour
 	// sera utile pour trouver un PU random
 	public int GetNumPUs()
 	{
-		return _arrPUs.Count;
+		return _arrPUs.Length;
 	}
 
+	/* -- voir la classe PosManager
 	public void AddShipToList(SpaceShip spaceship)
 	{
 		_position.Add(spaceship);
-	}
+	} */
 }

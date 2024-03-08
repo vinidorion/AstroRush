@@ -4,50 +4,53 @@ using UnityEngine;
 
 public class WayPointFinder : MonoBehaviour
 {
-    private int wayPoint;
+	private int _wayPoint;
 
-    // Update is called once per frame
-    void Update()
-    {
-        Waypoints();
-        SendInfo();
-    }
+	void Update()
+	{
+		SendInfo();
+	}
 
-    private void Waypoints()
-    {
-        Vector3 waypointPos = WaypointManager.Instance.GetWaypointPos(wayPoint);           // position du current waypoint
-        Vector3 nextwaypointPos = WaypointManager.Instance.GetWaypointPos(wayPoint + 1);   // position du next waypoint
+	void FixedUpdate()
+	{
+		Waypoints(); // expensive, ne pas mettre dans Update()
+	}
 
-        //Debug.Log("waypointPos: " + waypointPos);
-        //Debug.Log("nextwaypointPos: " + nextwaypointPos);
+	private void Waypoints()
+	{
+		Vector3 waypointPos = WaypointManager.Instance.GetWaypointPos(_wayPoint);			// position du current waypoint
+		Vector3 nextwaypointPos = WaypointManager.Instance.GetWaypointPos(_wayPoint + 1);	// position du next waypoint
 
-        // pour visualiser à quel waypoint le spaceship est rendu
-        Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
-        Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
+		//Debug.Log("waypointPos: " + waypointPos);
+		//Debug.Log("nextwaypointPos: " + nextwaypointPos);
 
-        // sqrt inutile ici, on compare deux distances
-        float distCurrWaypoint = (transform.position - waypointPos).sqrMagnitude;
-        float distNextWaypoint = (transform.position - nextwaypointPos).sqrMagnitude;
+		// pour visualiser Ã  quel waypoint le spaceship est rendu
+		Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
+		Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
 
-        if (distNextWaypoint < distCurrWaypoint)
-        {
-            wayPoint++;
-            if (WaypointManager.Instance.IsFinalWaypoint(wayPoint))
-            {
-                wayPoint = 0;
-            }
-        }
-    }
+		// sqrt inutile ici, on compare deux distances
+		float distCurrWaypoint = (transform.position - waypointPos).sqrMagnitude;
+		float distNextWaypoint = (transform.position - nextwaypointPos).sqrMagnitude;
 
-    private void SendInfo()
-    {
-        if (gameObject.GetComponent<SpaceShip>() == null)
-        {
-            gameObject.GetComponent<Projectile>().SetWaypoint(wayPoint);
-        }
-        else
-        {
-            gameObject.GetComponent<SpaceShip>().SetWaypoint(wayPoint);
-        }
-    }
+		// si la distance entre le spaceship et le prochain waypoint
+		// et plus petite que
+		// la distance entre le spaceship et son waypoint actuel
+		if (distNextWaypoint < distCurrWaypoint) {
+			_wayPoint++;
+			if (WaypointManager.Instance.IsFinalWaypoint(_wayPoint)) {
+				_wayPoint = 0;
+			}
+		}
+	}
+
+	private void SendInfo()
+	{
+		if (GetComponent<SpaceShip>() == null) {
+			GetComponent<Projectile>().SetWaypoint(_wayPoint);
+		} else if (GetComponent<Projectile>() == null) {
+			GetComponent<SpaceShip>().SetWaypoint(_wayPoint);
+		} else {
+			Debug.Log(gameObject + " HAS WAYPOINTFINDER BUT ISNT A SPACESHIP NOR A PROJECTILE");
+		}
+	}
 }

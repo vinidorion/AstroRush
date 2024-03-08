@@ -9,38 +9,33 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float _accel = default;
 	[SerializeField] private float airbrake_power = default;
 	[SerializeField] private int max_hp = default;
-    [SerializeField] private int _hp = default;
-    [SerializeField] private float weigth = default;
+	[SerializeField] private int _hp = default;
+	[SerializeField] private float weigth = default;
 	[SerializeField] private float agility = default;
 	[SerializeField] private float _slower = default;
-    [SerializeField] private float _maxBoost = default;
-    [SerializeField] private float _boost = default;
+	[SerializeField] private float _maxBoost = default;
+	[SerializeField] private float _boost = default;
 
 	private bool _isFrozen = false;
 	private Vector3 current_speed = Vector3.zero;
-    [SerializeField] private int _currentPU = 0;
+	[SerializeField] private int _currentPU = 0;
 	private Rigidbody _rb;
 	private GameManager _gm;
-	private int _position;
-
-	// pour trouver position
+	
+	// WAYPOINTS / POSITIONS
 	private int _lap = 0;
 	private int _waypoint = 0;
+	private int _position;
 
 	// le Time.time quand le lap est complété
-	// faire _listLapTime[0] - _startTime pour le temps du premier lap
-	// faire _listLapTime[n] - _listLapTime[n - 1] pour le temps de lap autre que le premier
-	// faire _listLapTime[_listLapTime.Count - 1] - _startTime pour le temps total (quand le dernier lap est complété)
+	// premier lap :		_listLapTime[0] - _startTime
+	// autre que premier : 	_listLapTime[n] - _listLapTime[n - 1]
+	// temps total :		_listLapTime[_listLapTime.Count - 1] - _startTime
 	private List<float> _listLapTime = new List<float>(); 
 
+	// PHYSICS
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.2f;
-
-	public int GetLife() { return max_hp; }
-	public int GetCurrentLife() { return _hp; }
-	public void SetCurrentLife(int life) { _hp = life; if (_hp > max_hp) _hp = max_hp; }
-	public float GetBoost() { return _boost; }
-	public void SetBoost(float boost) { _boost = boost; if (_boost > _maxBoost) _boost = _maxBoost; } 
 
 	/********************************************
 					SYSTÈME PID
@@ -93,15 +88,14 @@ public class SpaceShip : MonoBehaviour
 
 	void Start()
 	{
-        _gm = GameManager.Instance;
-		_gm.AddShipToList(this);
-    }
+		_gm = GameManager.Instance;
+		//_gm.AddShipToList(this); -- voir la classe PosManager
+	}
 
 	void Update()
 	{
 		current_speed = _rb.velocity;
 		//Debug.Log(_rb.velocity.magnitude);
-
 	}
 
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
@@ -115,11 +109,12 @@ public class SpaceShip : MonoBehaviour
 			// PID/gravité
 			CheckForGround();
 			ApplyVerticalForce();
-
-			// waypoints
-			Waypoints();
 		}
 	}
+
+	/********************************************
+					PHYSICS
+	*********************************************/
 
 	// méthode privée qui trouve la direction de la gravité
 	private void CheckForGround()
@@ -172,7 +167,8 @@ public class SpaceShip : MonoBehaviour
 		_rb.AddForce((_dragForce * _slower), ForceMode.Acceleration);
 	}
 
-    private void LateralStability()
+	// force appliquée latéralement pour éviter que le spaceship glisse sur le côté
+	private void LateralStability()
 	{
 		float lateralSpeed = transform.InverseTransformDirection(_rb.velocity).x;
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
@@ -185,6 +181,64 @@ public class SpaceShip : MonoBehaviour
 	}
 
 	/********************************************
+				POSITIONS/WAYPOINTS
+	*********************************************/
+
+	// faire la classe qui utilise cette méthode quand OnTriggerEnter()
+	// aussi vérifier que le spaceship a complété la majorité des waypoints
+	public void LapCompleted()
+	{
+		_lap++; // et changer lap dans le hud
+
+		// check ici si _lap atteint le nombre de lap total, si oui c'est la fin du jeu
+
+		_listLapTime.Add(Time.time);
+		if (_listLapTime.Count == 1) {
+			InGameHud.Instance.TimeComp(_listLapTime[0] - GameManager.Instance.GetStartTime());
+		} else {
+			InGameHud.Instance.TimeComp(_listLapTime[_listLapTime.Count - 1] - _listLapTime[_listLapTime.Count - 2]);
+		}
+	}
+
+	// méthode publique qui retourne le nombre de lap du spaceship
+	public int GetLap()
+	{
+		return _lap;
+	}
+
+	// méthode publique qui retourne l'index du waypoint actuel du spaceship
+	public int GetWaypoint()
+	{
+		return _waypoint;
+	}
+
+	// méthode public pour manuellement set le waypoint
+	public void SetWaypoint(int point)
+	{
+		_waypoint = point;
+	}
+
+	public void SetPosition(int pos)
+	{
+		_position = pos;
+	}
+
+	public int GetPosition()
+	{
+		return _position;
+	}
+
+	// cette valeur représente la "position" du spaceship
+	// plus haute = premier
+	// plus basse = dernier
+	// faut juste sort en ordre décroissant pour trouver l'ordre des spaceships (le sort se fait dans la classe PosManager)
+	// la multiplication par 1000 ici implique qu'on ne peut avoir que 1000 waypoints max
+	public int GetPosValue()
+	{
+		return (_lap * 1000) + _waypoint;
+	}
+
+	/********************************************
 					CONTROLS
 	*********************************************/
 
@@ -193,9 +247,7 @@ public class SpaceShip : MonoBehaviour
 		_rb.AddForce(transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
 	}
 
-
-
-    public void Turn(bool left)
+	public void Turn(bool left)
 	{
 		if (left) {
 			Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
@@ -209,7 +261,7 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
-    public void AirBrake(bool left)
+	public void AirBrake(bool left)
 	{
 		if (left)
 		{
@@ -225,20 +277,20 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
-    public void UsePU()
-    {
-        if (!_isFrozen && _currentPU != -1)
-        {
-            Debug.Log(_currentPU);
+	public void UsePU()
+	{
+		if (!_isFrozen && _currentPU != -1)
+		{
+			Debug.Log(_currentPU);
 			Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + transform.forward, transform.rotation, transform);
 			//RemovePU();
 		}
 	}
 
-    void RemovePU()
+	void RemovePU()
 	{
 		_currentPU = -1;
-    }
+	}
 
 	// méthode publique qui donne un item au spaceship
 	public void GivePU()
@@ -247,7 +299,25 @@ public class SpaceShip : MonoBehaviour
 		// plus on est dernier, meilleur sont nos PU, vice versa
 
 		_currentPU = 1;
+	}
 
+	public int GetMaxHP()
+	{
+		return max_hp;
+	}
+
+	public int GetHP()
+	{
+		return _hp;
+	}
+
+	public void SetCurrentLife(int life)
+	{
+		_hp = life;
+
+		if (_hp > max_hp) {
+			_hp = max_hp;
+		}
 	}
 
 	public void GiveHP()
@@ -255,98 +325,46 @@ public class SpaceShip : MonoBehaviour
 		// give HP au spaceship, utilisé dans la classe PitStop
 		// mettre une petite valeur car OnTriggerStay() dans PitStop est called
 		// sur le physic timer, au chaque 0.02s
+		// ou bien mettre un cooldown
 		Debug.Log("RECEIVED HP");
 	}
 
-	/********************************************
-				POSITIONS/WAYPOINTS
-	*********************************************/
-
-	// trouve le waypoint du spaceship
-	private void Waypoints()
+	public float GetBoost()
 	{
-		Vector3 waypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint);			// position du current waypoint
-		Vector3 nextwaypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint + 1);	// position du next waypoint
-
-		//Debug.Log("waypointPos: " + waypointPos);
-		//Debug.Log("nextwaypointPos: " + nextwaypointPos);
-
-		// pour visualiser à quel waypoint le spaceship est rendu
-		Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
-		Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
-
-		// sqrt inutile ici, on compare deux distances
-		float distCurrWaypoint = (transform.position - waypointPos).sqrMagnitude;
-		float distNextWaypoint = (transform.position - nextwaypointPos).sqrMagnitude;
-
-		if(distNextWaypoint < distCurrWaypoint) {
-			_waypoint++;
-			if(WaypointManager.Instance.IsFinalWaypoint(_waypoint)) {
-				_waypoint = 0;
-				_lap++; // et changer lap dans le hud
-
-				// check ici si _lap atteint le nombre de lap total, si oui c'est la fin du jeu
-
-				_listLapTime.Add(Time.time);
-				if(_listLapTime.Count == 1) {
-					InGameHud.Instance.TimeComp(_listLapTime[0] - GameManager.Instance.GetStartTime());
-				} else {
-					InGameHud.Instance.TimeComp(_listLapTime[_listLapTime.Count - 1] - _listLapTime[_listLapTime.Count - 2]);
-				}
-			}
-		}
+		return _boost;
 	}
 
-	public void AddLap()
+	public void SetBoost(float boost)
 	{
-        _lap++; // et changer lap dans le hud
-
-        // check ici si _lap atteint le nombre de lap total, si oui c'est la fin du jeu
-
-        _listLapTime.Add(Time.time);
-        if (_listLapTime.Count == 1)
-        {
-            InGameHud.Instance.TimeComp(_listLapTime[0] - GameManager.Instance.GetStartTime());
-        }
-        else
-        {
-            InGameHud.Instance.TimeComp(_listLapTime[_listLapTime.Count - 1] - _listLapTime[_listLapTime.Count - 2]);
-        }
-    }
-
-	// méthode publique qui retourne le nombre de lap du spaceship
-	public int GetLap() { return _lap; }
-
-	// méthode publique qui retourne l'index du waypoint actuel du spaceship
-	public int GetWaypoint() { return _waypoint; }
-
-	public void SetWaypoint(int point) { _waypoint = point; }
-
-	public void SetPosition(int pos) { _position = pos; }
-
-	public int GetPosition() { return _position;}
-
-	// cette valeur représente la "position" du spaceship
-	// plus haute = premier
-	// plus basse = dernier
-	// faut juste sort en ordre décroissant pour trouver l'ordre des spaceships
-	// la multiplication par 1000 ici implique qu'on ne peut avoir que 1000 waypoints max
-	public int GetPosValue() { return (_lap * 1000) + _waypoint; }
-
-	// temporaire
-	public Vector3 GetVecGrav() { return _rayDir; }
+		_boost = boost;
+		if (_boost > _maxBoost) {
+			_boost = _maxBoost;
+		}
+	} 
 
 	// méthode publique qui permet de freeze/unfreeze le spaceship
-	public void Freeze(bool isFrozen) { _isFrozen = isFrozen; }
+	public void Freeze(bool isFrozen)
+	{
+		_isFrozen = isFrozen;
+	}
 
 	// méthode publique pour savoir si le spaceship est frozen
-	public bool isFrozen() { return _isFrozen; }
+	public bool isFrozen()
+	{
+		return _isFrozen;
+	}
+
+	// temporaire
+	public Vector3 GetVecGrav()
+	{
+		return _rayDir;
+	}
 
 	// méthode publique qui permet de ralentir le spaceship (par les PU)
 	public void Slow(float slow, float slowTime)
 	{
-        _slower = slow;
-        StartCoroutine(SlowTime(slowTime));
+		_slower = slow;
+		StartCoroutine(SlowTime(slowTime));
 	}
 
 	IEnumerator SlowTime(float slowTime) 
