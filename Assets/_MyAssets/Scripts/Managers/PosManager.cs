@@ -51,13 +51,14 @@ public class PosManager : MonoBehaviour
 	}
 
 	// pour debug
-	// print la liste _listSpaceship
+	// print la liste _listSpaceship en un string
 	private void PrintList()
 	{
-		Debug.Log("====================================");
+		string str = string.Empty;
 		foreach (SpaceShip spaceship in _listSpaceship) {
-			Debug.Log(spaceship.GetPosition() + " : " + spaceship);
+			str += spaceship.GetPosition() + " : " + spaceship + "\n";
 		}
+		Debug.Log(str);
 	}
 
 	// méthode publique qui obtient le spaceship associé à la position
