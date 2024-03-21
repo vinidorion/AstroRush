@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpaceShip : MonoBehaviour
 {
+	public static SpaceShip Instance;
+
 	[Header("Stats")]
 	[SerializeField] private float max_speed = default;
 	[SerializeField] private float _accel = default;
@@ -90,6 +92,7 @@ public class SpaceShip : MonoBehaviour
 	{
 		_gm = GameManager.Instance;
 		//_gm.AddShipToList(this); -- voir la classe PosManager
+		Instance = this;
 	}
 
 	void Update()
@@ -173,10 +176,10 @@ public class SpaceShip : MonoBehaviour
 		float lateralSpeed = transform.InverseTransformDirection(_rb.velocity).x;
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
 
-		if(lateralSpeed > 0.8f) {
-			_rb.AddForce(Vector3.left * 5f);
-		} else if(lateralSpeed < -0.8f)  {
-			_rb.AddForce(Vector3.right * 5f);
+		if(lateralSpeed > 1f) {
+			_rb.AddForce(-transform.right * 5f * lateralSpeed);
+		} else if(lateralSpeed < -1f)  {
+			_rb.AddForce(transform.right * 5f * -lateralSpeed);
 		}
 	}
 
