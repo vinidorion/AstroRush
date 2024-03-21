@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private float _speed = default;
     [SerializeField] private float _acceleration = default;
+
     private SpaceShip _ship = default;
     private GameObject _target = null;
     private PU _pu;
@@ -14,7 +17,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private int _dmg = default;
     [SerializeField] private float _slow = default;
     [SerializeField] private float _slowTime = default;
-    [SerializeField] private int _aim = default; //0 = droit, 1 = nous meme, 2 = prochain ship
+    [SerializeField] private int _aim = default; //0 = droit, 1 = nous meme, 2 = prochain ship, 3 = premier joueur
+    [SerializeField] private GameObject _explosion = default;
     private GameManager _gm;
 
     private void Awake()
@@ -35,6 +39,7 @@ public class Projectile : MonoBehaviour
     void Update()
     {
         Move();
+        Debug.Log(_target.name);
     }
 
     private void Move()
@@ -43,8 +48,10 @@ public class Projectile : MonoBehaviour
         if (_target == null)
         {
             direction = transform.forward;
+            transform.rotation = Quaternion.LookRotation(direction);
+            transform.Translate(Vector3.forward * Time.deltaTime * _speed * (_pu.GetTimer() * _acceleration + 1));
         }
-        else
+        else if (_target != _ship.gameObject)
         {
             Vector3 targetPosition = _target.transform.position;
             Vector3 nextWaypointPosition = WaypointManager.Instance.GetWaypointPos(_wayPoint + 1);
@@ -57,9 +64,17 @@ public class Projectile : MonoBehaviour
             {
                 direction = nextWaypointPosition - position;
             }
+            transform.rotation = Quaternion.LookRotation(direction);
+            transform.Translate(Vector3.forward * Time.deltaTime * _speed * (_pu.GetTimer() * _acceleration + 1));
         }
-        transform.rotation = Quaternion.LookRotation(direction);
-        transform.Translate(Vector3.forward * Time.deltaTime * _speed * (_pu.GetTimer() * _acceleration + 1));
+        else
+        {
+            Vector3 targetPosition = _target.transform.position + Vector3.up/4;
+            Vector3 nextWaypointPosition = Vector3.left * 10000000;
+            Vector3 position = transform.position;direction = targetPosition - position;
+            transform.rotation = Quaternion.LookRotation(direction);
+            transform.Translate(Vector3.forward * Time.deltaTime * _speed * (_pu.GetTimer() * _acceleration + 1) * (targetPosition - position).magnitude);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -69,8 +84,9 @@ public class Projectile : MonoBehaviour
         { 
             _shipTouche.SetCurrentLife(_shipTouche.GetHP() - _dmg);
             _shipTouche.Slow(_slow, _slowTime);
+            Instantiate(_explosion, transform.position, transform.rotation);
         }
-        Destroy(transform.parent.gameObject);
+        if (_shipTouche == _target) Destroy(transform.parent.gameObject);
     }
 
     private void SetTarget()
@@ -88,6 +104,18 @@ public class Projectile : MonoBehaviour
             if (_ship.GetPosition() != 0)
             {
                 _target = PosManager.Instance.GetShipFromPos(_ship.GetPosition() - 1).gameObject;
+            }
+            else
+            {
+                _target = PosManager.Instance.GetShipFromPos(_ship.GetPosition() + 1).gameObject;
+            }
+        }
+        if (_aim == 3)
+        {
+            if (_ship.GetPosition() != 0)
+            {
+                _target = PosManager.Instance.GetShipFromPos(0).gameObject;
+                Debug.Log(_ship.GetPosition() - 1);
             }
             else
             {

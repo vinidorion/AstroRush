@@ -32,10 +32,10 @@ public class GameManager : MonoBehaviour
 		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
 		_arrPUs = Resources.LoadAll("PUs/", typeof(GameObject)).Cast<GameObject>().ToArray();
 
-		// print la liste de PU pour debug
-		foreach (GameObject pu in _arrPUs) {
-			Debug.Log(pu);
-		}
+		//// print la liste de PU pour debug
+		//foreach (GameObject pu in _arrPUs) {
+		//	Debug.Log(pu);
+		//}
 	}
 
 	void Start()

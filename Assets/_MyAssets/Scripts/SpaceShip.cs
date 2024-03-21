@@ -35,7 +35,7 @@ public class SpaceShip : MonoBehaviour
 
 	// PHYSICS
 	private Vector3 _dragForce;
-	private const float COEF_DRAG = -0.2f;
+	private const float COEF_DRAG = -0.3f;
 
 	/********************************************
 					SYSTÈME PID
