@@ -18,6 +18,7 @@ public class PU : MonoBehaviour
 
     void Start()
     {
+        Physics.IgnoreCollision(_ship.GetComponent<Collider>(), GetComponent<Collider>(), true);
         if (PUtype == 0)
         {
             _ship.SetCurrentLife(_ship.GetHP() + 10);

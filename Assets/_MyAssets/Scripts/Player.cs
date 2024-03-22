@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
 		inputx = Input.GetAxis("Horizontal");
 		inputz = Input.GetAxis("Vertical");
 		if (inputz > 0) _spaceship.Forward();
+		if (inputz < 0) _spaceship.backward();
 		if (inputx > 0) _spaceship.Turn(false);
 		if (inputx < 0) _spaceship.Turn(true);
 		if (Input.GetKey(KeyCode.Mouse0)) _spaceship.AirBrake(true);

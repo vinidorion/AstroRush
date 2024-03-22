@@ -117,7 +117,7 @@ MonoBehaviour:
   _dmg: 10
   _slow: 10
   _slowTime: 10
-  _aim: 2
+  _aim: 3
   _explosion: {fileID: 8946126991218605337, guid: 839a800d0e07af84f94123c19d620b7d, type: 3}
 --- !u!114 &8114299649088863996
 MonoBehaviour:

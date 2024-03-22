@@ -440,7 +440,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 200272818}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -503,7 +503,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 200272818}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 25.74, y: 0.57, z: -0.04}
+  m_LocalPosition: {x: 19.7, y: 0.57, z: -0.04}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.45896003}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -522,6 +522,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a775d77fd9b7e40ae2979ac378e856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listeWaypoint: {fileID: 0}
+  listeOptiWaypoint: {fileID: 0}
+  listeBots: {fileID: 0}
+  listeTargets: {fileID: 0}
+  _layersToHit:
+    serializedVersion: 2
+    m_Bits: 0
+  difficulty: 1
 --- !u!114 &200272826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5762,6 +5770,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a775d77fd9b7e40ae2979ac378e856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listeWaypoint: {fileID: 0}
+  listeOptiWaypoint: {fileID: 0}
+  listeBots: {fileID: 0}
+  listeTargets: {fileID: 0}
+  _layersToHit:
+    serializedVersion: 2
+    m_Bits: 0
+  difficulty: 1
 --- !u!114 &502237050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6099,7 +6115,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987917726}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 8.16, y: 1.38, z: 0.3}
+  m_LocalPosition: {x: 7, y: 1.38, z: 0.3}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6118,6 +6134,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a775d77fd9b7e40ae2979ac378e856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listeWaypoint: {fileID: 0}
+  listeOptiWaypoint: {fileID: 0}
+  listeBots: {fileID: 0}
+  listeTargets: {fileID: 0}
+  _layersToHit:
+    serializedVersion: 2
+    m_Bits: 0
+  difficulty: 1
 --- !u!114 &987917734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6392,6 +6416,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a775d77fd9b7e40ae2979ac378e856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listeWaypoint: {fileID: 0}
+  listeOptiWaypoint: {fileID: 0}
+  listeBots: {fileID: 0}
+  listeTargets: {fileID: 0}
+  _layersToHit:
+    serializedVersion: 2
+    m_Bits: 0
+  difficulty: 1
 --- !u!114 &1515247656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6521,7 +6553,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587733994}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 15.21, y: 1.38, z: -0.56}
+  m_LocalPosition: {x: 11.72, y: 1.38, z: -0.56}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6542,7 +6574,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 1
 --- !u!114 &1587734001
 MonoBehaviour:
@@ -6899,7 +6931,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1784292764}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 12.04, y: 1.38, z: -0.61}
+  m_LocalPosition: {x: 6.63, y: 1.38, z: -0.61}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6918,6 +6950,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4a775d77fd9b7e40ae2979ac378e856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  listeWaypoint: {fileID: 0}
+  listeOptiWaypoint: {fileID: 0}
+  listeBots: {fileID: 0}
+  listeTargets: {fileID: 0}
+  _layersToHit:
+    serializedVersion: 2
+    m_Bits: 0
+  difficulty: 1
 --- !u!114 &1784292772
 MonoBehaviour:
   m_ObjectHideFlags: 0

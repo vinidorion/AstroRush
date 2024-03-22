@@ -250,7 +250,12 @@ public class SpaceShip : MonoBehaviour
 		_rb.AddForce(transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
 	}
 
-	public void Turn(bool left)
+    public void backward()
+    {
+        _rb.AddForce(-1 * transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
+    }
+
+    public void Turn(bool left)
 	{
 		if (left) {
 			Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
@@ -286,7 +291,6 @@ public class SpaceShip : MonoBehaviour
 	{
 		if (!_isFrozen && _currentPU != -1)
 		{
-			Debug.Log(_currentPU);
 			Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + transform.forward, transform.rotation, transform);
 			//RemovePU();
 		}
