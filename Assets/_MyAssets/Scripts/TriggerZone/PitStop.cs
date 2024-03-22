@@ -12,10 +12,11 @@ public class PitStop : MonoBehaviour
 	// on physic timer (called every 0.02s comme dans FixedUpdate())
 	void OnTriggerStay(Collider other)
 	{
+		// rajouter un cooldown ici
 		SpaceShip spaceship = other.GetComponent<SpaceShip>();
 
 		if (spaceship != null) {
-			spaceship.GiveHP();
+			spaceship.GiveHP(1);
 		}
 	}
 }

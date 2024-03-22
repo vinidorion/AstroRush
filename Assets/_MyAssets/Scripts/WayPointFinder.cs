@@ -46,11 +46,11 @@ public class WayPointFinder : MonoBehaviour
 	private void SendInfo()
 	{
 		if (GetComponent<SpaceShip>() == null) {
-			GetComponent<Projectile>().SetWaypoint(_wayPoint);
+			GetComponent<poly.Missile>().SetWaypoint(_wayPoint);
 		} else if (GetComponent<Projectile>() == null) {
 			GetComponent<SpaceShip>().SetWaypoint(_wayPoint);
 		} else {
-			Debug.Log(gameObject + " HAS WAYPOINTFINDER BUT ISNT A SPACESHIP NOR A PROJECTILE");
+			Debug.Log(gameObject + " HAS WAYPOINTFINDER BUT ISNT A SPACESHIP NOR A MISSILE");
 		}
 	}
 }

@@ -21,7 +21,7 @@ public class PU : MonoBehaviour
         Physics.IgnoreCollision(_ship.GetComponent<Collider>(), GetComponent<Collider>(), true);
         if (PUtype == 0)
         {
-            _ship.SetCurrentLife(_ship.GetHP() + 10);
+            _ship.GiveHP(10);
         }
         else if (PUtype == 1)
         {
@@ -29,8 +29,6 @@ public class PU : MonoBehaviour
         }
     }
 
-    // FixedUpdate() est called à intervalle régulière (50x par seconde)
-    // multiplier par Time.deltaTime se fait seulement dans Update()
     void Update() 
     {
         Timer();
@@ -41,6 +39,4 @@ public class PU : MonoBehaviour
         _timer = _timer + 1 * Time.deltaTime;
         if (_timer > _lifeTime) Destroy(transform.gameObject);
     }
-
-    
 }

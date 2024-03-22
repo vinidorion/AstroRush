@@ -6,6 +6,41 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Bot : MonoBehaviour
 {
+/* -- NE PAS SUPPRIMER
+
+	private SpaceShip _spaceship;
+	private float testcooldown = 0f;
+
+	void Awake()
+	{
+		_spaceship = GetComponent<SpaceShip>();
+		if(_spaceship == null) {
+			Debug.Log(this.gameObject + " N'A PAS DE SPACESHIP");
+		}
+	}
+
+	void Update()
+	{
+		//_spaceship.Forward();
+		if(testcooldown < Time.time) {
+			//Debug.Log("angle: " + Quaternion.Angle(transform.rotation, Quaternion.LookRotation(GetNextPos() - transform.position, GetGravDir())));
+			testcooldown = Time.time + 1f;
+		}
+	}
+
+	// get la position du next waypoint
+	private Vector3 GetNextPos()
+	{
+		return WaypointManager.Instance.GetWaypointPos(_spaceship.GetWaypoint() + 1);
+	}
+
+	// get la direction de la gravité
+	private Vector3 GetGravDir()
+	{
+		return -_spaceship.GetVecGrav(); // pour le moment
+	}
+*/
+
     // Start is called before the first frame update
     [SerializeField] private GameObject listeWaypoint;
     [SerializeField] private GameObject listeOptiWaypoint;
@@ -81,14 +116,14 @@ public class Bot : MonoBehaviour
 
             float angleVel = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction, Bots[i].transform.up);
             float angle2ndP = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction2nd, Bots[i].transform.up);
-            //SpaceShip.Instance.Forward();
+            //SpaceShip.Instance.Forward(); -- le spaceship ne doit pas être un singleton
             if (angle2ndP > 12 || angle2ndP < -12)
             {
                 targetspeed = 9;
             }
             if (angle2ndP > 18 || angle2ndP < -18)
             {
-                SpaceShip.Instance.AirBrake(true);
+                //SpaceShip.Instance.AirBrake(true); -- le spaceship ne doit pas être un singleton
             }
 
             if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= targetspeed)
@@ -96,7 +131,7 @@ public class Bot : MonoBehaviour
                 Bots[i].GetComponent<Rigidbody>().AddForce(Bots[i].transform.forward * accelbot);
             }
 
-            // si vitesse max et essaye de tourner on tourne le vecteur de sa velocit�
+            // si vitesse max et essaye de tourner on tourne le vecteur de sa velocit�
             if (angleVel > 7 && Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= targetspeed)
             {
                 Bots[i].GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(20f * Time.deltaTime, Bots[i].transform.up) * Bots[i].GetComponent<Rigidbody>().velocity;
@@ -111,14 +146,14 @@ public class Bot : MonoBehaviour
             if (angle > 50 / Bots[i].GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
             {
                 Debug.Log("Turn");
-                SpaceShip.Instance.AirBrake(false);
+                //SpaceShip.Instance.AirBrake(false); -- le spaceship ne doit pas être un singleton
                 Bots[i].transform.Rotate(0f, 120f * Time.deltaTime, 0f);
                 directionRight[i] = Quaternion.AngleAxis(120f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
             }
             if (angle < -50 / Bots[i].GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
             {
                 Debug.Log("Turn");
-                SpaceShip.Instance.AirBrake(true);
+                //SpaceShip.Instance.AirBrake(true); -- le spaceship ne doit pas être un singleton
                 Bots[i].transform.Rotate(0f, -120f * Time.deltaTime, 0f);
                 directionRight[i] = Quaternion.AngleAxis(-120f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
             }

@@ -36,11 +36,8 @@ public class Player : MonoBehaviour
 
 	private void UsePU()
 	{
-		if (Input.GetKey(KeyCode.Space))
-		{
+		if (Input.GetKeyDown(KeyCode.Space) && !_spaceship.isFrozen()) {
 			_spaceship.UsePU();
 		}
 	}
-
-
 }

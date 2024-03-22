@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class SpaceShip : MonoBehaviour
 {
-	public static SpaceShip Instance;
-
 	[Header("Stats")]
 	[SerializeField] private float max_speed = default;
 	[SerializeField] private float _accel = default;
 	[SerializeField] private float airbrake_power = default;
-	[SerializeField] private int max_hp = default;
-	[SerializeField] private int _hp = default;
+	private const int max_hp = 100;
+	private int _hp = max_hp;
 	[SerializeField] private float weigth = default;
 	[SerializeField] private float agility = default;
 	[SerializeField] private float _slower = default;
@@ -20,10 +18,11 @@ public class SpaceShip : MonoBehaviour
 
 	private bool _isFrozen = false;
 	private Vector3 current_speed = Vector3.zero;
-	[SerializeField] private int _currentPU = 0;
 	private Rigidbody _rb;
 	private GameManager _gm;
-	
+
+	private int _currentPU = 2;
+
 	// WAYPOINTS / POSITIONS
 	private int _lap = 0;
 	private int _waypoint = 0;
@@ -91,8 +90,6 @@ public class SpaceShip : MonoBehaviour
 	void Start()
 	{
 		_gm = GameManager.Instance;
-		//_gm.AddShipToList(this); -- voir la classe PosManager
-		Instance = this;
 	}
 
 	void Update()
@@ -187,8 +184,7 @@ public class SpaceShip : MonoBehaviour
 				POSITIONS/WAYPOINTS
 	*********************************************/
 
-	// faire la classe qui utilise cette méthode quand OnTriggerEnter()
-	// aussi vérifier que le spaceship a complété la majorité des waypoints
+	// utilisé dans la classe LapComplete
 	public void LapCompleted()
 	{
 		_lap++; // et changer lap dans le hud
@@ -250,12 +246,12 @@ public class SpaceShip : MonoBehaviour
 		_rb.AddForce(transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
 	}
 
-    public void backward()
-    {
-        _rb.AddForce(-1 * transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
-    }
+	public void backward()
+	{
+		_rb.AddForce(-1 * transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
+	}
 
-    public void Turn(bool left)
+	public void Turn(bool left)
 	{
 		if (left) {
 			Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
@@ -281,18 +277,25 @@ public class SpaceShip : MonoBehaviour
 		if (!left)
 		{
 			float rotation = (agility - current_speed.y + airbrake_power) * -1;
-            Vector3 force = _rb.velocity;
-            //Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
-            _rb.AddForce(-force * 0.7f);
-        }
+			Vector3 force = _rb.velocity;
+			//Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
+			_rb.AddForce(-force * 0.7f);
+		}
 	}
+
+	/********************************************
+					POWER UPS
+	*********************************************/
 
 	public void UsePU()
 	{
 		if (!_isFrozen && _currentPU != -1)
 		{
-			Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + transform.forward, transform.rotation, transform);
+			//Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + transform.forward, transform.rotation, transform);
 			//RemovePU();
+
+			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + (transform.forward * 0.5f), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
+			pu.SetOwner(transform);
 		}
 	}
 
@@ -320,22 +323,11 @@ public class SpaceShip : MonoBehaviour
 		return _hp;
 	}
 
-	public void SetCurrentLife(int life)
+	public void GiveHP(int life)
 	{
-		_hp = life;
+		_hp = Mathf.Clamp(_hp + life, 0, max_hp);
 
-		if (_hp > max_hp) {
-			_hp = max_hp;
-		}
-	}
-
-	public void GiveHP()
-	{
-		// give HP au spaceship, utilisé dans la classe PitStop
-		// mettre une petite valeur car OnTriggerStay() dans PitStop est called
-		// sur le physic timer, au chaque 0.02s
-		// ou bien mettre un cooldown
-		Debug.Log("RECEIVED HP");
+		Debug.Log(life + " (" + _hp + " HP)");
 	}
 
 	public float GetBoost()

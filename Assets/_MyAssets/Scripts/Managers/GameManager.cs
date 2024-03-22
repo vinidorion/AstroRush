@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour
 
 	private GameObject[] _arrPUs;
 
-	// private List<SpaceShip> _position = new List<SpaceShip>(); -- voir la classe PosManager
-
 	void Awake()
 	{
 		if (Instance == null) {
@@ -30,12 +28,14 @@ public class GameManager : MonoBehaviour
 		// get les PUs sans utiliser SerializeField,
 		// les PUs dans l'array seront dans le même ordre
 		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
-		_arrPUs = Resources.LoadAll("PUs/", typeof(GameObject)).Cast<GameObject>().ToArray();
+		//_arrPUs = Resources.LoadAll("PUs/", typeof(GameObject)).Cast<GameObject>().ToArray();
 
-		//// print la liste de PU pour debug
-		//foreach (GameObject pu in _arrPUs) {
-		//	Debug.Log(pu);
-		//}
+		_arrPUs = Resources.LoadAll("PUs/poly/", typeof(GameObject)).Cast<GameObject>().ToArray();
+
+		// print la liste de PU pour debug
+		foreach (GameObject pu in _arrPUs) {
+			Debug.Log(pu);
+		}
 	}
 
 	void Start()
@@ -57,30 +57,7 @@ public class GameManager : MonoBehaviour
 		} else {
 			// game
 		}
-		//OrderPosition();
 	}
-
-	/* -- voir la classe PosManager
-	private void OrderPosition()
-	{
-		for (int i = 1; i < _position.Count; i++)
-		{
-			if (_position[i].GetPosValue() > _position[i - 1].GetPosValue())
-			{
-				SpaceShip tmp = _position[i];
-				_position[i] = _position[i - 1];
-				_position[i - 1] = tmp;
-				_position[i - 1].SetPosition(i - 1);
-				_position[i].SetPosition(i);
-			}
-		}
-	} */
-
-	/* -- voir la classe PosManager
-	public SpaceShip GetShipFormPosition(int pos)
-	{
-		return _position[pos];
-	} */
 
 	IEnumerator IntroCoroutine()
 	{
@@ -150,9 +127,4 @@ public class GameManager : MonoBehaviour
 		return _arrPUs.Length;
 	}
 
-	/* -- voir la classe PosManager
-	public void AddShipToList(SpaceShip spaceship)
-	{
-		_position.Add(spaceship);
-	} */
 }

@@ -34,7 +34,7 @@ public class Shockwave : MonoBehaviour
         SpaceShip _shipTouche = collision.gameObject.GetComponent<SpaceShip>();
         if (_shipTouche != null && _shipTouche.gameObject != _ship.gameObject)
         {
-            _shipTouche.SetCurrentLife(_shipTouche.GetHP() - _dmg);
+            _shipTouche.GiveHP(-_dmg);
             _shipTouche.Slow(_slow, _slowTime);
             Instantiate(_explosion, transform.position, transform.rotation);
         }
