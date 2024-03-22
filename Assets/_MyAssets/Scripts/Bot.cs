@@ -20,6 +20,8 @@ public class Bot : MonoBehaviour
     private List<GameObject> targets = new List<GameObject>();
     private List<Vector3> directionRight = new List<Vector3>();
     private List<int> passedTargets = new List<int>();
+    [SerializeField] private float accelbot = 0;
+    private float targetspeed;
 
     public Plane Plane
     {
@@ -58,9 +60,12 @@ public class Bot : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-
+        
+        // boucle qui fait les actions de tout les bots 1 par 1
         for (int i = 0; i < Bots.Count; i++)
         {
+            targetspeed = 12;
+            //si le bot est assez proche de sa target on set sa target au prochain waypoint
             if (Vector3.Magnitude(Bots[i].transform.position - targets[i].transform.position) < 1f)
             {
                 passedTargets[i] += 1;
@@ -69,39 +74,55 @@ public class Bot : MonoBehaviour
             }
             Plane = new Plane(Bots[i].transform.up, Bots[i].transform.position);
             Vector3 direction = Plane.ClosestPointOnPlane(targets[i].transform.position) - Bots[i].transform.position;
+            Vector3 direction2nd = Plane.ClosestPointOnPlane(Vector3.Lerp(waypoints[passedTargets[i] + 1].transform.position,
+                optiWaypoints[passedTargets[i] + 1].transform.position, difficulty)) - Bots[i].transform.position;
 
             float angle = Vector3.SignedAngle(Bots[i].transform.forward, direction, Bots[i].transform.up);
 
-            if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= 5)
+            float angleVel = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction, Bots[i].transform.up);
+            float angle2ndP = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction2nd, Bots[i].transform.up);
+            //SpaceShip.Instance.Forward();
+            if (angle2ndP > 12 || angle2ndP < -12)
             {
-                Bots[i].GetComponent<Rigidbody>().AddForce(Bots[i].transform.forward * 1);
+                targetspeed = 9;
+            }
+            if (angle2ndP > 18 || angle2ndP < -18)
+            {
+                SpaceShip.Instance.AirBrake(true);
             }
 
-            float angle2 = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction, Bots[i].transform.up);
-            //SpaceShip.Instance.Forward();
-            if (angle2 > 7 && Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= 5)
+            if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= targetspeed)
             {
-                //SpaceShip.Instance.AirBrake(false);
+                Bots[i].GetComponent<Rigidbody>().AddForce(Bots[i].transform.forward * accelbot);
+            }
+
+            // si vitesse max et essaye de tourner on tourne le vecteur de sa velocité
+            if (angleVel > 7 && Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= targetspeed)
+            {
                 Bots[i].GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(20f * Time.deltaTime, Bots[i].transform.up) * Bots[i].GetComponent<Rigidbody>().velocity;
             }
-            if (angle2 < -7 && Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= 5)
+            if (angleVel < -7 && Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= targetspeed)
             {
-                //SpaceShip.Instance.AirBrake(true);
                 Bots[i].GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(-20f * Time.deltaTime, Bots[i].transform.up) * Bots[i].GetComponent<Rigidbody>().velocity;
             }
 
-            if (angle > 7)
+            // si l'angle est assez grande le bot utilise les air brakes pour tourner plus vite
+            Debug.Log(angle);
+            if (angle > 50 / Bots[i].GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
             {
-                //SpaceShip.Instance.AirBrake(false);
-                Bots[i].transform.Rotate(0f, 60f * Time.deltaTime, 0f);
-                directionRight[i] = Quaternion.AngleAxis(100f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
+                Debug.Log("Turn");
+                SpaceShip.Instance.AirBrake(false);
+                Bots[i].transform.Rotate(0f, 120f * Time.deltaTime, 0f);
+                directionRight[i] = Quaternion.AngleAxis(120f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
             }
-            if (angle < -7)
+            if (angle < -50 / Bots[i].GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
             {
-                //SpaceShip.Instance.AirBrake(true);
-                Bots[i].transform.Rotate(0f, -60f * Time.deltaTime, 0f);
-                directionRight[i] = Quaternion.AngleAxis(-100f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
+                Debug.Log("Turn");
+                SpaceShip.Instance.AirBrake(true);
+                Bots[i].transform.Rotate(0f, -120f * Time.deltaTime, 0f);
+                directionRight[i] = Quaternion.AngleAxis(-120f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
             }
+            // sinon il tourne normalement
             else if (angle > 0.1f)
             {
                 Bots[i].transform.Rotate(0f, 60f * Time.deltaTime, 0f);
@@ -112,15 +133,16 @@ public class Bot : MonoBehaviour
                 Bots[i].transform.Rotate(0f, -60f * Time.deltaTime, 0f);
                 directionRight[i] = Quaternion.AngleAxis(-60f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
             }
-
+            
             Ray ray = new Ray(Bots[i].transform.position, -Bots[i].transform.up);
             Physics.Raycast(ray, out RaycastHit hit, 1, _layersToHit, QueryTriggerInteraction.Ignore);
-
+            
             if (hit.normal != Vector3.up)
             {
                 Bots[i].transform.rotation = Quaternion.RotateTowards(Bots[i].transform.rotation, Quaternion.LookRotation(Vector3.Cross(hit.normal, directionRight[i]), hit.normal),
                 90 * Time.deltaTime);
             }
+            
         }
     }
 }

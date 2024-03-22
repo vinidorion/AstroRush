@@ -269,15 +269,17 @@ public class SpaceShip : MonoBehaviour
 		if (left)
 		{
 			float rotation = agility - current_speed.y + airbrake_power;
-			Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
-			_rb.AddForce(force);
+			Vector3 force = _rb.velocity;
+			//Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
+			_rb.AddForce(-force * 0.7f);
 		}
 		if (!left)
 		{
 			float rotation = (agility - current_speed.y + airbrake_power) * -1;
-			Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
-			_rb.AddForce(force);
-		}
+            Vector3 force = _rb.velocity;
+            //Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
+            _rb.AddForce(-force * 0.7f);
+        }
 	}
 
 	public void UsePU()
