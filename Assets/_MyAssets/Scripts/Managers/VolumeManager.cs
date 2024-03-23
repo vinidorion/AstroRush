@@ -18,6 +18,7 @@ public class VolumeManager : MonoBehaviour
 	{
 		if (Instance == null) {
 			Instance = this;
+			DontDestroyOnLoad(this.gameObject);
 		} else {
 			Destroy(this.gameObject);
 		}

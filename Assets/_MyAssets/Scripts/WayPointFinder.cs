@@ -2,24 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WayPointFinder : MonoBehaviour
+public class WaypointFinder : MonoBehaviour
 {
-	private int _wayPoint;
-
-	void Update()
-	{
-		SendInfo();
-	}
+	private int _waypoint;
 
 	void FixedUpdate()
 	{
 		Waypoints(); // expensive, ne pas mettre dans Update()
+		SendInfo();
 	}
 
 	private void Waypoints()
 	{
-		Vector3 waypointPos = WaypointManager.Instance.GetWaypointPos(_wayPoint);			// position du current waypoint
-		Vector3 nextwaypointPos = WaypointManager.Instance.GetWaypointPos(_wayPoint + 1);	// position du next waypoint
+		Vector3 waypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint);			// position du current waypoint
+		Vector3 nextwaypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint + 1);	// position du next waypoint
 
 		//Debug.Log("waypointPos: " + waypointPos);
 		//Debug.Log("nextwaypointPos: " + nextwaypointPos);
@@ -36,9 +32,9 @@ public class WayPointFinder : MonoBehaviour
 		// et plus petite que
 		// la distance entre le spaceship et son waypoint actuel
 		if (distNextWaypoint < distCurrWaypoint) {
-			_wayPoint++;
-			if (WaypointManager.Instance.IsFinalWaypoint(_wayPoint)) {
-				_wayPoint = 0;
+			_waypoint++;
+			if (WaypointManager.Instance.IsFinalWaypoint(_waypoint)) {
+				_waypoint = 0;
 			}
 		}
 	}
@@ -46,11 +42,16 @@ public class WayPointFinder : MonoBehaviour
 	private void SendInfo()
 	{
 		if (GetComponent<SpaceShip>() == null) {
-			GetComponent<poly.Missile>().SetWaypoint(_wayPoint);
-		} else if (GetComponent<Projectile>() == null) {
-			GetComponent<SpaceShip>().SetWaypoint(_wayPoint);
+			GetComponent<poly.Missile>().SetWaypoint(_waypoint);
+		} else if (GetComponent<poly.Missile>() == null) {
+			GetComponent<SpaceShip>().SetWaypoint(_waypoint);
 		} else {
 			Debug.Log(gameObject + " HAS WAYPOINTFINDER BUT ISNT A SPACESHIP NOR A MISSILE");
 		}
+	}
+
+	public void SetWaypoint(int waypoint)
+	{
+		_waypoint = waypoint;
 	}
 }

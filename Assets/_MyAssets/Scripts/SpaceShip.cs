@@ -188,6 +188,7 @@ public class SpaceShip : MonoBehaviour
 	public void LapCompleted()
 	{
 		_lap++; // et changer lap dans le hud
+		GetComponent<WaypointFinder>().SetWaypoint(0);
 
 		// check ici si _lap atteint le nombre de lap total, si oui c'est la fin du jeu
 
@@ -267,15 +268,12 @@ public class SpaceShip : MonoBehaviour
 
 	public void AirBrake(bool left)
 	{
-		if (left)
-		{
+		if (left) {
 			float rotation = agility - current_speed.y + airbrake_power;
 			Vector3 force = _rb.velocity;
 			//Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
 			_rb.AddForce(-force * 0.7f);
-		}
-		if (!left)
-		{
+		} else {
 			float rotation = (agility - current_speed.y + airbrake_power) * -1;
 			Vector3 force = _rb.velocity;
 			//Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);

@@ -13,6 +13,7 @@ namespace poly
 		protected override void Awake()
 		{
 			base.Awake();
+
 			_speed = 50f;
 		}
 
@@ -23,6 +24,7 @@ namespace poly
 			if(_owner) {
 				FindTarget();
 				_waypoint = _owner.GetComponent<SpaceShip>().GetWaypoint();
+				GetComponent<WaypointFinder>().SetWaypoint(_waypoint);
 				_owner = null;
 			}
 
@@ -38,7 +40,7 @@ namespace poly
 			// trouver la cible ici
 		}
 
-		// utilisé dans WayPointFinder
+		// utilisé dans WaypointFinder
 		public void SetWaypoint(int waypoint)
 		{
 			_waypoint = waypoint;
