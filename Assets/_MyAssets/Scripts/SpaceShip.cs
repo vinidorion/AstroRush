@@ -67,7 +67,7 @@ public class SpaceShip : MonoBehaviour
 	private const float PID_KD = 500f;
 
 	/****** VARIABLES ******/
-	private LayerMask _layersToHit;							// la seule layer que le Raycast du PID touche
+	protected LayerMask _layersToHit;							// la seule layer que le Raycast du PID touche
 	private Vector3 _rayDir = Vector3.down;					// direction de la gravité, par défaut vers le bas, toujours normalisé
 	private float _hauteur = 0f;							// hauteur actuelle
 	private float _diffHauteur = 0f;						// difference (delta distance) entre la hauteur actuelle et la hauteur que le PID vise
@@ -174,7 +174,7 @@ public class SpaceShip : MonoBehaviour
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
 
 		if(lateralSpeed > 1f) {
-			_rb.AddForce(-transform.right * 5f * lateralSpeed);
+			_rb.AddForce(transform.right * 5f * lateralSpeed);
 		} else if(lateralSpeed < -1f)  {
 			_rb.AddForce(transform.right * 5f * -lateralSpeed);
 		}
@@ -244,12 +244,12 @@ public class SpaceShip : MonoBehaviour
 
 	public void Forward()
 	{
-		_rb.AddForce(transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
+		_rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
 	}
 
 	public void backward()
 	{
-		_rb.AddForce(-1 * transform.forward * _accel * (_slower + 1), ForceMode.Acceleration);
+		_rb.AddForce(-1 * transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
 	}
 
 	public void Turn(bool left)
