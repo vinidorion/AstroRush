@@ -47,7 +47,11 @@ public class Bot : MonoBehaviour
     [SerializeField] private GameObject listeBots;
     [SerializeField] private GameObject listeTargets;
     [SerializeField] private LayerMask _layersToHit;
-    [SerializeField] private float difficulty = 1;
+    [SerializeField] private float difficulty1 = 1;
+    [SerializeField] private float difficulty2 = 1;
+    [SerializeField] private float difficulty3 = 0.5f;
+    [SerializeField] private float difficulty4 = 0;
+    [SerializeField] private float difficulty5 = 0;
 
     private List<GameObject> waypoints = new List<GameObject>();
     private List<GameObject> optiWaypoints = new List<GameObject>();
@@ -55,6 +59,7 @@ public class Bot : MonoBehaviour
     private List<GameObject> targets = new List<GameObject>();
     private List<Vector3> directionRight = new List<Vector3>();
     private List<int> passedTargets = new List<int>();
+    private List<float> difficulty = new List<float>();
     [SerializeField] private float accelbot = 0;
     private float targetspeed;
 
@@ -66,6 +71,11 @@ public class Bot : MonoBehaviour
 
     private void Start()
     {
+        difficulty.Add(difficulty1);
+        difficulty.Add(difficulty2);
+        difficulty.Add(difficulty3);
+        difficulty.Add(difficulty4);
+        difficulty.Add(difficulty5);
         foreach (Transform child in listeWaypoint.transform)
         {
             waypoints.Add(child.gameObject);
@@ -86,10 +96,10 @@ public class Bot : MonoBehaviour
         }
         for (int i = 0; i < targets.Count; i++)
         {
-            targets[i].transform.position = Vector3.Lerp(waypoints[passedTargets[i]].transform.position, optiWaypoints[passedTargets[i]].transform.position, difficulty);
+            targets[i].transform.position = Vector3.Lerp(waypoints[passedTargets[i]].transform.position,
+                optiWaypoints[passedTargets[i]].transform.position, difficulty[i]);
             directionRight[i] = Bots[i].transform.right;
         }
-
     }
 
     // Update is called once per frame
@@ -104,21 +114,26 @@ public class Bot : MonoBehaviour
             if (Vector3.Magnitude(Bots[i].transform.position - targets[i].transform.position) < 1f)
             {
                 passedTargets[i] += 1;
-                targets[i].transform.position = Vector3.Lerp(waypoints[passedTargets[i]].transform.position, optiWaypoints[passedTargets[i]].transform.position, difficulty);
+                targets[i].transform.position = Vector3.Lerp(waypoints[passedTargets[i]].transform.position,
+                    optiWaypoints[passedTargets[i]].transform.position, difficulty[i]);
             }
             Plane = new Plane(Bots[i].transform.up, Bots[i].transform.position);
             Vector3 direction = Plane.ClosestPointOnPlane(targets[i].transform.position) - Bots[i].transform.position;
             Vector3 direction2nd = Plane.ClosestPointOnPlane(Vector3.Lerp(waypoints[passedTargets[i] + 1].transform.position,
-                optiWaypoints[passedTargets[i] + 1].transform.position, difficulty)) - Bots[i].transform.position;
+                optiWaypoints[passedTargets[i] + 1].transform.position, difficulty[i])) - Bots[i].transform.position;
 
             float angle = Vector3.SignedAngle(Bots[i].transform.forward, direction, Bots[i].transform.up);
 
             float angleVel = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction, Bots[i].transform.up);
             float angle2ndP = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction2nd, Bots[i].transform.up);
+
+            targetspeed = 15 - ((Mathf.Abs(angle2ndP) / 180) * 15);
+            /*
             if (angle2ndP > 12 || angle2ndP < -12)
             {
-                targetspeed = 12;
+                targetspeed = 15 - ((Mathf.Abs(angle2ndP) / 180) * 15);
             }
+            */
             if (angle2ndP > 18 || angle2ndP < -18)
             {
                 //AirBrake(true);
