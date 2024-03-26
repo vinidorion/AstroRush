@@ -10,7 +10,6 @@ public class title : MonoBehaviour
 	private const float DELAY_BACKTOWHITE = 0.02f;
 	
 	private List<Transform> _titlePiece = new List<Transform>();
-	private List<float> _pieceColor = new List<float>();
 	private Transform _blackBG;
 	private Horbar _horbar;
 
@@ -21,12 +20,10 @@ public class title : MonoBehaviour
 				foreach(Transform titlePiece in child) {
 					ChangeColor(titlePiece, Color.black);
 					_titlePiece.Add(titlePiece);
-					_pieceColor.Add(0f);
 				}
 			} else if(child.name == "black_bg") {
 				_blackBG = child;
 			} else if(child.name == "Opening") {
-				//_opening = child.GetComponent<AudioSource>();
 				child.GetComponent<AudioSource>().time = 25f;
 			} else if(child.name == "horbar") {
 				_horbar = child.GetComponent<Horbar>();
@@ -45,12 +42,10 @@ public class title : MonoBehaviour
 		for(int i = 0; i < _titlePiece.Count; i++) {
 			StartCoroutine(AnimCoroutine(_titlePiece[i], i, Color.white));
 		}
-
 		yield return new WaitForSeconds(((_titlePiece.Count - 1) * DELAY_WHITE) + 0.25f);
 		for(int i = 0; i < _titlePiece.Count; i++) {
 			StartCoroutine(AnimCoroutine(_titlePiece[i], i, Color.red));
 		}
-
 		yield return new WaitForSeconds(0.5f);
 		_horbar.Extend();
 	}
@@ -60,7 +55,6 @@ public class title : MonoBehaviour
 		if(color == Color.red) {
 			yield return new WaitForSeconds(index * DELAY_RED);
 			ChangeColor(titlePiece, color);
-
 			if(titlePiece.name[0] == 'L') {
 				yield return new WaitForSeconds(index * DELAY_BACKTOWHITE);
 				titlePiece.GetComponent<Letter>().FadeWhite();

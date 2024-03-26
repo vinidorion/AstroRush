@@ -21,7 +21,7 @@ public class SpaceShip : MonoBehaviour
 	private Rigidbody _rb;
 	private GameManager _gm;
 
-	private int _currentPU = 2;
+	private int _pu = 2;
 
 	// WAYPOINTS / POSITIONS
 	private int _lap = 0;
@@ -218,11 +218,13 @@ public class SpaceShip : MonoBehaviour
 		_waypoint = point;
 	}
 
+	// utilisé dans PosManager
 	public void SetPosition(int pos)
 	{
 		_position = pos;
 	}
 
+	// utilisé dans PosManager
 	public int GetPosition()
 	{
 		return _position;
@@ -287,28 +289,57 @@ public class SpaceShip : MonoBehaviour
 
 	public void UsePU()
 	{
-		if (!_isFrozen && _currentPU != -1)
-		{
-			//Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + transform.forward, transform.rotation, transform);
-			//RemovePU();
-
-			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_currentPU), transform.position + (transform.forward * 0.5f), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
+		if (!_isFrozen && _pu != -1) {
+			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * 0.5f), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
 			pu.SetOwner(transform);
 		}
 	}
 
 	void RemovePU()
 	{
-		_currentPU = -1;
+		_pu = -1;
 	}
 
 	// méthode publique qui donne un item au spaceship
+	// sélectionne l'item en fonction de la position
+	// y = a * ( x - 0.5 ) + 0.5
 	public void GivePU()
 	{
-		// random ici pour choisir le PU
-		// plus on est dernier, meilleur sont nos PU, vice versa
+		if(_pu != -1) {
+			return;
+		}
+		
+		int numShip = FindObjectsOfType<SpaceShip>().Length;
+		int pos = _position;
+		int numPU = _gm.GetNumPUs();
+		int[] listWeight = new int[numPU];
+		float ratioPos = ((1f - (pos / (float)numShip)) * 2f) - 1f;
 
-		_currentPU = 1;
+		for(int i = 0; i < numPU; i++) {
+			listWeight[i] = Mathf.RoundToInt((ratioPos * ((i / (float)(numPU - 1)) - 0.5f) + 0.5f) * numPU * 100f);
+		}
+
+		/*Debug.Log("position: " + pos);
+		for(int i = 0; i < listWeight.Length; i++) {
+			Debug.Log(i + " : " + listWeight[i]);
+		}*/
+
+		int totalWeight = 0;
+
+		for (int i = 0; i < numPU; i++) {
+			totalWeight += listWeight[i];
+		}
+
+		int random = Random.Range(0, totalWeight);
+
+		for (int i = 0; i < numPU; i++) {
+			if (random < listWeight[i]) {
+				_pu = i;
+				//Debug.Log("PU PICKED: " + _pu);
+				break;
+			}
+			random -= listWeight[i];
+		}
 	}
 
 	public int GetMaxHP()

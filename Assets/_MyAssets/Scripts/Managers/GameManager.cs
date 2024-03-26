@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
 	private GameObject[] _arrPUs;
 
+	private float _testCooldown = 0f;
+
 	void Awake()
 	{
 		if (Instance == null) {
@@ -42,6 +44,7 @@ public class GameManager : MonoBehaviour
 	{
 		Camera.Instance.SetCameraMode(CameraMode.Intro);
 		StartCoroutine(IntroCoroutine());
+		UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks);
 	}
 
 	void Update()
@@ -57,6 +60,11 @@ public class GameManager : MonoBehaviour
 		} else {
 			// game
 		}
+
+		/*if(_testCooldown < Time.time) {
+			FindObjectsOfType<Player>()[0].GetComponent<SpaceShip>().GivePU();
+			_testCooldown = Time.time + 1f;
+		}*/
 	}
 
 	IEnumerator IntroCoroutine()

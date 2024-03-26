@@ -23,7 +23,6 @@ public class Horbar : MonoBehaviour
 			transform.localScale = _scale;
 			if(_scale.x >= _target) {
 				_isExtending = false;
-				Debug.Log("stopped extending");			
 			}
 		}
 	}
