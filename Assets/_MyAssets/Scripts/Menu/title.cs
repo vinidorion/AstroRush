@@ -8,27 +8,41 @@ public class title : MonoBehaviour
 	private const float DELAY_WHITE = 0.04f;
 	private const float DELAY_RED = 0.03f;
 	private const float DELAY_BACKTOWHITE = 0.02f;
-	
+	private const float _blackBarsTarget = 200f;
+
+	private Transform _titleParent;
 	private List<Transform> _titlePiece = new List<Transform>();
 	private Transform _blackBG;
+	private Horbar _blackFG;
 	private Horbar _horbar;
+
+	private RectTransform _topBar;
+	private RectTransform _botBar;
+	private Vector2 _blackBarsSize = new Vector2(1920f, 0f);
+	private bool _blackBarsAreMoving = false;
+	private float _speed = 2f;
 
 	void Awake()
 	{
 		foreach(Transform child in transform) {
 			if(child.name == "title") {
+				_titleParent = child;
 				foreach(Transform titlePiece in child) {
 					ChangeColor(titlePiece, Color.black);
 					_titlePiece.Add(titlePiece);
 				}
 			} else if(child.name == "black_bg") {
 				_blackBG = child;
+			}  else if(child.name == "black_fg") {
+				_blackFG = child.GetComponent<Horbar>();
 			} else if(child.name == "Opening") {
 				child.GetComponent<AudioSource>().time = 25f;
 			} else if(child.name == "horbar") {
 				_horbar = child.GetComponent<Horbar>();
 			}
 		}
+		_topBar = GameObject.Find("blackbar_top").GetComponent<RectTransform>();
+		_botBar = GameObject.Find("blackbar_bottom").GetComponent<RectTransform>();
 	}
 
 	void Start()
@@ -47,7 +61,24 @@ public class title : MonoBehaviour
 			StartCoroutine(AnimCoroutine(_titlePiece[i], i, Color.red));
 		}
 		yield return new WaitForSeconds(0.5f);
-		_horbar.Extend();
+		_horbar.Extend(4f, 100f);
+		yield return new WaitForSeconds(2f);
+		_blackFG.Extend(0.1f, 50f);
+		yield return new WaitForSeconds(1f);
+		_blackBarsAreMoving = true;
+		_blackBarsSize.y = 1080f;
+		yield return new WaitForSeconds(0.1f);
+		Destroy(_titleParent.gameObject);
+		Destroy(_horbar.gameObject);
+		Destroy(_blackFG.gameObject);
+		Destroy(_blackBG.gameObject);
+	}
+
+	void Update()
+	{
+		if(_blackBarsAreMoving) {
+			SetBlackBarHeight();
+		}
 	}
 
 	IEnumerator AnimCoroutine(Transform titlePiece, int index, Color color)
@@ -68,5 +99,15 @@ public class title : MonoBehaviour
 	private void ChangeColor(Transform titlePiece, Color newColor)
 	{
 		titlePiece.GetComponent<Renderer>().material.color = newColor;
+	}
+
+	private void SetBlackBarHeight()
+	{
+		if(_blackBarsSize.y <= 200.1f) {
+			_blackBarsAreMoving= false;
+		}
+		_blackBarsSize.y += (_blackBarsTarget - _blackBarsSize.y) * Time.deltaTime * _speed;
+		_topBar.sizeDelta = _blackBarsSize;
+		_botBar.sizeDelta = _blackBarsSize;
 	}
 }

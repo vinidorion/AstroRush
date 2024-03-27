@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Horbar : MonoBehaviour
 {
-	private const float _target = 100f;
-	private const float _speed = 4f;
+	private float _target;
+	private float _speed;
 
 	private bool _isExtending = false;
 	private Vector3 _scale = new Vector3(0f, 100f, 100f);
@@ -27,8 +27,10 @@ public class Horbar : MonoBehaviour
 		}
 	}
 
-	public void Extend()
+	public void Extend(float speed, float target)
 	{
 		_isExtending = true;
+		_speed = speed;
+		_target = target;
 	}
 }
