@@ -67,7 +67,7 @@ public class SpaceShip : MonoBehaviour
 	private const float PID_KD = 500f;
 
 	/****** VARIABLES ******/
-	protected LayerMask _layersToHit;							// la seule layer que le Raycast du PID touche
+	private LayerMask _layersToHit;							// la seule layer que le Raycast du PID touche
 	private Vector3 _rayDir = Vector3.down;					// direction de la gravité, par défaut vers le bas, toujours normalisé
 	private float _hauteur = 0f;							// hauteur actuelle
 	private float _diffHauteur = 0f;						// difference (delta distance) entre la hauteur actuelle et la hauteur que le PID vise
