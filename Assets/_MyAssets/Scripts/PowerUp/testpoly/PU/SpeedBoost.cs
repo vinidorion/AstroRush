@@ -9,12 +9,6 @@ namespace poly
 	{
 		private float _thrust = 10f;
 
-		protected override void Awake()
-		{
-			Debug.Log("SPEED BOOST");
-			base.Awake();
-		}
-
 		void Update()
 		{
 			if(_owner) {

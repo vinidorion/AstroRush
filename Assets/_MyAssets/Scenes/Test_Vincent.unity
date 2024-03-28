@@ -424,14 +424,12 @@ MonoBehaviour:
   max_speed: 10
   _accel: 1
   airbrake_power: 10
-  max_hp: 10
-  _hp: 10
   weigth: 10
   agility: 10
   _slower: 0
   _maxBoost: 10
   _boost: 10
-  _currentPU: 0
+  _pu: 2
 --- !u!65 &200272821
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -503,7 +501,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 200272818}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 19.7, y: 0.57, z: -0.04}
+  m_LocalPosition: {x: 29.57, y: 0.57, z: -13.07}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.45896003}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -529,7 +527,12 @@ MonoBehaviour:
   _layersToHit:
     serializedVersion: 2
     m_Bits: 0
-  difficulty: 1
+  difficulty1: 1
+  difficulty2: 1
+  difficulty3: 0.5
+  difficulty4: 0
+  difficulty5: 0
+  accelbot: 0
 --- !u!114 &200272826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5672,14 +5675,12 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  max_hp: 0
-  _hp: 0
   weigth: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
   _boost: 0
-  _currentPU: 0
+  _pu: 2
 --- !u!65 &502237045
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5777,7 +5778,12 @@ MonoBehaviour:
   _layersToHit:
     serializedVersion: 2
     m_Bits: 0
-  difficulty: 1
+  difficulty1: 1
+  difficulty2: 1
+  difficulty3: 0.5
+  difficulty4: 0
+  difficulty5: 0
+  accelbot: 0
 --- !u!114 &502237050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6036,14 +6042,12 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  max_hp: 0
-  _hp: 0
   weigth: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
   _boost: 0
-  _currentPU: 0
+  _pu: 2
 --- !u!65 &987917729
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6052,7 +6056,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987917726}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -6115,7 +6119,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987917726}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 7, y: 1.38, z: 0.3}
+  m_LocalPosition: {x: 27.3, y: 1.38, z: 1}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6141,7 +6145,12 @@ MonoBehaviour:
   _layersToHit:
     serializedVersion: 2
     m_Bits: 0
-  difficulty: 1
+  difficulty1: 1
+  difficulty2: 1
+  difficulty3: 0.5
+  difficulty4: 0
+  difficulty5: 0
+  accelbot: 0
 --- !u!114 &987917734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6318,14 +6327,12 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  max_hp: 0
-  _hp: 0
   weigth: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
   _boost: 0
-  _currentPU: 0
+  _pu: 2
 --- !u!65 &1515247651
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6423,7 +6430,12 @@ MonoBehaviour:
   _layersToHit:
     serializedVersion: 2
     m_Bits: 0
-  difficulty: 1
+  difficulty1: 1
+  difficulty2: 1
+  difficulty3: 0.5
+  difficulty4: 0
+  difficulty5: 0
+  accelbot: 0
 --- !u!114 &1515247656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6474,14 +6486,12 @@ MonoBehaviour:
   max_speed: 5
   _accel: 3
   airbrake_power: 10
-  max_hp: 10
-  _hp: 10
   weigth: 10
   agility: 5
   _slower: 1
   _maxBoost: 10
   _boost: 10
-  _currentPU: 1
+  _pu: 5
 --- !u!65 &1587733996
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6553,7 +6563,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587733994}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 11.72, y: 1.38, z: -0.56}
+  m_LocalPosition: {x: 18.126, y: 1.38, z: 0.399}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6852,14 +6862,12 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  max_hp: 0
-  _hp: 0
   weigth: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
   _boost: 0
-  _currentPU: 0
+  _pu: 2
 --- !u!65 &1784292767
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6957,7 +6965,12 @@ MonoBehaviour:
   _layersToHit:
     serializedVersion: 2
     m_Bits: 0
-  difficulty: 1
+  difficulty1: 1
+  difficulty2: 1
+  difficulty3: 0.5
+  difficulty4: 0
+  difficulty5: 0
+  accelbot: 0
 --- !u!114 &1784292772
 MonoBehaviour:
   m_ObjectHideFlags: 0

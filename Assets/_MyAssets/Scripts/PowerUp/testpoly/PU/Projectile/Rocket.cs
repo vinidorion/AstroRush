@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace poly
@@ -7,11 +8,12 @@ namespace poly
 	[AddComponentMenu("POLYMORPHISM: Rocket")]
 	public class Rocket : Projectile
 	{
+		[SerializeField] private GameObject _explosion = default;
+
 		protected override void Awake()
 		{
 			base.Awake();
-
-			_speed = 20f;
+			_speed = 10f;
 		}
 
 		protected override void Update()
@@ -23,11 +25,9 @@ namespace poly
 
 		protected override void OnTriggerEnter(Collider other)
 		{
-			// instantiate une explosion ici
+            Instantiate(_explosion, transform.position, transform.rotation);
 
-			// l'explosion elle aussi fait des dégâts
-
-			base.OnTriggerEnter(other);
+            base.OnTriggerEnter(other);
 		}
 	}
 }

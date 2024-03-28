@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 3606272128801826123}
   - component: {fileID: 8373006940519952646}
   - component: {fileID: 1560272683187124735}
+  - component: {fileID: -1349387583861130027}
+  - component: {fileID: -4029713945488784220}
   m_Layer: 0
   m_Name: 04_Missile
   m_TagString: Untagged
@@ -95,6 +97,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e2af7767209c7349bf2299e26ca49be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _explosion: {fileID: 8946126991218605337, guid: 839a800d0e07af84f94123c19d620b7d, type: 3}
+--- !u!65 &-1349387583861130027
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116076100018976721}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.2964966, y: 1.1246706, z: 4.7218747}
+  m_Center: {x: 0.0010815561, y: 0.18619645, z: 0.27990675}
+--- !u!114 &-4029713945488784220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116076100018976721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4df6e437b40a9214ea301161e551c16c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8489547181889168903

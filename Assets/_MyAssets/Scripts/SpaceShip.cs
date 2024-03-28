@@ -21,7 +21,7 @@ public class SpaceShip : MonoBehaviour
 	private Rigidbody _rb;
 	private GameManager _gm;
 
-	private int _pu = 2;
+	[SerializeField] private int _pu = 2;
 
 	// WAYPOINTS / POSITIONS
 	private int _lap = 0;

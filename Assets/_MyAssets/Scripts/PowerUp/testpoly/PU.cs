@@ -10,12 +10,12 @@ namespace poly
 		protected Transform _owner;
 		protected float _lifeTime = 1f;
 
-		protected virtual void Awake()
-		{
-			StartCoroutine(TimeLimitCoroutine());
-		}
+        private void Start()
+        {
+            StartCoroutine(TimeLimitCoroutine());
+        }
 
-		IEnumerator TimeLimitCoroutine()
+        IEnumerator TimeLimitCoroutine()
 		{
 			yield return new WaitForSeconds(_lifeTime);
 			Destroy(this.gameObject);
@@ -24,6 +24,7 @@ namespace poly
 		public void SetOwner(Transform owner)
 		{
 			_owner = owner;
-		}
+            Physics.IgnoreCollision(owner.GetComponent<Collider>(), GetComponent<Collider>(), true);
+        }
 	}
 }

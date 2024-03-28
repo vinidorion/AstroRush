@@ -7,11 +7,6 @@ namespace poly
 	[AddComponentMenu("POLYMORPHISM: HPBoost")]
 	public class HPBoost : PU
 	{
-		protected override void Awake()
-		{
-			Debug.Log("HP BOOST");
-			base.Awake();
-		}
 
 		void Update()
 		{

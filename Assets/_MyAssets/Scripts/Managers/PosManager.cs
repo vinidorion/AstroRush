@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PosManager : MonoBehaviour
 {
@@ -65,5 +66,10 @@ public class PosManager : MonoBehaviour
 	public SpaceShip GetShipFromPos(int pos)
 	{
 		return _listSpaceship[pos];
+	}
+
+	public SpaceShip GetLastShip()
+	{
+		return _listSpaceship[_listSpaceship.Count - 1];
 	}
 }
