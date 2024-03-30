@@ -392,7 +392,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &200272819
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -429,6 +429,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
+  _pu: 2
 --- !u!65 &200272821
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5642,7 +5643,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &502237043
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5679,6 +5680,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
+  _pu: 2
 --- !u!65 &502237045
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6009,7 +6011,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &987917727
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6046,6 +6048,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
+  _pu: 2
 --- !u!65 &987917729
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6438,7 +6441,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1515247649
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6475,6 +6478,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
+  _pu: 2
 --- !u!65 &1515247651
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6633,6 +6637,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
+  _pu: 2
 --- !u!65 &1587733996
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6703,14 +6708,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587733994}
-  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -1.1238986, y: -3.6325417, z: -4.015299}
+  m_LocalRotation: {x: -0, y: 0.7071069, z: -0, w: -0.7071067}
+  m_LocalPosition: {x: 26.37, y: -3.6325417, z: -17.093}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2063888210}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
 --- !u!54 &1587734000
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6971,7 +6976,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1784292765
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7008,6 +7013,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
+  _pu: 2
 --- !u!65 &1784292767
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -34,7 +34,7 @@ public class OutOfBounds : MonoBehaviour
 		rb.angularVelocity = Vector3.zero;
 
 		spaceship.transform.position = respawnPos;
-		spaceship.transform.rotation = Quaternion.LookRotation(nextWaypoint - respawnPos);
+		spaceship.transform.rotation = Quaternion.LookRotation(nextWaypoint - respawnPos, -(spaceship.GetVecGrav()));
 
 		yield return null;
 	}

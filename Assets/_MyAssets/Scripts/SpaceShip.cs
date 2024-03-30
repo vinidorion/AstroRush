@@ -37,6 +37,9 @@ public class SpaceShip : MonoBehaviour
 	// PHYSICS
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.3f;
+	private float _normalRotSmoothing = 0.6f;
+	private Vector3 _prevRayDir = Vector3.down;	
+
 
 	/********************************************
 					SYSTÈME PID
@@ -94,6 +97,7 @@ public class SpaceShip : MonoBehaviour
 
 	void Update()
 	{
+		
 		current_speed = _rb.velocity;
 		//Debug.Log(_rb.velocity.magnitude);
 	}
@@ -121,10 +125,12 @@ public class SpaceShip : MonoBehaviour
 	{
 		Ray ray = new Ray(transform.position, _rayDir);
 		if(Physics.Raycast(ray, out RaycastHit hit, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore)) {
+			_prevRayDir = -_rayDir;
 			_rayDir = -hit.normal;
 			_onGround = true;
 			_hauteur = hit.distance;
 			PID();
+			KeepUpright();
 			//Debug.Log("found ground");
 			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
 			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime);	// normale de la surface (inverse de la direction de la gravité)
@@ -178,6 +184,12 @@ public class SpaceShip : MonoBehaviour
 		} else if(lateralSpeed < -1f)  {
 			_rb.AddForce(transform.right * 5f * -lateralSpeed);
 		}
+	}
+
+	private void KeepUpright()
+	{
+        Quaternion targetRotation = Quaternion.FromToRotation(transform.up, -_rayDir) * transform.rotation;
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 3f * Time.fixedDeltaTime);
 	}
 
 	/********************************************
