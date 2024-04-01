@@ -10,9 +10,9 @@ namespace poly
 	{
 		[SerializeField] private GameObject _explosion = default;
 
-		protected override void Awake()
+		void Awake()
 		{
-			base.Awake();
+			//_lifeTime = ;
 			_speed = 10f;
 		}
 
@@ -20,14 +20,49 @@ namespace poly
 		{
 			base.Update();
 
-			_speed += Time.deltaTime * 100f;
+			_speed += Time.deltaTime * 100f; // voir le commentaire dessous pour choisir quelle classe peut accelerer ou non
 		}
+
+/*	-- comment skip l'héritage d'une classe
+
+		class A
+		{
+			public virtual void Method1()
+			{
+				AMethod1();
+			}
+
+			protected void AMethod1()
+			{
+				// faire qqch
+			}
+		}
+
+		class B : A
+		{
+			public override void Method1()
+			{
+				base.Method1();
+				// faire autre chose
+			}
+		}
+
+		class C : B
+		{   
+			public override void Method1()
+			{
+				// ne pas call base.Method1() pour overrride class B
+				// call Method1() de la classe A
+				AMethod1();
+			}
+		}
+*/
 
 		protected override void OnTriggerEnter(Collider other)
 		{
-            Instantiate(_explosion, transform.position, transform.rotation);
+			Instantiate(_explosion, transform.position, transform.rotation);
 
-            base.OnTriggerEnter(other);
+			base.OnTriggerEnter(other);
 		}
 	}
 }

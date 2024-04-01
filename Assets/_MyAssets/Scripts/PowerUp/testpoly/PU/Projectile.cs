@@ -14,10 +14,19 @@ namespace poly
 		protected int _slow = 0;
 		protected int _slowTime = 0;
 
-		protected virtual void Awake()
+		void Awake()
 		{
-			_direction = transform.forward;
 			_lifeTime = 3f;
+		}
+
+		protected override void Start()
+		{
+			base.Start();
+			_direction = transform.forward;
+			Debug.Log("Projectile: Start()");
+
+			// HPBoost et SpeedBoost sont des objets vides
+			Physics.IgnoreCollision(_owner.GetComponent<Collider>(), GetComponent<Collider>(), true);
 		}
 
 		protected virtual void Update()
@@ -27,14 +36,13 @@ namespace poly
 
 		protected virtual void OnTriggerEnter(Collider other)
 		{
-			// faire les dégâts sur le other.GetComponent<Spaceship>()
 			SpaceShip _ship = other.GetComponent<SpaceShip>();
-            if (_ship != null)
-            {
+			if (_ship != null)
+			{
 				_ship.GiveHP(-_dmg);
-                _ship.Slow(_slow, _slowTime);
-            }
-            Destroy(this.gameObject);
+				_ship.Slow(_slow, _slowTime);
+			}
+			Destroy(this.gameObject);
 		}
 
 		public void SetDirection(Vector3 direction)

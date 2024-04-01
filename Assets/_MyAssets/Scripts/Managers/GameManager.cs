@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
 	private GameObject[] _arrPUs;
 
-	private float _testCooldown = 0f;
+	//private float _testCooldown = 0f;
 
 	void Awake()
 	{
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
 
 		// print la liste de PU pour debug
 		foreach (GameObject pu in _arrPUs) {
-			Debug.Log(pu);
+			Debug.Log(pu.name.Substring(3));
 		}
 	}
 

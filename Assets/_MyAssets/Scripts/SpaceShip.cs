@@ -21,7 +21,7 @@ public class SpaceShip : MonoBehaviour
 	private Rigidbody _rb;
 	private GameManager _gm;
 
-	[SerializeField] private int _pu = 2;
+	private int _pu = -1;
 
 	// WAYPOINTS / POSITIONS
 	private int _lap = 0;
@@ -86,7 +86,7 @@ public class SpaceShip : MonoBehaviour
 	void Awake()
 	{
 		_rb = GetComponent<Rigidbody>();
-		_rb.angularDrag = 0.5f;
+		_rb.angularDrag = 10f;
 		_layersToHit = 1 << LayerMask.NameToLayer("track");
 	}
 
@@ -97,7 +97,6 @@ public class SpaceShip : MonoBehaviour
 
 	void Update()
 	{
-		
 		current_speed = _rb.velocity;
 		//Debug.Log(_rb.velocity.magnitude);
 	}
@@ -180,9 +179,9 @@ public class SpaceShip : MonoBehaviour
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
 
 		if(lateralSpeed > 1f) {
-			_rb.AddForce(transform.right * 5f * lateralSpeed);
+			_rb.AddForce(transform.right * -5f);
 		} else if(lateralSpeed < -1f)  {
-			_rb.AddForce(transform.right * 5f * -lateralSpeed);
+			_rb.AddForce(transform.right * 5f);
 		}
 	}
 
@@ -269,12 +268,12 @@ public class SpaceShip : MonoBehaviour
 	public void Turn(bool left)
 	{
 		if (left) {
-			Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
+			//Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
 			//float rotation = agility - current_speed.y;
 			_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
 			//_rb.angularVelocity = new Vector3(0f, 6f, 0f);
 		} else {
-			Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
+			//Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
 			_rb.AddTorque(transform.up * /*_rb.angularDrag **/ agility, ForceMode.Acceleration);
 			//float rotation = (agility - current_speed.y) * -1;
 		}
@@ -304,12 +303,8 @@ public class SpaceShip : MonoBehaviour
 		if (!_isFrozen && _pu != -1) {
 			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * 0.5f), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
 			pu.SetOwner(transform);
+			_pu = -1; // sauf le cannon laser qui aura plusieurs projectile
 		}
-	}
-
-	void RemovePU()
-	{
-		_pu = -1;
 	}
 
 	// méthode publique qui donne un item au spaceship
@@ -347,7 +342,7 @@ public class SpaceShip : MonoBehaviour
 		for (int i = 0; i < numPU; i++) {
 			if (random < listWeight[i]) {
 				_pu = i;
-				//Debug.Log("PU PICKED: " + _pu);
+				Debug.Log("PU PICKED: " + _gm.GetGameObjectPU(_pu).name.Substring(3));
 				break;
 			}
 			random -= listWeight[i];

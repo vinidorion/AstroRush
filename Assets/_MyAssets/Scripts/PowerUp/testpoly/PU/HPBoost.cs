@@ -7,13 +7,12 @@ namespace poly
 	[AddComponentMenu("POLYMORPHISM: HPBoost")]
 	public class HPBoost : PU
 	{
-
-		void Update()
+		protected override void Start()
 		{
-			if(_owner) {
-				_owner.GetComponent<SpaceShip>().GiveHP(10);
-				_owner = null;
-			}
+			base.Start();
+
+			Debug.Log("HPBoost: Start()");
+			_owner.GetComponent<SpaceShip>().GiveHP(10);
 		}
 	}
 }

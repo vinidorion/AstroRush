@@ -8,22 +8,18 @@ namespace poly
     [AddComponentMenu("POLYMORPHISME: Missile")]
     public class BlueShell : Missile
     {
-        protected override void Awake()
-        {
-            base.Awake();
+		void Awake()
+		{
+			//_lifeTime = ;
+			_speed = 30f;
+		}
 
-            _speed = 30f;
-        }
+		protected override void Start()
+		{
+			base.Start();
 
-        protected override void Start()
-        {
-            base.Start();
-            if (_owner)
-            {
-                SetTarget();
-            }
-        }
-
+			SetTarget();
+		}
 
         private void SetTarget()
         {
