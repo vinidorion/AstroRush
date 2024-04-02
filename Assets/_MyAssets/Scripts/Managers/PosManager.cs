@@ -8,7 +8,7 @@ public class PosManager : MonoBehaviour
 	public static PosManager Instance; // Singleton
 	
 	private float _nextUpdate = 0f;
-	private const float _cooldown = 2f; // ne pas oublier de réduire ce cooldown
+	private const float COOLDOWN = 2f; // ne pas oublier de réduire ce cooldown
 	
 	private List<SpaceShip> _listSpaceship = new List<SpaceShip>(); 
 
@@ -34,7 +34,7 @@ public class PosManager : MonoBehaviour
 	{
 		if(_nextUpdate < Time.time) { // expensive, mettre un cooldown sur l'opération
 			SortSpaceshipList();
-			_nextUpdate = Time.time + _cooldown;
+			_nextUpdate = Time.time + COOLDOWN;
 		}
 	}
 

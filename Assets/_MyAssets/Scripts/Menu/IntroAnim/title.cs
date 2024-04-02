@@ -8,7 +8,7 @@ public class title : MonoBehaviour
 	private const float DELAY_WHITE = 0.04f;
 	private const float DELAY_RED = 0.03f;
 	private const float DELAY_BACKTOWHITE = 0.02f;
-	private const float _blackBarsTarget = 200f;
+	private const float BLACK_BARS_TARGET = 200f;
 
 	private Transform _titleParent;
 	private List<Transform> _titlePiece = new List<Transform>();
@@ -72,6 +72,9 @@ public class title : MonoBehaviour
 		Destroy(_horbar.gameObject);
 		Destroy(_blackFG.gameObject);
 		Destroy(_blackBG.gameObject);
+		yield return new WaitForSeconds(1.5f);
+		Menu.Instance.ToggleCameraMovement(true);
+		Menu.Instance.ShowMainMenu(true);
 	}
 
 	void Update()
@@ -104,9 +107,9 @@ public class title : MonoBehaviour
 	private void SetBlackBarHeight()
 	{
 		if(_blackBarsSize.y <= 200.1f) {
-			_blackBarsAreMoving= false;
+			_blackBarsAreMoving = false;
 		}
-		_blackBarsSize.y += (_blackBarsTarget - _blackBarsSize.y) * Time.deltaTime * _speed;
+		_blackBarsSize.y += (BLACK_BARS_TARGET - _blackBarsSize.y) * Time.deltaTime * _speed;
 		_topBar.sizeDelta = _blackBarsSize;
 		_botBar.sizeDelta = _blackBarsSize;
 	}

@@ -521,7 +521,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
@@ -5771,7 +5771,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
@@ -6138,7 +6138,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
@@ -6567,7 +6567,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
@@ -6725,7 +6725,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 1
   agility: 5
   _slower: 0
   _maxBoost: 0
@@ -7100,7 +7100,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0

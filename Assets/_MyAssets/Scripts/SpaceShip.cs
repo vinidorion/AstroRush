@@ -8,14 +8,9 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float max_speed = default;
 	[SerializeField] private float _accel = default;
 	[SerializeField] private float airbrake_power = default;
-	private const int max_hp = 100;
-<<<<<<< Updated upstream
-	private int _hp = max_hp;
+	private const int MAX_HP = 100;
+	private int _hp = MAX_HP;
 	[SerializeField] private float weight = default;
-=======
-    private int _hp = max_hp;
-	[SerializeField] private float weigth = default;
->>>>>>> Stashed changes
 	[SerializeField] private float agility = default;
 	[SerializeField] private float _slower = default;
 	[SerializeField] private float _maxBoost = default;
@@ -26,10 +21,10 @@ public class SpaceShip : MonoBehaviour
 	private Rigidbody _rb;
 	private GameManager _gm;
 
-    [SerializeField] private int _pu = -1; //[SerializeField] temporaire pour tester
+	[SerializeField] private int _pu = -1; //[SerializeField] temporaire pour tester
 
-    // WAYPOINTS / POSITIONS
-    private int _lap = 0;
+	// WAYPOINTS / POSITIONS
+	private int _lap = 0;
 	private int _waypoint = 0;
 	private int _position;
 
@@ -42,7 +37,6 @@ public class SpaceShip : MonoBehaviour
 	// PHYSICS
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.3f;
-	private float _normalRotSmoothing = 0.6f;
 	private Vector3 _prevRayDir = Vector3.down;	
 
 
@@ -57,7 +51,7 @@ public class SpaceShip : MonoBehaviour
 
 	/* (P) PROPORTIONAL
 		proportionnel à _diffHauteur,
-		l'augmenter fait que le systçème PID agit plus agressivement en fonction de _diffHauteur,
+		l'augmenter fait que le système PID agit plus agressivement en fonction de _diffHauteur,
 		augmenter cette constante peut causer de l'overshoot et donc de l'oscillation */
 	private const float PID_KP = 200f;
 
@@ -192,9 +186,8 @@ public class SpaceShip : MonoBehaviour
 
 	private void KeepUpright()
 	{
-        Quaternion targetRotation = Quaternion.FromToRotation(transform.up, -_rayDir) * transform.rotation;
-		transform.rotation = targetRotation;
-        //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 3f * Time.fixedDeltaTime);
+		Quaternion targetRotation = Quaternion.FromToRotation(transform.up, -_rayDir) * transform.rotation;
+		transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 10f * Time.fixedDeltaTime);
 	}
 
 	/********************************************
@@ -207,7 +200,7 @@ public class SpaceShip : MonoBehaviour
 		_lap++; // et changer lap dans le hud
 		GetComponent<WaypointFinder>().SetWaypoint(0);
 
-		// check ici si _lap atteint le nombre de lap total, si oui c'est la fin du jeu
+		// check ici si _lap atteint le nombre de lap total, si oui et si c'est le joueur: c'est la fin du jeu (Camera.Instance.SetCameraMode(CameraMode.Spectate);)
 
 		_listLapTime.Add(Time.time);
 		if (_listLapTime.Count == 1) {
@@ -292,9 +285,9 @@ public class SpaceShip : MonoBehaviour
 		} else {
 			float rotation = (agility - current_speed.y + airbrake_power) * -1;
 		}
-        Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
-        _rb.AddForce(force * 15f);
-    }
+		Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
+		_rb.AddForce(force * 15f);
+	}
 
 	/********************************************
 					POWER UPS
@@ -353,7 +346,7 @@ public class SpaceShip : MonoBehaviour
 
 	public int GetMaxHP()
 	{
-		return max_hp;
+		return MAX_HP;
 	}
 
 	public int GetHP()
@@ -363,7 +356,7 @@ public class SpaceShip : MonoBehaviour
 
 	public void GiveHP(int life)
 	{
-		_hp = Mathf.Clamp(_hp + life, 0, max_hp);
+		_hp = Mathf.Clamp(_hp + life, 0, MAX_HP);
 
 		//Debug.Log(life + " (" + _hp + " HP)");
 	}

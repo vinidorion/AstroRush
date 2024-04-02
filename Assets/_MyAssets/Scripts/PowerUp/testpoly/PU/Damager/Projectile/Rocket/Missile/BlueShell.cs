@@ -14,14 +14,12 @@ namespace poly
 			_speed = 30f;
 		}
 
-        protected override void Start()
-        {
-            base.Start();
-            if (_owner)
-            {
-                SetTarget();
-            }
-        }
+		protected override void Start()
+		{
+			base.Start();
+
+			SetTarget();
+		}
 
         private void SetTarget()
         {
@@ -33,6 +31,7 @@ namespace poly
             {
                 _target = PosManager.Instance.GetLastShip().transform;
             }
+
         }
     }
 }

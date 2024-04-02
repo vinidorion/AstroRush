@@ -7,7 +7,7 @@ namespace poly
 	[AddComponentMenu("POLYMORPHISM: SpeedBoost")]
 	public class SpeedBoost : PU
 	{
-		private const float _thrust = 10f;
+		private const float THRUST = 10f;
 
 		protected override void Start()
 		{
@@ -15,7 +15,7 @@ namespace poly
 
 			Debug.Log("SpeedBoost: Start()");
 			Rigidbody rb = _owner.GetComponent<Rigidbody>();
-			rb.AddForce(transform.forward * _thrust, ForceMode.Impulse);
+			rb.AddForce(transform.forward * THRUST, ForceMode.Impulse);
 		}
 	}
 }
