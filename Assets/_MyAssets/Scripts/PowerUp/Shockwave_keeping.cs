@@ -9,7 +9,6 @@ public class Shockwave : MonoBehaviour
 {
 
     private SpaceShip _ship = default;
-    private PU _pu;
     [SerializeField] private int _dmg = default;
     [SerializeField] private float _slow = default;
     [SerializeField] private float _slowTime = default;
@@ -19,7 +18,6 @@ public class Shockwave : MonoBehaviour
     private void Start()
     {
         _gm = GameManager.Instance;
-        _pu = GetComponent<PU>();
         _ship = transform.parent.GetComponent<SpaceShip>();
         transform.position = transform.parent.position;
     }

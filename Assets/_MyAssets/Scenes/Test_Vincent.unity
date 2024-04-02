@@ -6491,7 +6491,7 @@ MonoBehaviour:
   _slower: 1
   _maxBoost: 10
   _boost: 10
-  _pu: 5
+  _pu: 6
 --- !u!65 &1587733996
 BoxCollider:
   m_ObjectHideFlags: 0

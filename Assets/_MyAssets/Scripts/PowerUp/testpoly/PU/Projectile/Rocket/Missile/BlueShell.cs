@@ -14,9 +14,23 @@ namespace poly
 			_speed = 30f;
 		}
 
+<<<<<<< Updated upstream
 		protected override void Start()
 		{
 			base.Start();
+=======
+            _speed = 20f;
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            if (_owner)
+            {
+                SetTarget();
+            }
+        }
+>>>>>>> Stashed changes
 
 			SetTarget();
 		}
