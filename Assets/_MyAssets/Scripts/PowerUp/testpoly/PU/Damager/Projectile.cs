@@ -6,15 +6,12 @@ using UnityEngine;
 namespace poly
 {
 	[AddComponentMenu("POLYMORPHISM: Projectile")]
-	public class Projectile : PU
+	public class Projectile : Damager
 	{
 		protected Vector3 _direction = Vector3.zero;
 		protected float _speed = 30f;
-		protected int _dmg = 0;
-		protected int _slow = 0;
-		protected int _slowTime = 0;
 
-		void Awake()
+        protected virtual void Awake()
 		{
 			_lifeTime = 3f;
 		}
@@ -23,10 +20,6 @@ namespace poly
 		{
 			base.Start();
 			_direction = transform.forward;
-			Debug.Log("Projectile: Start()");
-
-			// HPBoost et SpeedBoost sont des objets vides
-			Physics.IgnoreCollision(_owner.GetComponent<Collider>(), GetComponent<Collider>(), true);
 		}
 
 		protected virtual void Update()
@@ -34,14 +27,9 @@ namespace poly
 			transform.position += _direction * _speed * Time.deltaTime;
 		}
 
-		protected virtual void OnTriggerEnter(Collider other)
+		protected override void OnTriggerEnter(Collider other)
 		{
-			SpaceShip _ship = other.GetComponent<SpaceShip>();
-			if (_ship != null)
-			{
-				_ship.GiveHP(-_dmg);
-				_ship.Slow(_slow, _slowTime);
-			}
+			base.OnTriggerEnter(other);
 			Destroy(this.gameObject);
 		}
 

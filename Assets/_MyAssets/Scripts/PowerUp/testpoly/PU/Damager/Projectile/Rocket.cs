@@ -10,7 +10,7 @@ namespace poly
 	{
 		[SerializeField] private GameObject _explosion = default;
 
-		void Awake()
+		protected override void Awake()
 		{
 			//_lifeTime = ;
 			_speed = 10f;
@@ -60,9 +60,10 @@ namespace poly
 
 		protected override void OnTriggerEnter(Collider other)
 		{
-			Instantiate(_explosion, transform.position, transform.rotation);
+			poly.PU l = Instantiate(_explosion, transform.position, transform.rotation).GetComponent<poly.PU>();
+			l.SetLifeTime(.6f);
 
-			base.OnTriggerEnter(other);
+            base.OnTriggerEnter(other);
 		}
 	}
 }

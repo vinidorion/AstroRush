@@ -9,8 +9,13 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float _accel = default;
 	[SerializeField] private float airbrake_power = default;
 	private const int max_hp = 100;
+<<<<<<< Updated upstream
 	private int _hp = max_hp;
 	[SerializeField] private float weight = default;
+=======
+    private int _hp = max_hp;
+	[SerializeField] private float weigth = default;
+>>>>>>> Stashed changes
 	[SerializeField] private float agility = default;
 	[SerializeField] private float _slower = default;
 	[SerializeField] private float _maxBoost = default;
@@ -21,10 +26,10 @@ public class SpaceShip : MonoBehaviour
 	private Rigidbody _rb;
 	private GameManager _gm;
 
-	private int _pu = -1;
+    [SerializeField] private int _pu = -1; //[SerializeField] temporaire pour tester
 
-	// WAYPOINTS / POSITIONS
-	private int _lap = 0;
+    // WAYPOINTS / POSITIONS
+    private int _lap = 0;
 	private int _waypoint = 0;
 	private int _position;
 
@@ -300,7 +305,7 @@ public class SpaceShip : MonoBehaviour
 		if (!_isFrozen && _pu != -1) {
 			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * 0.5f), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
 			pu.SetOwner(transform);
-			_pu = -1; // sauf le cannon laser qui aura plusieurs projectile
+			//_pu = -1;  //en commentaire pour tester
 		}
 	}
 
@@ -360,7 +365,7 @@ public class SpaceShip : MonoBehaviour
 	{
 		_hp = Mathf.Clamp(_hp + life, 0, max_hp);
 
-		Debug.Log(life + " (" + _hp + " HP)");
+		//Debug.Log(life + " (" + _hp + " HP)");
 	}
 
 	public float GetBoost()

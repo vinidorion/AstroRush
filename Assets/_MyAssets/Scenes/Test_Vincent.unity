@@ -429,7 +429,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 10
   _boost: 10
-  _pu: 2
+  _pu: -1
 --- !u!65 &200272821
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5680,7 +5680,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
-  _pu: 2
+  _pu: -1
 --- !u!65 &502237045
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6047,7 +6047,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
-  _pu: 2
+  _pu: -1
 --- !u!65 &987917729
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6332,7 +6332,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
-  _pu: 2
+  _pu: -1
 --- !u!65 &1515247651
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6491,7 +6491,7 @@ MonoBehaviour:
   _slower: 1
   _maxBoost: 10
   _boost: 10
-  _pu: 6
+  _pu: 8
 --- !u!65 &1587733996
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6563,7 +6563,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587733994}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 18.126, y: 1.38, z: 0.399}
+  m_LocalPosition: {x: 23.92, y: 1.38, z: -0.45}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6867,7 +6867,7 @@ MonoBehaviour:
   _slower: 0
   _maxBoost: 0
   _boost: 0
-  _pu: 2
+  _pu: -1
 --- !u!65 &1784292767
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6940,7 +6940,7 @@ Transform:
   m_GameObject: {fileID: 1784292764}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 6.63, y: 1.38, z: -0.61}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.10000001, y: 0.10000001, z: 0.10000001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}

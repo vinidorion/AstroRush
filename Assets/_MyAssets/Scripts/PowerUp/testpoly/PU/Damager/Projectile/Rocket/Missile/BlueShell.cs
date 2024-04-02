@@ -14,14 +14,6 @@ namespace poly
 			_speed = 30f;
 		}
 
-<<<<<<< Updated upstream
-		protected override void Start()
-		{
-			base.Start();
-=======
-            _speed = 20f;
-        }
-
         protected override void Start()
         {
             base.Start();
@@ -30,10 +22,6 @@ namespace poly
                 SetTarget();
             }
         }
->>>>>>> Stashed changes
-
-			SetTarget();
-		}
 
         private void SetTarget()
         {

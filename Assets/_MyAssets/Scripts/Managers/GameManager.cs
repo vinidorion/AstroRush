@@ -35,9 +35,9 @@ public class GameManager : MonoBehaviour
 		_arrPUs = Resources.LoadAll("PUs/poly/", typeof(GameObject)).Cast<GameObject>().ToArray();
 
 		// print la liste de PU pour debug
-		foreach (GameObject pu in _arrPUs) {
-			Debug.Log(pu.name.Substring(3));
-		}
+		//foreach (GameObject pu in _arrPUs) {
+		//	Debug.Log(pu.name.Substring(3));
+		//}
 	}
 
 	void Start()

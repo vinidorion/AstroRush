@@ -12,7 +12,6 @@ namespace poly
 
 		protected virtual void Start()
 		{
-			Debug.Log("PU: Start()");
 			StartCoroutine(TimeLimitCoroutine());
 		}
 
@@ -25,6 +24,11 @@ namespace poly
 		public void SetOwner(Transform owner)
 		{
 			_owner = owner;
+		}
+
+		public void SetLifeTime(float lifeTime)
+		{
+			_lifeTime = lifeTime;
 		}
 	}
 }
