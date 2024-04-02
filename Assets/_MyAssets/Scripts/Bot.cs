@@ -116,11 +116,15 @@ public class Bot : MonoBehaviour
 
             targetspeed = 15;
             //si le bot est assez proche de sa target on set sa target au prochain waypoint
-            if (Vector3.Magnitude(Bots[i].transform.position - targets[i].transform.position) < 1f)
+            if (Vector3.Magnitude(Bots[i].transform.position - targets[i].transform.position) < 2f)
             {
                 passedTargets[i] += 1;
                 targets[i].transform.position = Vector3.Lerp(waypoints[passedTargets[i]].transform.position,
                     optiWaypoints[passedTargets[i]].transform.position, difficulty[i]);
+                if (passedTargets[i] == 35)
+                {
+                    passedTargets[i] = 0;
+                }
             }
             Plane = new Plane(Bots[i].transform.up, Bots[i].transform.position);
             Vector3 direction = Plane.ClosestPointOnPlane(targets[i].transform.position) - Bots[i].transform.position;
@@ -140,11 +144,13 @@ public class Bot : MonoBehaviour
             {
                 targetspeed = 15 - ((Mathf.Abs(angle2ndP) / 180) * 15);
             }
+            Debug.Log(i);
+            Debug.Log(targetspeed);
 
             BotMove(i, angleVel);
-            if (i >= 3)
+            if (i == 1)
             {
-                Debug.Log(angle);
+                //Debug.Log(angle);
             }
             BotTurn(i, angle);
             SetPitch(i);
@@ -161,28 +167,37 @@ public class Bot : MonoBehaviour
         {
             Bots[i].GetComponent<SpaceShip>().backward();
         }
-        if (angleVel > 7)
+        if (angleVel > 5)
         {
             Bots[i].GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(20f * Time.deltaTime, Bots[i].transform.up) * Bots[i].GetComponent<Rigidbody>().velocity;
         }
-        if (angleVel < -7)
+        if (angleVel < -5)
         {
             Bots[i].GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(-20f * Time.deltaTime, Bots[i].transform.up) * Bots[i].GetComponent<Rigidbody>().velocity;
         }
+        if (angleVel > 20 && _spaceship.GetComponent<Rigidbody>().velocity.magnitude > 3)
+        {
+            Bots[i].GetComponent<SpaceShip>().backward();
+        }
+        if (angleVel < -20 && _spaceship.GetComponent<Rigidbody>().velocity.magnitude > 3)
+        {
+            Bots[i].GetComponent<SpaceShip>().backward();
+        }
+        
     }
 
     void BotTurn(int i, float angle)
     {
         if (angle > 50 / Bots[i].GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
         {
-            Debug.Log("Turn");
+            //Debug.Log("Turn");
             Bots[i].GetComponent<SpaceShip>().AirBrake(false);
             Bots[i].transform.Rotate(0f, 90f * Time.deltaTime, 0f);
             directionRight[i] = Quaternion.AngleAxis(90f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
         }
         if (angle < -50 / Bots[i].GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
         {
-            Debug.Log("Turn");
+            //Debug.Log("Turn");
             Bots[i].GetComponent<SpaceShip>().AirBrake(true);
             Bots[i].transform.Rotate(0f, -90f * Time.deltaTime, 0f);
             directionRight[i] = Quaternion.AngleAxis(-90f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
@@ -208,8 +223,8 @@ public class Bot : MonoBehaviour
 
         if (hit.normal != Vector3.up)
         {
-            Bots[i].transform.rotation = Quaternion.RotateTowards(Bots[i].transform.rotation, Quaternion.LookRotation(Vector3.Cross(hit.normal, directionRight[i]), hit.normal),
-            90 * Time.deltaTime);
+            //Bots[i].transform.rotation = Quaternion.RotateTowards(Bots[i].transform.rotation, Quaternion.LookRotation(Vector3.Cross(hit.normal, directionRight[i]), hit.normal),
+            //90 * Time.deltaTime);
         }
     }
 

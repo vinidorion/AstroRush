@@ -10,7 +10,7 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float airbrake_power = default;
 	private const int max_hp = 100;
 	private int _hp = max_hp;
-	[SerializeField] private float weigth = default;
+	[SerializeField] private float weight = default;
 	[SerializeField] private float agility = default;
 	[SerializeField] private float _slower = default;
 	[SerializeField] private float _maxBoost = default;
@@ -188,7 +188,8 @@ public class SpaceShip : MonoBehaviour
 	private void KeepUpright()
 	{
         Quaternion targetRotation = Quaternion.FromToRotation(transform.up, -_rayDir) * transform.rotation;
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 3f * Time.fixedDeltaTime);
+		transform.rotation = targetRotation;
+        //transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 3f * Time.fixedDeltaTime);
 	}
 
 	/********************************************
@@ -283,16 +284,12 @@ public class SpaceShip : MonoBehaviour
 	{
 		if (left) {
 			float rotation = agility - current_speed.y + airbrake_power;
-			Vector3 force = _rb.velocity;
-			//Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
-			_rb.AddForce(-force * 0.7f);
 		} else {
 			float rotation = (agility - current_speed.y + airbrake_power) * -1;
-			Vector3 force = _rb.velocity;
-			//Vector3 force = new Vector3(1 * current_speed.y + airbrake_power - weigth, 0, 0);
-			_rb.AddForce(-force * 0.7f);
 		}
-	}
+        Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
+        _rb.AddForce(force * 15f);
+    }
 
 	/********************************************
 					POWER UPS
