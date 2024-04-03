@@ -8,12 +8,12 @@ public class Menu : MonoBehaviour
 
 	private bool _isCameraMoving = false;
 	private int _pos = 0;
-	
+	private Transform _cam;
 
-	private List<Vector3> _camPosList = new List<Vector3>();
+	private List<Transform> _camList = new List<Transform>();
 
-	private float _buttonSpeed = 4f;
-	private float _camSpeed = 10f;
+	private const float BUTTON_SPEED = 6f;
+	private const float CAM_SPEED = 5f;
 
 	private Transform _choix;
 	private Vector3 _mainMenuPos;
@@ -31,6 +31,8 @@ public class Menu : MonoBehaviour
 			Destroy(this.gameObject);
 		}
 
+		_cam = GameObject.Find("Main Camera").transform;
+
 		_choix = GameObject.Find("choix").transform; // keep this as a transform
 		_mainMenuPos = _choix.localPosition;
 		_mainMenuTargetPos = new Vector3(-1400f, _mainMenuPos.y, _mainMenuPos.z);
@@ -43,20 +45,19 @@ public class Menu : MonoBehaviour
 
 		foreach (Transform camPos in GameObject.Find("CamPosList").transform) {
 			camPos.GetComponent<MeshRenderer>().enabled = false;
-			_camPosList.Add(camPos.position);
+			_camList.Add(camPos);
 		}
 	}
 
 	void Update()
 	{
 		if(_isCameraMoving) {
-			// move camera toward target position
-			// camera.position += (_camPosList[_pos] - camera.position) * Time.deltaTime * _camSpeed;
-			// same with angle
+			_cam.position += (_camList[_pos].position - _cam.position) * Time.deltaTime * CAM_SPEED;
+			_cam.rotation = Quaternion.Slerp(_cam.rotation, _camList[_pos].rotation, CAM_SPEED * Time.deltaTime);
 		}
 
-		_choix.localPosition += (_mainMenuTargetPos - _choix.localPosition) * Time.deltaTime * _buttonSpeed;
-		_retour.localPosition += (_retourTargetPos - _retour.localPosition) * Time.deltaTime * _buttonSpeed;
+		_choix.localPosition += (_mainMenuTargetPos - _choix.localPosition) * Time.deltaTime * BUTTON_SPEED;
+		_retour.localPosition += (_retourTargetPos - _retour.localPosition) * Time.deltaTime * BUTTON_SPEED;
 	}
 
 	public void ToggleCameraMovement(bool isCameraMoving)

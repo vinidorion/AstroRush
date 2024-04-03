@@ -72,8 +72,9 @@ public class title : MonoBehaviour
 		Destroy(_horbar.gameObject);
 		Destroy(_blackFG.gameObject);
 		Destroy(_blackBG.gameObject);
-		yield return new WaitForSeconds(1.5f);
+		yield return new WaitForSeconds(0.5f);
 		Menu.Instance.ToggleCameraMovement(true);
+		yield return new WaitForSeconds(1f);
 		Menu.Instance.ShowMainMenu(true);
 	}
 
