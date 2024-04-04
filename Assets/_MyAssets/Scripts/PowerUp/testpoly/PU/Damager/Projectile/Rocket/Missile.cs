@@ -10,10 +10,10 @@ namespace poly
 	{
 		private int _waypoint;
 
-		protected Transform _target;
+		protected Transform _target = null;
 		protected SpaceShip _ship;
 
-		void Awake()
+		protected override void Awake()
 		{
 			//_lifeTime = ;
 			_speed = 30f;
@@ -22,11 +22,9 @@ namespace poly
 		protected override void Start()
 		{
 			base.Start();
-
-			Debug.Log("Missile: Start()");
 			_ship = _owner.GetComponent<SpaceShip>();
 
-			FindTarget();
+			if (_target == null) FindTarget();
 			_waypoint = _ship.GetWaypoint();
 			GetComponent<WaypointFinder>().SetWaypoint(_waypoint);
 		}
@@ -48,7 +46,7 @@ namespace poly
 			}
 		}
 
-		private void FindTarget()
+		protected virtual void FindTarget()
 		{
 			if (_owner.GetComponent<SpaceShip>().GetPosition() != 0)
 			{
@@ -65,5 +63,10 @@ namespace poly
 		{
 			_waypoint = waypoint;
 		}
+
+		public void SetTarget(int target)
+		{
+            _target = PosManager.Instance.GetShipFromPos(target).transform;
+        }
 	}
 }

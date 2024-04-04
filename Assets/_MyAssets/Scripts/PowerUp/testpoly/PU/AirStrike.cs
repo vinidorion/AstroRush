@@ -8,7 +8,6 @@ namespace poly
     public class AirStrike : PU
     {
         [SerializeField] GameObject laser = default;
-        private SpaceShip _ship = null;
 
         protected override void Start()
         {

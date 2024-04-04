@@ -8,7 +8,7 @@ namespace poly
     [AddComponentMenu("POLYMORPHISME: Missile")]
     public class BlueShell : Missile
     {
-		void Awake()
+		protected override void Awake()
 		{
 			//_lifeTime = ;
 			_speed = 30f;

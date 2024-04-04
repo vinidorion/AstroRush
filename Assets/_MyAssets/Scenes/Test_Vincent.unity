@@ -424,7 +424,7 @@ MonoBehaviour:
   max_speed: 10
   _accel: 1
   airbrake_power: 10
-  weigth: 10
+  weight: 0
   agility: 10
   _slower: 0
   _maxBoost: 10
@@ -5675,7 +5675,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
@@ -6042,7 +6042,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
@@ -6056,7 +6056,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987917726}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -6120,7 +6120,7 @@ Transform:
   m_GameObject: {fileID: 987917726}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 27.3, y: 1.38, z: 1}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -6327,7 +6327,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
@@ -6486,12 +6486,12 @@ MonoBehaviour:
   max_speed: 5
   _accel: 3
   airbrake_power: 10
-  weigth: 10
+  weight: 0
   agility: 5
   _slower: 1
   _maxBoost: 10
   _boost: 10
-  _pu: 8
+  _pu: 10
 --- !u!65 &1587733996
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6862,7 +6862,7 @@ MonoBehaviour:
   max_speed: 0
   _accel: 1
   airbrake_power: 0
-  weigth: 0
+  weight: 0
   agility: 0
   _slower: 0
   _maxBoost: 0
