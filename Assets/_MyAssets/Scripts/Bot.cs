@@ -50,6 +50,9 @@ public class Bot : MonoBehaviour
     [SerializeField] private float difficulty4 = 0;
     [SerializeField] private float difficulty5 = 0;
     private SpaceShip _spaceship;
+    private float _agility;
+    private float _targetSpeed;
+    private float _maxSpeed;
 
     private List<GameObject> waypoints = new List<GameObject>();
     private List<GameObject> optiWaypoints = new List<GameObject>();
@@ -59,7 +62,6 @@ public class Bot : MonoBehaviour
     private List<int> passedTargets = new List<int>();
     private List<float> difficulty = new List<float>();
     [SerializeField] private float accelbot = 0;
-    private float targetspeed;
 
     public Plane Plane
     {
@@ -113,8 +115,10 @@ public class Bot : MonoBehaviour
         for (int i = 0; i < Bots.Count; i++)
         {
             _spaceship = Bots[i].GetComponent<SpaceShip>();
+            _agility = _spaceship.GetAgility();
+            _maxSpeed = _spaceship.GetMaxSpeed();
+            _targetSpeed = _maxSpeed;
 
-            targetspeed = 15;
             //si le bot est assez proche de sa target on set sa target au prochain waypoint
             if (Vector3.Magnitude(Bots[i].transform.position - targets[i].transform.position) < 2f)
             {
@@ -139,80 +143,114 @@ public class Bot : MonoBehaviour
             Debug.DrawLine(_spaceship.transform.position, Vector3.Lerp(waypoints[passedTargets[i] + 1].transform.position,
                     optiWaypoints[passedTargets[i] + 1].transform.position, difficulty[i]), Color.blue, Time.fixedDeltaTime);
             Debug.DrawLine(_spaceship.transform.position, _spaceship.transform.position + Bots[i].GetComponent<Rigidbody>().velocity, Color.red, Time.fixedDeltaTime);
-
-            if (angle2ndP > 5 || angle2ndP < -5)
+            
+            if (angle2ndP > 20 || angle2ndP < -20)
             {
-                targetspeed = 15 - ((Mathf.Abs(angle2ndP) / 180) * 15);
+                _targetSpeed = _maxSpeed - (Mathf.Abs(angle2ndP) / 180 * _maxSpeed / _agility);
+                if (_targetSpeed > _spaceship.GetMaxSpeed())
+                {
+                    _targetSpeed = _spaceship.GetMaxSpeed();
+                }
+                else if (_targetSpeed < 0)
+                {
+                    _targetSpeed = 0;
+                }
             }
-            Debug.Log(i);
-            Debug.Log(targetspeed);
+            
+            //Debug.Log(i);
+            //Debug.Log(_targetSpeed);
 
-            BotMove(i, angleVel);
+            BotMove(i);
             if (i == 1)
             {
                 //Debug.Log(angle);
             }
-            BotTurn(i, angle);
+            BotTurn(i, angle, angleVel);
             SetPitch(i);
         }
     }
 
-    void BotMove(int i, float angleVel)
+    void BotMove(int i)
     {
-        if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= targetspeed)
+        if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= _targetSpeed)
         {
-            Bots[i].GetComponent<SpaceShip>().Forward();
+            _spaceship.Forward();
         }
-        else if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude > targetspeed)
+        else if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude > _targetSpeed)
         {
-            Bots[i].GetComponent<SpaceShip>().backward();
+            _spaceship.backward();
         }
-        if (angleVel > 5)
-        {
-            Bots[i].GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(20f * Time.deltaTime, Bots[i].transform.up) * Bots[i].GetComponent<Rigidbody>().velocity;
-        }
-        if (angleVel < -5)
-        {
-            Bots[i].GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(-20f * Time.deltaTime, Bots[i].transform.up) * Bots[i].GetComponent<Rigidbody>().velocity;
-        }
+
+        /*
         if (angleVel > 20 && _spaceship.GetComponent<Rigidbody>().velocity.magnitude > 3)
         {
-            Bots[i].GetComponent<SpaceShip>().backward();
+            _spaceship.backward();
         }
         if (angleVel < -20 && _spaceship.GetComponent<Rigidbody>().velocity.magnitude > 3)
         {
-            Bots[i].GetComponent<SpaceShip>().backward();
+            _spaceship.backward();
         }
-        
+        */
     }
 
-    void BotTurn(int i, float angle)
+    void BotTurn(int i, float angle, float angleVel)
     {
-        if (angle > 50 / Bots[i].GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
+        /*
+        // OVERSTEER
+        if (angleVel > 15)
         {
-            //Debug.Log("Turn");
-            Bots[i].GetComponent<SpaceShip>().AirBrake(false);
-            Bots[i].transform.Rotate(0f, 90f * Time.deltaTime, 0f);
-            directionRight[i] = Quaternion.AngleAxis(90f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
+            if (_spaceship.GetComponent<Rigidbody>().velocity.magnitude >= _targetSpeed * 0.75f)
+            {
+                _spaceship.AirBrake(false);
+                _spaceship.transform.Rotate(0f, 60f * Time.deltaTime * _agility, 0f);
+                directionRight[i] = Quaternion.AngleAxis(60f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+            }
+            _spaceship.transform.Rotate(0f, 40f * Time.deltaTime * _agility, 0f);
+            directionRight[i] = Quaternion.AngleAxis(40f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+            Debug.Log("oversteer right");
         }
-        if (angle < -50 / Bots[i].GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
+        else if (angleVel < -15)
         {
-            //Debug.Log("Turn");
-            Bots[i].GetComponent<SpaceShip>().AirBrake(true);
-            Bots[i].transform.Rotate(0f, -90f * Time.deltaTime, 0f);
-            directionRight[i] = Quaternion.AngleAxis(-90f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
+            if (_spaceship.GetComponent<Rigidbody>().velocity.magnitude >= _targetSpeed * 0.75f)
+            {
+                _spaceship.AirBrake(true);
+                _spaceship.transform.Rotate(0f, -60f * Time.deltaTime * _agility, 0f);
+                directionRight[i] = Quaternion.AngleAxis(-60f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+            }
+            _spaceship.transform.Rotate(0f, -40f * Time.deltaTime * _agility, 0f);
+            directionRight[i] = Quaternion.AngleAxis(-40f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+            Debug.Log("oversteer left");
         }
+        */
+        // Air brakes
+        else if (angle > 50 / _spaceship.GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
+        {
+            _spaceship.AirBrake(false);
+            _spaceship.transform.Rotate(0f, 60f * Time.deltaTime * _agility, 0f);
+            directionRight[i] = Quaternion.AngleAxis(60f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+            Debug.Log("air brakes right");
+        }
+        else if (angle < -50 / _spaceship.GetComponent<Rigidbody>().velocity.magnitude && _spaceship.GetComponent<Rigidbody>().velocity.magnitude >= 1)
+        {
+            _spaceship.AirBrake(true);
+            _spaceship.transform.Rotate(0f, -60f * Time.deltaTime * _agility, 0f);
+            directionRight[i] = Quaternion.AngleAxis(-60f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+            Debug.Log("air brakes left");
+        }
+        // Normal turn
         else if (angle > 0.1f)
         {
             //_spaceship.Turn(true);
-            Bots[i].transform.Rotate(0f, 60f * Time.deltaTime, 0f);
-            directionRight[i] = Quaternion.AngleAxis(60f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
+            _spaceship.transform.Rotate(0f, 40f * Time.deltaTime * _agility, 0f);
+            directionRight[i] = Quaternion.AngleAxis(40f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+            Debug.Log("turn right");
         }
         else if (angle < -0.1f)
         {
             //_spaceship.Turn(false);
-            Bots[i].transform.Rotate(0f, -60f * Time.deltaTime, 0f);
-            directionRight[i] = Quaternion.AngleAxis(-60f * Time.deltaTime, Bots[i].transform.up) * directionRight[i];
+            _spaceship.transform.Rotate(0f, -40f * Time.deltaTime * _agility, 0f);
+            directionRight[i] = Quaternion.AngleAxis(-40f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+            Debug.Log("turn right");
         }
     }
 

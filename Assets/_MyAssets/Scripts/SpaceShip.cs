@@ -177,10 +177,10 @@ public class SpaceShip : MonoBehaviour
 		float lateralSpeed = transform.InverseTransformDirection(_rb.velocity).x;
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
 
-		if(lateralSpeed > 1f) {
-			_rb.AddForce(transform.right * -5f);
-		} else if(lateralSpeed < -1f)  {
-			_rb.AddForce(transform.right * 5f);
+		if(lateralSpeed > 0.5f) {
+			_rb.AddForce(transform.right * -15f * agility);
+		} else if(lateralSpeed < -0.5f)  {
+			_rb.AddForce(transform.right * 15f * agility);
 		}
 	}
 
@@ -286,7 +286,7 @@ public class SpaceShip : MonoBehaviour
 			float rotation = (agility - current_speed.y + airbrake_power) * -1;
 		}
 		Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
-		_rb.AddForce(force * 15f);
+		_rb.AddForce(force * 4);
 	}
 
 	/********************************************
@@ -403,5 +403,15 @@ public class SpaceShip : MonoBehaviour
 	{ 
 		yield return new WaitForSeconds(slowTime);
 		_slower = 0;
+	}
+
+	public float GetAgility()
+	{
+		return agility;
+	}
+
+	public float GetMaxSpeed()
+	{
+		return max_speed;
 	}
 }

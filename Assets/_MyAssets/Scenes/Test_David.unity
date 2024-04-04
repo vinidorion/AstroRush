@@ -988,12 +988,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_speed: 20
   _accel: 1.25
-  airbrake_power: 20
+  airbrake_power: 10
   weight: 10
-  agility: 10
+  agility: 1
   _slower: 0.8
   _maxBoost: 10
   _boost: 10
+  _pu: -1
 --- !u!65 &200272821
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1065,7 +1066,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 200272818}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -4.967, y: 6.073, z: 10.065}
+  m_LocalPosition: {x: -5.033, y: 6.073, z: 9.754}
   m_LocalScale: {x: 0.15, y: 0.05, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1501,7 +1502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9179017853419834167, guid: 7969e15ba4c722248bf25e36a9e70608, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.94
+      value: 2.63
       objectReference: {fileID: 0}
     - target: {fileID: 9179017853419834167, guid: 7969e15ba4c722248bf25e36a9e70608, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6985,10 +6986,11 @@ MonoBehaviour:
   _accel: 1.25
   airbrake_power: 10
   weight: 10
-  agility: 10
+  agility: 1
   _slower: 0.8
   _maxBoost: 0
   _boost: 0
+  _pu: -1
 --- !u!65 &502237045
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8243,10 +8245,11 @@ MonoBehaviour:
   _accel: 1.25
   airbrake_power: 10
   weight: 10
-  agility: 10
+  agility: 1
   _slower: 0.8
   _maxBoost: 0
   _boost: 0
+  _pu: -1
 --- !u!65 &987917729
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8318,7 +8321,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 987917726}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -4.18, y: 6.192, z: 10.06}
+  m_LocalPosition: {x: -4.285, y: 6.192, z: 9.892}
   m_LocalScale: {x: 0.15, y: 0.05, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8373,9 +8376,9 @@ MonoBehaviour:
   _layersToHit:
     serializedVersion: 2
     m_Bits: 64
-  difficulty1: 1
-  difficulty2: 1
-  difficulty3: 0.5
+  difficulty1: 0
+  difficulty2: 0
+  difficulty3: 0
   difficulty4: 0
   difficulty5: 0
   accelbot: 1.25
@@ -8420,7 +8423,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1040373756}
   m_LocalRotation: {x: -0.7071079, y: -0, z: -0, w: 0.70710564}
-  m_LocalPosition: {x: -2.5137503, y: -0.6391127, z: 2.2136362}
+  m_LocalPosition: {x: -1.82, y: -0.6391127, z: 2.2136362}
   m_LocalScale: {x: 11.1427355, y: 11.142734, z: 11.142734}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9983,10 +9986,11 @@ MonoBehaviour:
   _accel: 1.25
   airbrake_power: 10
   weight: 10
-  agility: 10
+  agility: 1
   _slower: 0.8
   _maxBoost: 0
   _boost: 0
+  _pu: -1
 --- !u!65 &1515247651
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10058,7 +10062,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1515247648}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -4.381, y: 6.171, z: 9.102}
+  m_LocalPosition: {x: -4.588, y: 6.171, z: 8.794}
   m_LocalScale: {x: 0.15, y: 0.05, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10203,6 +10207,7 @@ MonoBehaviour:
   _slower: 0.7
   _maxBoost: 10
   _boost: 10
+  _pu: -1
 --- !u!65 &1587733996
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10573,10 +10578,11 @@ MonoBehaviour:
   _accel: 1.25
   airbrake_power: 10
   weight: 10
-  agility: 10
+  agility: 1
   _slower: 0.8
   _maxBoost: 0
   _boost: 0
+  _pu: -1
 --- !u!65 &1784292767
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10648,7 +10654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1784292764}
   m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -3.87, y: 6.062, z: 9.15}
+  m_LocalPosition: {x: -4.322, y: 6.062, z: 9.384}
   m_LocalScale: {x: 0.15, y: 0.05, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
