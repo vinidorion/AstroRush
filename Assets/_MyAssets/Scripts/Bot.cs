@@ -195,8 +195,8 @@ public class Bot : MonoBehaviour
 
     void BotTurn(int i, float angle, float angleVel)
     {
-        /*
-        // OVERSTEER
+
+        // OVERSTEER // A FIX
         if (angleVel > 15)
         {
             if (_spaceship.GetComponent<Rigidbody>().velocity.magnitude >= _targetSpeed * 0.75f)
@@ -221,7 +221,7 @@ public class Bot : MonoBehaviour
             directionRight[i] = Quaternion.AngleAxis(-40f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
             Debug.Log("oversteer left");
         }
-        */
+
         // Air brakes
         else if (angle > 50 / _spaceship.GetComponent<Rigidbody>().velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
         {
