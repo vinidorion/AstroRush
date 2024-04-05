@@ -42,16 +42,17 @@ public class GameManager : MonoBehaviour
 
 	void Start()
 	{
-		Camera.Instance.SetCameraMode(CameraMode.Intro);
+		Camera.Instance.SetCameraMode(CameraMode.Spectate);
 		StartCoroutine(IntroCoroutine());
 		UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks);
+		//PauseMenu.Instance.SetCanPause(false); -- ne pas supprimer
 	}
 
 	void Update()
 	{
 		if(_isIntro) {
 			if (Input.anyKeyDown) { // tout ce qui est dans ce block est called sur une seule frame (une seule fois)
-				Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
+				//Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
 				_isIntro = false;
 				// call CountdownCoroutine() ici
 			} else {
@@ -76,7 +77,7 @@ public class GameManager : MonoBehaviour
 		// (ne pas oublier de l'enlever)
 		yield return null;
 
-		Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
+		//Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
 		_isIntro = false;
 	}
 
@@ -96,6 +97,8 @@ public class GameManager : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 		// start race ici
 		// unfreeze tout les spaceships ici avec FreezeAll(false)
+
+		PauseMenu.Instance.SetCanPause(true);
 
 		// comme le _startTime est le même pour tout le monde, 
 		// je le store ici pour pas le store dans chaque classe spaceship

@@ -10,6 +10,8 @@ public class Camera : MonoBehaviour
 	private Player[] _plyArray;
 	private Transform _plyPos;
 
+	private float _camRotSpeed = 10f;
+
 	void Awake()
 	{
 		if (Instance == null) {
@@ -24,7 +26,7 @@ public class Camera : MonoBehaviour
 		FindPly();
 
 		//_currentMode = CameraMode.Intro;
-		_currentMode = CameraMode.ThirdPerson; // pour tester
+		_currentMode = CameraMode.Spectate; // pour tester
 	}
 
 	void Update()
@@ -74,6 +76,16 @@ public class Camera : MonoBehaviour
 		_currentMode = mode;
 	}
 
+	public CameraMode GetCameraMode()
+	{
+		return _currentMode;
+	}
+
+	public void SetCamPos(Vector3 newPos)
+	{
+		transform.position = newPos;
+	}
+
 	// avant que la course commence, la caméra montre la map
 	private void Intro() {}
 
@@ -93,21 +105,8 @@ public class Camera : MonoBehaviour
 	// quand la course est fini
 	private void Spectate()
 	{
-		//transform.LookAt(target); // target = player
-
-		// TODO: .LookAt() regarde directement vers l'argument target, changer pour que ça smooth, comme le cinematic mode dans minecraft
-		/* -- comme ceci:
-		 *		var targetObj : GameObject;
-		 *		var speed : int = 5;
-		 *
-		 *		// doit être called dans Update()
-		 *		function Update() {
-		 *			var targetRotation = Quaternion.LookRotation(targetObj.transform.position - transform.position);
-		 *
-		 *			// smoothly rotate towards the target point.
-		 *			transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speed * Time.deltaTime);
-		 *		}
-		*/
+		Quaternion targetRotation = Quaternion.LookRotation(_plyPos.position - transform.position);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _camRotSpeed * Time.deltaTime);
 	}
 
 	// méthode public pour faire shaker la caméra
