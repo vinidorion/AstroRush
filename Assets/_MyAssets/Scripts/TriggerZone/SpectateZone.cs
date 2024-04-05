@@ -20,7 +20,7 @@ public class SpectateZone : MonoBehaviour
 		SpaceShip spaceship = other.GetComponent<SpaceShip>();
 		if (spaceship != null && Camera.Instance.GetCameraMode() == CameraMode.Spectate) {
 			Camera.Instance.SetCamPos(_camPos);
-			Camera.Instance.transform.LookAt(other.transform);
+			Camera.Instance.transform.LookAt(other.transform, Vector3.up);
 		}
 	}
 }
