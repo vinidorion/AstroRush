@@ -14,9 +14,11 @@ namespace poly
 
         protected override void Start()
         {
+
             transform.parent = _owner;
             transform.position = _owner.position + _offSet;
             _ship = _owner.GetComponent<SpaceShip>();
+            base.Start();
         }
     }
 }

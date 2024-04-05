@@ -41,11 +41,20 @@ public class WaypointFinder : MonoBehaviour
 
 	private void SendInfo()
 	{
-		if (GetComponent<SpaceShip>() == null) {
-			GetComponent<poly.Missile>().SetWaypoint(_waypoint);
-		} else if (GetComponent<poly.Missile>() == null) {
-			GetComponent<SpaceShip>().SetWaypoint(_waypoint);
-		} else {
+		if (GetComponent<SpaceShip>() != null) 
+		{
+            GetComponent<SpaceShip>().SetWaypoint(_waypoint);
+		} 
+		else if (GetComponent<poly.Missile>() != null) 
+		{
+            GetComponent<poly.Missile>().SetWaypoint(_waypoint);
+        } 
+		else if (GetComponent<poly.Quake>() != null)
+		{
+            GetComponent<poly.Quake>().SetWaypoint(_waypoint);
+        }
+		else
+        {
 			Debug.Log(gameObject + " HAS WAYPOINTFINDER BUT ISNT A SPACESHIP NOR A MISSILE");
 		}
 	}

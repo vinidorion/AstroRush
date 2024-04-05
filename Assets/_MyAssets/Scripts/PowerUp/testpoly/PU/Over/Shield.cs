@@ -11,6 +11,7 @@ namespace poly
 
         protected override void Start()
         {
+            _lifeTime = 9999;
             base.Start();
             hpDepart = _ship.GetHP();
         }
