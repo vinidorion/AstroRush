@@ -44,6 +44,11 @@ namespace poly
 					SetDirection(vecNxtWpt.normalized);
 				}
 			}
+			else
+			{
+                Vector3 vecNxtWpt = WaypointManager.Instance.GetWaypointPos(_waypoint + 1) - transform.position;
+				SetDirection(vecNxtWpt.normalized);
+            }
 		}
 
 		protected virtual void FindTarget()

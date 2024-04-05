@@ -5,7 +5,7 @@ using static UnityEngine.GraphicsBuffer;
 
 namespace poly
 {
-    [AddComponentMenu("POLYMORPHISME: Missile")]
+    [AddComponentMenu("POLYMORPHISME: BlueShell")]
     public class BlueShell : Missile
     {
 		protected override void Awake()
