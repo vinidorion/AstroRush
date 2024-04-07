@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
@@ -23,6 +24,15 @@ public class Menu : MonoBehaviour
 	private Vector3 _retourPos;
 	private Vector3 _retourTargetPos;
 
+	private Transform _play;
+	private Vector3 _playPos;
+	private Vector3 _playTargetPos;
+
+	private bool _playCalledOnce = true;
+
+	private Fade _fadeOut;
+	private AudioFade _music;
+
 	void Awake()
 	{
 		if(Instance == null) {
@@ -32,6 +42,8 @@ public class Menu : MonoBehaviour
 		}
 
 		_cam = GameObject.Find("Main Camera").transform;
+		_fadeOut = GameObject.Find("FadeOut").GetComponent<Fade>();
+		_music = GameObject.Find("Opening").GetComponent<AudioFade>();
 
 		_choix = GameObject.Find("choix").transform; // keep this as a transform
 		_mainMenuPos = _choix.localPosition;
@@ -42,6 +54,11 @@ public class Menu : MonoBehaviour
 		_retourPos = _retour.localPosition;
 		_retourTargetPos = new Vector3(-1400f, _retourPos.y, _retourPos.z);
 		_retour.localPosition = _retourTargetPos;
+
+		_play = GameObject.Find("bt_play").transform;
+		_playPos = _play.localPosition;
+		_playTargetPos = new Vector3(_playPos.x, -700f, _playPos.z);
+		_play.localPosition = _playTargetPos;
 
 		foreach (Transform camPos in GameObject.Find("CamPosList").transform) {
 			camPos.GetComponent<MeshRenderer>().enabled = false;
@@ -58,6 +75,7 @@ public class Menu : MonoBehaviour
 
 		_choix.localPosition += (_mainMenuTargetPos - _choix.localPosition) * Time.deltaTime * BUTTON_SPEED;
 		_retour.localPosition += (_retourTargetPos - _retour.localPosition) * Time.deltaTime * BUTTON_SPEED;
+		_play.localPosition += (_playTargetPos - _play.localPosition) * Time.deltaTime * BUTTON_SPEED;
 	}
 
 	public void ToggleCameraMovement(bool isCameraMoving)
@@ -77,6 +95,11 @@ public class Menu : MonoBehaviour
 		}
 	}
 
+	public void Quitter()
+	{
+		Application.Quit();
+	}
+
 	public void ShowMainMenu(bool showMainMenu)
 	{
 		if(showMainMenu) {
@@ -93,5 +116,32 @@ public class Menu : MonoBehaviour
 		} else {
 			_retourTargetPos = new Vector3(-1400f, _retourPos.y, _retourPos.z);
 		}
+	}
+
+	public void ShowPlayMenu(bool showPlayMenu)
+	{
+		if(showPlayMenu) {
+			_playTargetPos = _playPos;
+		} else {
+			_playTargetPos = new Vector3(_playPos.x, -700f, _playPos.z);
+		}
+	}
+
+	public void PlayButton()
+	{
+		if(!_playCalledOnce) {
+			return;
+		}
+		_playCalledOnce = false;
+
+		StartCoroutine(FadeOutPlayCoroutine());
+	}
+
+	IEnumerator FadeOutPlayCoroutine()
+	{
+		_fadeOut.ToggleFade(false);
+		_music.ToggleFade(false);
+		yield return new WaitForSeconds(1f);
+		SceneManager.LoadScene("LoadingScreen");
 	}
 }

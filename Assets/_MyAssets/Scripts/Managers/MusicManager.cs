@@ -20,7 +20,6 @@ public class MusicManager : MonoBehaviour
 		ShuffleMusicList();
 
 		_audio = GameObject.Find("MusicAudioSource").GetComponent<AudioSource>(); // ne pas oublier de mettre le tag MUS sur cet objet dans l'inspecteur
-		
 	}
 
 	void Start()
@@ -28,6 +27,7 @@ public class MusicManager : MonoBehaviour
 
 		// start music here
 		// on race start or on scene start???
+		StartCoroutine(StartMusicCoroutine());
 	}
 
 	private void ShuffleMusicList()
@@ -41,6 +41,12 @@ public class MusicManager : MonoBehaviour
 			_listMusic[randomIndex] = _listMusic[i];
 			_listMusic[i] = temp;
 		}
+
+		Debug.Log("====== NEW MUSIC PLAYLIST ======");
+		foreach(AudioClip audio in _listMusic) {
+			Debug.Log(audio.name);
+		}
+		Debug.Log("===========================");
 	}
 
 	public void PauseMusic()
@@ -68,6 +74,9 @@ public class MusicManager : MonoBehaviour
 	{
 		_audio.clip = _listMusic[_musicIndex];
 		_audio.Play();
+
+		Debug.Log("===========================");
+		Debug.Log("NOW PLAYING: " + _listMusic[_musicIndex].name);
 
 		_musicIndex++;
 		if(_musicIndex >= _listMusic.Length) {
