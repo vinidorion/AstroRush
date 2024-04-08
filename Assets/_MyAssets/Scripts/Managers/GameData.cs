@@ -8,6 +8,7 @@ public class GameData : MonoBehaviour
 
 	private int _numBot;
 	private int _plyShip; // ou passer le nom du préfab (string)?? ou le préfab lui même (gameobject)???
+	private int _numLap;
 	private string _trackName;
 
 	void Awake()
@@ -48,5 +49,15 @@ public class GameData : MonoBehaviour
 	public string GetTrackName()
 	{
 		return _trackName;
+	}
+
+	public void SetNumLap(int numLap)
+	{
+		_numLap = numLap;
+	}
+
+	public int GetNumLap()
+	{
+		return _numLap;
 	}
 }
