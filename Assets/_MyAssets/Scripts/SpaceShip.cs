@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SpaceShip : MonoBehaviour
 {
@@ -303,8 +304,11 @@ public class SpaceShip : MonoBehaviour
 
 	public void UsePU()
 	{
-		if (!_isFrozen && _pu != -1) {
-			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * 0.5f), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
+		Collider col = GetComponent<Collider>();
+        
+
+        if (!_isFrozen && _pu != -1) {
+			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * (transform.lossyScale.z/2)), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
 			pu.SetOwner(transform);
 			//_pu = -1;  //en commentaire pour tester
 		}

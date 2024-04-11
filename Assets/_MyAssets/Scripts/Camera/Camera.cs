@@ -26,7 +26,7 @@ public class Camera : MonoBehaviour
 		FindPly();
 
 		//_currentMode = CameraMode.Intro;
-		_currentMode = CameraMode.Spectate; // pour tester
+		//_currentMode = CameraMode.Spectate; // pour tester
 	}
 
 	void Update()
@@ -71,6 +71,18 @@ public class Camera : MonoBehaviour
 		// FirstPerson
 		// ThirdPerson
 		// Spectate
+	public void RotateCameraMode()
+	{
+        if ((int)_currentMode == 1)
+		{
+			_currentMode = CameraMode.ThirdPerson;
+		}
+		else 
+		{
+            _currentMode = CameraMode.FirstPerson;
+        }
+    }
+
 	public void SetCameraMode(CameraMode mode)
 	{
 		_currentMode = mode;
@@ -98,7 +110,7 @@ public class Camera : MonoBehaviour
 	// caméra attaché derrière le spaceship en hauteur
 	// mouvement latéral? https://github.com/phoboslab/wipeout-rewrite/blob/90702ce17115484b6cfc1155dd4617b5fa3762cd/src/wipeout/camera.c#L42
 	private void ThirdPerson() {
-		transform.position = _plyPos.position + (_plyPos.forward * -0.5f) + (_plyPos.up * 0.15f);
+		transform.position = _plyPos.position + (_plyPos.forward * -1.5f) + (_plyPos.up * 0.3f);
 		transform.rotation = _plyPos.rotation;
 	}
 	

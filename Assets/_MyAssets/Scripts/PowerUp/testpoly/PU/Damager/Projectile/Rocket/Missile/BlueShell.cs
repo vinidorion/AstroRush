@@ -33,5 +33,19 @@ namespace poly
             }
 
         }
+
+        protected override void OnTriggerEnter(Collider other)
+        {
+            if (other.transform == _target) base.OnTriggerEnter(other);
+            else
+            {
+                SpaceShip _ship = other.GetComponent<SpaceShip>();
+                if (_ship != null)
+                {
+                    _ship.GiveHP(-_dmg);
+                    _ship.Slow(_slow, _slowTime);
+                }
+            }
+        }
     }
 }

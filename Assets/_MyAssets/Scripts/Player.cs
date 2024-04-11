@@ -19,7 +19,8 @@ public class Player : MonoBehaviour
 		if(!_spaceship.isFrozen()) {
 			move();
 			UsePU();
-		}
+			ChangeCameraMode();
+        }
 	}
 
 	private void move()
@@ -39,5 +40,10 @@ public class Player : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.Space) && !_spaceship.isFrozen()) {
 			_spaceship.UsePU();
 		}
+	}
+
+	private void ChangeCameraMode()
+	{
+		if (Input.GetKeyDown(KeyCode.C)) { Camera.Instance.RotateCameraMode(); }
 	}
 }
