@@ -10,7 +10,15 @@ public class Camera : MonoBehaviour
 	private Player[] _plyArray;
 	private Transform _plyPos;
 
+	/***** SPECTATE *****/
 	private float _camRotSpeed = 10f;
+
+	/***** INTRO *****/
+	private List<Transform> _listCam = new List<Transform>();
+	private int _camIndex = 0;
+	private const float CAM_SPEED = 0.5f;
+	private const float COOLDOWN = 2f;
+	private float _nextCooldown;
 
 	void Awake()
 	{
@@ -19,14 +27,19 @@ public class Camera : MonoBehaviour
 		} else {
 			Destroy(this.gameObject);
 		}
+
+		foreach(Transform child in GameObject.Find("IntroAnim").transform) {
+			_listCam.Add(child);
+			child.GetComponent<MeshRenderer>().enabled = false;
+		}
 	}
 
 	void Start()
 	{
 		FindPly();
 
-		//_currentMode = CameraMode.Intro;
-		//_currentMode = CameraMode.Spectate; // pour tester
+		_nextCooldown = Time.time + COOLDOWN;
+		_currentMode = CameraMode.Intro;
 	}
 
 	void Update()
@@ -66,23 +79,24 @@ public class Camera : MonoBehaviour
 		}
 	}
 
+	public void RotateCameraMode()
+	{
+		if(_currentMode != CameraMode.FirstPerson && _currentMode != CameraMode.ThirdPerson) { // ne pas switch de CameraMode sur Intro ou Spectate
+			return;
+		}
+
+		if (_currentMode == CameraMode.FirstPerson) {
+			_currentMode = CameraMode.ThirdPerson;
+		} else {
+			_currentMode = CameraMode.FirstPerson;
+		}
+	}
+
 	// enum CameraMode:
 		// Intro
 		// FirstPerson
 		// ThirdPerson
 		// Spectate
-	public void RotateCameraMode()
-	{
-        if ((int)_currentMode == 1)
-		{
-			_currentMode = CameraMode.ThirdPerson;
-		}
-		else 
-		{
-            _currentMode = CameraMode.FirstPerson;
-        }
-    }
-
 	public void SetCameraMode(CameraMode mode)
 	{
 		_currentMode = mode;
@@ -99,7 +113,21 @@ public class Camera : MonoBehaviour
 	}
 
 	// avant que la course commence, la caméra montre la map
-	private void Intro() {}
+	private void Intro() {
+		if(Time.time > _nextCooldown) {
+			_camIndex += 2;
+			if(_camIndex >= _listCam.Count) {
+				//_camIndex = 0; -- uncomment to loop throught camera pairs
+				_currentMode = CameraMode.ThirdPerson;
+				return;
+			}
+			transform.position = _listCam[_camIndex].position;
+			transform.LookAt(transform.position + _listCam[_camIndex].forward);
+			_nextCooldown = Time.time + COOLDOWN;
+		}
+		transform.position += (_listCam[_camIndex + 1].position - transform.position) * Time.deltaTime * CAM_SPEED;
+		transform.rotation = Quaternion.Slerp(transform.rotation, _listCam[_camIndex + 1].rotation, CAM_SPEED * Time.deltaTime);
+	}
 
 	// caméra attaché juste devant le spaceship
 	private void FirstPerson() {
@@ -124,7 +152,9 @@ public class Camera : MonoBehaviour
 	// méthode public pour faire shaker la caméra
 	public void Shake()
 	{
-
+		if(_currentMode != CameraMode.FirstPerson && _currentMode != CameraMode.ThirdPerson) { // ne pas faire l'effet sur Intro ou Spectate
+			return;
+		}
 	}
 	
 }

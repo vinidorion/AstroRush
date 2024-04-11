@@ -24,9 +24,6 @@ public class MusicManager : MonoBehaviour
 
 	void Start()
 	{
-
-		// start music here
-		// on race start or on scene start???
 		StartCoroutine(StartMusicCoroutine());
 	}
 

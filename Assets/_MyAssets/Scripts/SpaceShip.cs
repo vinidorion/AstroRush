@@ -198,10 +198,17 @@ public class SpaceShip : MonoBehaviour
 	// utilisé dans la classe LapComplete
 	public void LapCompleted()
 	{
-		_lap++; // et changer lap dans le hud
 		GetComponent<WaypointFinder>().SetWaypoint(0);
+		// if _lap est arrivé au max, return;
+		
 
-		// check ici si _lap atteint le nombre de lap total, si oui et si c'est le joueur: c'est la fin du jeu (Camera.Instance.SetCameraMode(CameraMode.Spectate);)
+
+		_lap++; // et changer lap dans le hud
+		
+		// check ici si _lap atteint le nombre de lap total, si oui et si c'est le joueur: c'est la fin du jeu
+
+		// Camera.Instance.SetCameraMode(CameraMode.Spectate);
+		// GameData.Instance.GetNumLap()
 
 		_listLapTime.Add(Time.time);
 		if (_listLapTime.Count == 1) {
