@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
 		_spaceship = GetComponent<SpaceShip>();
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
 		if(!_spaceship.isFrozen()) {
 			move();

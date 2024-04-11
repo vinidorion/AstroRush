@@ -146,7 +146,7 @@ public class Bot : MonoBehaviour
             Debug.DrawLine(_spaceship.transform.position, Vector3.Lerp(waypoints[passedTargets[i] + 1].transform.position,
                     optiWaypoints[passedTargets[i] + 1].transform.position, difficulty[i]), Color.blue, Time.fixedDeltaTime);
             Debug.DrawLine(_spaceship.transform.position, _spaceship.transform.position + Bots[i].GetComponent<Rigidbody>().velocity, Color.red, Time.fixedDeltaTime);
-            
+            /*
             if (angle2ndP > 20 || angle2ndP < -20)
             {
                 _targetSpeed = _maxSpeed - (Mathf.Abs(angle2ndP) / 180 * _maxSpeed / _agility) * (2 - difficulty[i]);
@@ -159,7 +159,7 @@ public class Bot : MonoBehaviour
                     _targetSpeed = 0;
                 }
             }
-            
+            */
             //Debug.Log(i);
             Debug.Log(_targetSpeed);
 
@@ -197,39 +197,32 @@ public class Bot : MonoBehaviour
 
     void BotTurn(int i, float angle, float angleVel)
     {
-
-        // OVERSTEER // A FIX
-        if (angleVel > (5 + 60 * difficulty[i]) / _rb.velocity.magnitude)
+        float angleOver = Vector3.SignedAngle(_rb.velocity, transform.forward, transform.up);
+        if (angleVel > (10 + 100 * difficulty[i]) / _rb.velocity.magnitude/* && Mathf.Abs(angleOver) < 90*/)
         {
             Debug.Log(_rb.velocity.magnitude);
-            if (angleVel > (10 + 120 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed)
+            if (angleVel > (20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed)
             {
                 _spaceship.AirBrake(false);
-                _spaceship.transform.Rotate(0f, 80f * Time.deltaTime * _agility, 0f);
-                directionRight[i] = Quaternion.AngleAxis(80f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
                 Debug.Log("oversteer right");
             }
             else
             {
-                _spaceship.transform.Rotate(0f, 50f * Time.deltaTime * _agility, 0f);
-                directionRight[i] = Quaternion.AngleAxis(50f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+                _spaceship.transform.Rotate(0f, 66f * Time.deltaTime * _agility, 0f);
                 //Debug.Log("oversteer right");
             }
             
         }
-        else if (angleVel < -(5 + 60 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed)
+        else if (angleVel < -(10 + 100 * difficulty[i]) / _rb.velocity.magnitude/* && Mathf.Abs(angleOver) < 90*/)
         {
-            if (angleVel < -(10 + 120 * difficulty[i]) / _rb.velocity.magnitude)
+            if (angleVel < -(20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed)
             {
                 _spaceship.AirBrake(true);
-                _spaceship.transform.Rotate(0f, -50f * Time.deltaTime * _agility, 0f);
-                directionRight[i] = Quaternion.AngleAxis(-80f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
                 Debug.Log("oversteer left");
             }
             else
             {
-                _spaceship.transform.Rotate(0f, -50f * Time.deltaTime * _agility, 0f);
-                directionRight[i] = Quaternion.AngleAxis(-80f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
+                _spaceship.transform.Rotate(0f, -66f * Time.deltaTime * _agility, 0f);
                 //Debug.Log("oversteer left");
             }
         }

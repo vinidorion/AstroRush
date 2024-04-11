@@ -178,9 +178,9 @@ public class SpaceShip : MonoBehaviour
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
 
 		if(lateralSpeed > 0.5f) {
-			_rb.AddForce(transform.right * -12f * agility);
+			_rb.AddForce(transform.right * -20f * agility);
 		} else if(lateralSpeed < -0.5f)  {
-			_rb.AddForce(transform.right * 12f * agility);
+			_rb.AddForce(transform.right * 20f * agility);
 		}
 	}
 
@@ -256,7 +256,10 @@ public class SpaceShip : MonoBehaviour
 
 	public void Forward()
 	{
-		_rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
+		if (_rb.velocity.magnitude < max_speed)
+		{
+            _rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
+        }
 	}
 
 	public void backward()
@@ -267,25 +270,30 @@ public class SpaceShip : MonoBehaviour
 	public void Turn(bool left)
 	{
 		if (left) {
-			//Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
-			//float rotation = agility - current_speed.y;
-			_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
-			//_rb.angularVelocity = new Vector3(0f, 6f, 0f);
-		} else {
+            //Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
+            //float rotation = agility - current_speed.y;
+            //_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
+            //_rb.angularVelocity = new Vector3(0f, 6f, 0f);
+            transform.Rotate(0f, -66f * Time.deltaTime * agility, 0f);
+        } else {
 			//Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
-			_rb.AddTorque(transform.up * /*_rb.angularDrag **/ agility, ForceMode.Acceleration);
-			//float rotation = (agility - current_speed.y) * -1;
-		}
+			//_rb.AddTorque(transform.up * /*_rb.angularDrag **/ agility, ForceMode.Acceleration);
+            //float rotation = (agility - current_speed.y) * -1;
+            transform.Rotate(0f, 66f * Time.deltaTime * agility, 0f);
+        }
 	}
 
 	public void AirBrake(bool left)
 	{
 		if (left) {
 			float rotation = agility - current_speed.y + airbrake_power;
-		} else {
+            transform.Rotate(0f, -100f * Time.deltaTime * agility, 0f);
+        } else {
 			float rotation = (agility - current_speed.y + airbrake_power) * -1;
-		}
-		Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
+            transform.Rotate(0f, 100f * Time.deltaTime * agility, 0f);
+        }
+        
+        Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
 		_rb.AddForce(force * 5f);
 	}
 
