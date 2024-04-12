@@ -14,10 +14,10 @@ public class Camera : MonoBehaviour
 	private float _camRotSpeed = 10f;
 
 	/***** INTRO *****/
-	private List<Transform> _listCam = new List<Transform>();
-	private int _camIndex = 0;
 	private const float CAM_SPEED = 0.5f;
 	private const float COOLDOWN = 2f;
+	private List<Transform> _listCam = new List<Transform>();
+	private int _camIndex = 0;
 	private float _nextCooldown;
 
 	void Awake()
@@ -28,8 +28,7 @@ public class Camera : MonoBehaviour
 			Destroy(this.gameObject);
 		}
 
-		foreach (Transform child in GameObject.Find("IntroAnim").transform)
-		{
+		foreach (Transform child in GameObject.Find("IntroAnim").transform) {
 			_listCam.Add(child);
 			child.GetComponent<MeshRenderer>().enabled = false;
 		}
@@ -66,12 +65,12 @@ public class Camera : MonoBehaviour
 	private void FindPly() {
 		_plyArray = FindObjectsOfType<Player>();
 
-		int _plyArrLen = _plyArray.Length;
+		int plyArrLen = _plyArray.Length;
 
-		if(_plyArrLen == 1) {
+		if(plyArrLen == 1) {
 			// player found
 			_plyPos = _plyArray[0].transform;
-		} else if(_plyArrLen == 0) {
+		} else if(plyArrLen == 0) {
 			// no player found
 			Debug.Log("PLAYER NOT FOUND");
 		} else {
@@ -142,7 +141,7 @@ public class Camera : MonoBehaviour
 		transform.position = _plyPos.position + (_plyPos.forward * -1.5f) + (_plyPos.up * 0.3f);
 		transform.rotation = _plyPos.rotation;
 	}
-	
+
 	// quand la course est fini
 	private void Spectate()
 	{
@@ -156,6 +155,7 @@ public class Camera : MonoBehaviour
 		if(_currentMode != CameraMode.FirstPerson && _currentMode != CameraMode.ThirdPerson) { // ne pas faire l'effet sur Intro ou Spectate
 			return;
 		}
+
+		// shake ici
 	}
-	
 }

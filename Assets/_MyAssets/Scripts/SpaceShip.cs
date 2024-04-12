@@ -23,15 +23,22 @@ public class SpaceShip : MonoBehaviour
 	private Rigidbody _rb;
 	private GameManager _gm;
 
+	// keep upright
+	private Vector3 _rayDirFront = Vector3.down;
+	private Vector3 _rayDirBackRight = Vector3.down;
+	private Vector3 _rayDirBackLeft = Vector3.down;
+	private bool _onGround1 = false;
+	private bool _onGround2 = false;
+	private bool _onGround3 = false;
 	// objets d'ou partent les raycast pour keep upright
 	[SerializeField] private GameObject _front;
-    [SerializeField] private GameObject _backleft;
+	[SerializeField] private GameObject _backleft;
 	[SerializeField] private GameObject _backright;
 	private Vector3 _fronthit;
 	private Vector3 _backrighthit;
 	private Vector3 _backlefthit;
 
-    [SerializeField] private int _pu = -1; //[SerializeField] temporaire pour tester
+	[SerializeField] private int _pu = -1; //[SerializeField] temporaire pour tester
 
 	// WAYPOINTS / POSITIONS
 	private int _lap = 0;
@@ -48,7 +55,6 @@ public class SpaceShip : MonoBehaviour
 	private Vector3 _dragForce;
 	private const float COEF_DRAG = -0.3f;
 	private Vector3 _prevRayDir = Vector3.down;	
-
 
 	/********************************************
 					SYSTÈME PID
@@ -81,30 +87,26 @@ public class SpaceShip : MonoBehaviour
 	/****** VARIABLES ******/
 	private LayerMask _layersToHit;							// la seule layer que le Raycast du PID touche
 	private Vector3 _rayDir = Vector3.down;					// direction de la gravité, par défaut vers le bas, toujours normalisé
-    private Vector3 _rayDirFront = Vector3.down;
-    private Vector3 _rayDirBackRight = Vector3.down;
-    private Vector3 _rayDirBackLeft = Vector3.down;
-    private float _hauteur = 0f;							// hauteur actuelle
+
+	private float _hauteur = 0f;							// hauteur actuelle
 	private float _diffHauteur = 0f;						// difference (delta distance) entre la hauteur actuelle et la hauteur que le PID vise
 	private float _lastDiffHauteur = 0f;					// même chose que _diffHauteur mais de la dernière frame (du FixedUpdate())
 	private float _deriveeHauteur = 0f;						// derivee de la hauteur (vitesse du deplacement vertical)
 	private float _PIDForce = 0f;							// force verticale à appliquer pour faire léviter le spaceship (PID)
-	private bool _onGround = false;                         // si le ray touche le sol (et donc si le PID est active)
-    private bool _onGround1 = false;
-    private bool _onGround2 = false;
-    private bool _onGround3 = false;
-
-    // comment ignorer angular impulse des collisions en gardant la capacité d'appliquer .AddTorq()
-    // https://forum.unity.com/threads/how-to-stop-the-rotation-of-a-rigidbody-but-for-specific-collisions.1189615/#:~:text=I%20finally%20find,you%27re%20awesome%20guys
+	private bool _onGround = false;							// si le ray touche le sol (et donc si le PID est active)
 
 
-    void Awake()
+	// comment ignorer angular impulse des collisions en gardant la capacité d'appliquer .AddTorq()
+	// https://forum.unity.com/threads/how-to-stop-the-rotation-of-a-rigidbody-but-for-specific-collisions.1189615/#:~:text=I%20finally%20find,you%27re%20awesome%20guys
+
+
+	void Awake()
 	{
 		_rb = GetComponent<Rigidbody>();
 		_rb.angularDrag = 10f;
 		_layersToHit = 1 << LayerMask.NameToLayer("track");
 
-    }
+	}
 
 	void Start()
 	{
@@ -114,7 +116,7 @@ public class SpaceShip : MonoBehaviour
 	void Update()
 	{
 		current_speed = Vector3.Project(_rb.velocity, transform.forward);
-    }
+	}
 
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
 	void FixedUpdate()
@@ -137,47 +139,46 @@ public class SpaceShip : MonoBehaviour
 	// méthode privée qui trouve la direction de la gravité
 	private void CheckForGround()
 	{
-        Ray rayfront = new Ray(_front.transform.position, _rayDirFront);
-        if (Physics.Raycast(rayfront, out RaycastHit hitfront, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore))
-        {
-			_fronthit = hitfront.point;
-            _rayDirFront = -hitfront.normal;
-			_onGround1 = true;
-            //Debug.DrawLine(transform.position, hitfront.point, Color.red, Time.fixedDeltaTime);
-        } else {
-            _onGround1 = false;
-        }
-
-        Ray raybackleft = new Ray(_backleft.transform.position, _rayDirBackLeft);
-        if (Physics.Raycast(raybackleft, out RaycastHit hitbackleft, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore))
-        {
-            _backlefthit = hitbackleft.point;
-            _rayDirBackLeft = -hitbackleft.normal;
-            _onGround2 = true;
-            //Debug.DrawLine(transform.position, hitbackleft.point, Color.green, Time.fixedDeltaTime);
-        } else {
-            _onGround2 = false;
-        }
-
-        Ray raybackright = new Ray(_backright.transform.position, _rayDirBackRight);
-        if (Physics.Raycast(raybackright, out RaycastHit hitbackright, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore))
-        {
-            _backrighthit = hitbackright.point;
-            _rayDirBackRight = -hitbackright.normal;
-            _onGround3 = true;
-            //Debug.DrawLine(transform.position, hitbackright.point, Color.blue, Time.fixedDeltaTime);
-        } else {
-            _onGround3 = false;
-        }
-
-		if (_onGround1 == true && _onGround2 == true && _onGround3 == true)
+		Ray rayfront = new Ray(_front.transform.position, _rayDirFront);
+		if (Physics.Raycast(rayfront, out RaycastHit hitfront, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore))
 		{
+			_fronthit = hitfront.point;
+			_rayDirFront = -hitfront.normal;
+			_onGround1 = true;
+			//Debug.DrawLine(transform.position, hitfront.point, Color.red, Time.fixedDeltaTime);
+		} else {
+			_onGround1 = false;
+		}
+
+		Ray raybackleft = new Ray(_backleft.transform.position, _rayDirBackLeft);
+		if (Physics.Raycast(raybackleft, out RaycastHit hitbackleft, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore))
+		{
+			_backlefthit = hitbackleft.point;
+			_rayDirBackLeft = -hitbackleft.normal;
+			_onGround2 = true;
+			//Debug.DrawLine(transform.position, hitbackleft.point, Color.green, Time.fixedDeltaTime);
+		} else {
+			_onGround2 = false;
+		}
+
+		Ray raybackright = new Ray(_backright.transform.position, _rayDirBackRight);
+		if (Physics.Raycast(raybackright, out RaycastHit hitbackright, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore))
+		{
+			_backrighthit = hitbackright.point;
+			_rayDirBackRight = -hitbackright.normal;
+			_onGround3 = true;
+			//Debug.DrawLine(transform.position, hitbackright.point, Color.blue, Time.fixedDeltaTime);
+		} else {
+			_onGround3 = false;
+		}
+
+		if (_onGround1 && _onGround2 && _onGround3) {
 			_onGround3 = true;
 		} else {
 			_onGround3 = false;
 		}
 
-        Ray ray = new Ray(transform.position, _rayDir);
+		Ray ray = new Ray(transform.position, _rayDir);
 		if(Physics.Raycast(ray, out RaycastHit hit, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore)) {
 			_prevRayDir = -_rayDir;
 			_rayDir = -hit.normal;
@@ -186,15 +187,22 @@ public class SpaceShip : MonoBehaviour
 			PID();
 			KeepUpright(_onGround3);
 			//Debug.Log("found ground");
-			//Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
-			//Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime);	// normale de la surface (inverse de la direction de la gravité)
+
+			#if UNITY_EDITOR
+				Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
+				Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime);	// normale de la surface (inverse de la direction de la gravité)
+			#endif
 		} else {
 			//Debug.Log("ground not found");
-			Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
+
+			#if UNITY_EDITOR
+				Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
+			#endif
+			
 			_onGround = false;
 		}
 		
-    }
+	}
 
 	// trouve la force verticale qu'il faut appliquer pour faire léviter le spaceship
 	// https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller
@@ -243,18 +251,17 @@ public class SpaceShip : MonoBehaviour
 
 	private void KeepUpright(bool ground)
 	{
-		if (ground == true)
-		{
-            Vector3 frontToLeft = _fronthit - _backlefthit;
-            Vector3 frontToRight = _fronthit - _backrighthit;
-            Vector3 upright = Vector3.Cross(frontToRight, frontToLeft);
+		if (ground) {
+			Vector3 frontToLeft = _fronthit - _backlefthit;
+			Vector3 frontToRight = _fronthit - _backrighthit;
+			Vector3 upright = Vector3.Cross(frontToRight, frontToLeft);
 
-            Quaternion targetRotation = Quaternion.FromToRotation(transform.up, upright) * transform.rotation;
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 10f * Time.fixedDeltaTime);
-        } else {
-            Quaternion targetRotation = Quaternion.FromToRotation(transform.up, -_rayDir) * transform.rotation;
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 10f * Time.fixedDeltaTime);
-        }
+			Quaternion targetRotation = Quaternion.FromToRotation(transform.up, upright) * transform.rotation;
+			transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 10f * Time.fixedDeltaTime);
+		} else {
+			Quaternion targetRotation = Quaternion.FromToRotation(transform.up, -_rayDir) * transform.rotation;
+			transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 10f * Time.fixedDeltaTime);
+		}
 	}
 
 	/********************************************
@@ -332,9 +339,9 @@ public class SpaceShip : MonoBehaviour
 	{
 		if (_rb.velocity.magnitude < max_speed)
 		{
-            _rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/);
+			_rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/);
 			_rb.AddForce((-transform.forward * _accel /* * (_slower + 1)*/) * (current_speed.magnitude / max_speed));
-        }
+		}
 	}
 
 	public void backward()
@@ -345,30 +352,30 @@ public class SpaceShip : MonoBehaviour
 	public void Turn(bool left)
 	{
 		if (left) {
-            //Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
-            //float rotation = agility - current_speed.y;
-            //_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
-            //_rb.angularVelocity = new Vector3(0f, 6f, 0f);
-            transform.Rotate(0f, -66f * Time.deltaTime * agility, 0f);
-        } else {
+			//Debug.Log("TURNING LEFT: " + _rb.angularVelocity.magnitude);
+			//float rotation = agility - current_speed.y;
+			//_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
+			//_rb.angularVelocity = new Vector3(0f, 6f, 0f);
+			transform.Rotate(0f, -66f * Time.deltaTime * agility, 0f);
+		} else {
 			//Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
 			//_rb.AddTorque(transform.up * /*_rb.angularDrag **/ agility, ForceMode.Acceleration);
-            //float rotation = (agility - current_speed.y) * -1;
-            transform.Rotate(0f, 66f * Time.deltaTime * agility, 0f);
-        }
+			//float rotation = (agility - current_speed.y) * -1;
+			transform.Rotate(0f, 66f * Time.deltaTime * agility, 0f);
+		}
 	}
 
 	public void AirBrake(bool left)
 	{
 		if (left) {
 			float rotation = agility - current_speed.y + airbrake_power;
-            transform.Rotate(0f, -100f * Time.deltaTime * agility, 0f);
-        } else {
+			transform.Rotate(0f, -100f * Time.deltaTime * agility, 0f);
+		} else {
 			float rotation = (agility - current_speed.y + airbrake_power) * -1;
-            transform.Rotate(0f, 100f * Time.deltaTime * agility, 0f);
-        }
-        
-        Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
+			transform.Rotate(0f, 100f * Time.deltaTime * agility, 0f);
+		}
+		
+		Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
 		_rb.AddForce(force * 5f);
 	}
 
@@ -378,7 +385,7 @@ public class SpaceShip : MonoBehaviour
 
 	public void UsePU()
 	{
-        if (!_isFrozen && _pu != -1) {
+		if (!_isFrozen && _pu != -1) {
 			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * _size), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
 			pu.SetOwner(transform);
 			//_pu = -1;  //en commentaire pour tester
@@ -427,6 +434,10 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
+	/********************************************
+						STATS
+	*********************************************/
+
 	public int GetMaxHP() { return MAX_HP; }
 
 	public int GetHP() { return _hp; }
@@ -442,6 +453,31 @@ public class SpaceShip : MonoBehaviour
 			_boost = _maxBoost;
 		}
 	} 
+
+	public float GetAgility()
+	{
+		return agility;
+	}
+
+	public float GetMaxSpeed()
+	{
+		return max_speed;
+	}
+
+	public void SetMaxSpeed(float maxSpeed)
+	{
+		max_speed = maxSpeed;
+	}
+	public float GetSize()
+	{
+		return _size;
+	}
+
+	public float GetSpeed()
+	{
+		return current_speed.magnitude;
+
+	}
 
 	// méthode publique qui permet de freeze/unfreeze le spaceship
 	public void Freeze(bool isFrozen) { _isFrozen = isFrozen; }
@@ -465,31 +501,5 @@ public class SpaceShip : MonoBehaviour
 		_slower = 0;
 	}
 
-	public float GetAgility()
-	{
-		return agility;
-	}
 
-	public float GetMaxSpeed()
-	{
-		return max_speed;
-	}
-
-<<<<<<< Updated upstream
-	public void SetMaxSpeed(float maxSpeed)
-	{
-		max_speed = maxSpeed;
-	}
-=======
-	public float GetSize()
-	{
-		return _size;
-	}
-
-	public float GetSpeed()
-	{
-		return current_speed.magnitude;
-
-    }
->>>>>>> Stashed changes
 }

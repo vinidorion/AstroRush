@@ -20,9 +20,11 @@ public class WaypointFinder : MonoBehaviour
 		//Debug.Log("waypointPos: " + waypointPos);
 		//Debug.Log("nextwaypointPos: " + nextwaypointPos);
 
-		// pour visualiser à quel waypoint le spaceship est rendu
-		Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
-		Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
+		#if UNITY_EDITOR
+			// pour visualiser à quel waypoint le spaceship est rendu
+			Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
+			Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
+		#endif
 
 		// sqrt inutile ici, on compare deux distances
 		float distCurrWaypoint = (transform.position - waypointPos).sqrMagnitude;
@@ -55,7 +57,7 @@ public class WaypointFinder : MonoBehaviour
         }
 		else
         {
-			Debug.Log(gameObject + " HAS WAYPOINTFINDER BUT ISNT A SPACESHIP NOR A MISSILE");
+			Debug.Log(this.gameObject + " HAS WAYPOINTFINDER BUT ISNT A SPACESHIP NOR A MISSILE");
 		}
 	}
 

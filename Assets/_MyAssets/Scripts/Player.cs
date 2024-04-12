@@ -9,21 +9,22 @@ public class Player : MonoBehaviour
 
 	private SpaceShip _spaceship;
 
-    public static Player Instance;
+	public static Player Instance;
 
-    void Awake()
+	void Awake()
 	{
 		_spaceship = GetComponent<SpaceShip>();
-        Instance = this;
-    }
+		Instance = this;
+	}
 
-	void Update() //garder a Update sinon les PU ne sortent pas
+	// controles dans l'Update() et non dans FixedUpdate()
+	void Update()
 	{
 		if(!_spaceship.isFrozen()) {
 			move();
 			UsePU();
 			ChangeCameraMode();
-        }
+		}
 	}
 
 	private void move()
