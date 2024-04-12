@@ -51,17 +51,17 @@ public class Bot : MonoBehaviour
     [SerializeField] private float difficulty5 = 0;
     private SpaceShip _spaceship;
     private Rigidbody _rb;
-    private float _agility;
-    private float _targetSpeed;
-    private float _maxSpeed;
+    protected float _agility;
+    protected float _targetSpeed;
+    protected List<float> _maxSpeed;
 
     private List<GameObject> waypoints = new List<GameObject>();
     private List<GameObject> optiWaypoints = new List<GameObject>();
-    private List<GameObject> Bots = new List<GameObject>();
+    protected List<GameObject> Bots = new List<GameObject>();
     private List<GameObject> targets = new List<GameObject>();
     private List<Vector3> directionRight = new List<Vector3>();
     private List<int> passedTargets = new List<int>();
-    private List<float> difficulty = new List<float>();
+    protected List<float> difficulty = new List<float>();
     [SerializeField] private float accelbot = 0;
 
     public Plane Plane
@@ -106,6 +106,10 @@ public class Bot : MonoBehaviour
                 optiWaypoints[passedTargets[i]].transform.position, difficulty[i]);
             directionRight[i] = Bots[i].transform.right;
         }
+        for (int i = 0; i < 4; i++)
+        {
+            _maxSpeed.Add(Bots[i].GetComponent<SpaceShip>().GetMaxSpeed());
+        }
     }
 
     // Update is called once per frame
@@ -118,8 +122,7 @@ public class Bot : MonoBehaviour
             _spaceship = Bots[i].GetComponent<SpaceShip>();
             _rb = _spaceship.GetComponent<Rigidbody>();
             _agility = _spaceship.GetAgility();
-            _maxSpeed = _spaceship.GetMaxSpeed();
-            _targetSpeed = _maxSpeed;
+            _targetSpeed = _spaceship.GetMaxSpeed();
 
             //si le bot est assez proche de sa target on set sa target au prochain waypoint
             if (Vector3.Magnitude(_spaceship.transform.position - targets[i].transform.position) < 2f)
@@ -141,12 +144,12 @@ public class Bot : MonoBehaviour
             float angle = Vector3.SignedAngle(Bots[i].transform.forward, direction, Bots[i].transform.up);
             float angleVel = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction, Bots[i].transform.up);
             float angle2ndP = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction2nd, Bots[i].transform.up);
-
+            /*
             Debug.DrawLine(_spaceship.transform.position, targets[i].transform.position, Color.green, Time.fixedDeltaTime);
             Debug.DrawLine(_spaceship.transform.position, Vector3.Lerp(waypoints[passedTargets[i] + 1].transform.position,
                     optiWaypoints[passedTargets[i] + 1].transform.position, difficulty[i]), Color.blue, Time.fixedDeltaTime);
             Debug.DrawLine(_spaceship.transform.position, _spaceship.transform.position + Bots[i].GetComponent<Rigidbody>().velocity, Color.red, Time.fixedDeltaTime);
-            /*
+
             if (angle2ndP > 20 || angle2ndP < -20)
             {
                 _targetSpeed = _maxSpeed - (Mathf.Abs(angle2ndP) / 180 * _maxSpeed / _agility) * (2 - difficulty[i]);
@@ -161,69 +164,50 @@ public class Bot : MonoBehaviour
             }
             */
             //Debug.Log(i);
-            Debug.Log(_targetSpeed);
 
             BotMove(i);
-            if (i == 1)
-            {
-                //Debug.Log(angle);
-            }
             BotTurn(i, angle, angleVel);
+            
         }
     }
 
     void BotMove(int i)
     {
-        if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude <= _targetSpeed)
+        if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude < _targetSpeed)
         {
             _spaceship.Forward();
         }
         else if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude > _targetSpeed)
         {
-            _spaceship.backward();
+            _spaceship.AirBrake(false);
+            _spaceship.AirBrake(true);
         }
-
-        /*
-        if (angleVel > 20 && _rb().velocity.magnitude > 3)
-        {
-            _spaceship.backward();
-        }
-        if (angleVel < -20 && _rb().velocity.magnitude > 3)
-        {
-            _spaceship.backward();
-        }
-        */
     }
 
     void BotTurn(int i, float angle, float angleVel)
     {
-        float angleOver = Vector3.SignedAngle(_rb.velocity, transform.forward, transform.up);
-        if (angleVel > (10 + 100 * difficulty[i]) / _rb.velocity.magnitude/* && Mathf.Abs(angleOver) < 90*/)
+        if (angleVel > (10 + 100 * difficulty[i]) / _rb.velocity.magnitude)
         {
             Debug.Log(_rb.velocity.magnitude);
-            if (angleVel > (20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed)
+            if (angleVel > (20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
             {
                 _spaceship.AirBrake(false);
-                Debug.Log("oversteer right");
             }
             else
             {
                 _spaceship.transform.Rotate(0f, 66f * Time.deltaTime * _agility, 0f);
-                //Debug.Log("oversteer right");
             }
             
         }
-        else if (angleVel < -(10 + 100 * difficulty[i]) / _rb.velocity.magnitude/* && Mathf.Abs(angleOver) < 90*/)
+        else if (angleVel < -(10 + 100 * difficulty[i]) / _rb.velocity.magnitude)
         {
-            if (angleVel < -(20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed)
+            if (angleVel < -(20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
             {
                 _spaceship.AirBrake(true);
-                Debug.Log("oversteer left");
             }
             else
             {
                 _spaceship.transform.Rotate(0f, -66f * Time.deltaTime * _agility, 0f);
-                //Debug.Log("oversteer left");
             }
         }
 
@@ -232,30 +216,22 @@ public class Bot : MonoBehaviour
         {
             _spaceship.AirBrake(false);
             _spaceship.transform.Rotate(0f, 100f * Time.deltaTime * _agility, 0f);
-            directionRight[i] = Quaternion.AngleAxis(100f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
-            Debug.Log("air brakes right");
         }
         else if (angle < -50 / _rb.velocity.magnitude && _rb.velocity.magnitude >= 1)
         {
             _spaceship.AirBrake(true);
             _spaceship.transform.Rotate(0f, -100f * Time.deltaTime * _agility, 0f);
-            directionRight[i] = Quaternion.AngleAxis(-100f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
-            Debug.Log("air brakes left");
         }
         // Normal turn
         else if (angle > 0.1f)
         {
             //_spaceship.Turn(true);
             _spaceship.transform.Rotate(0f, 66f * Time.deltaTime * _agility, 0f);
-            directionRight[i] = Quaternion.AngleAxis(66f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
-            Debug.Log("turn right");
         }
         else if (angle < -0.1f)
         {
             //_spaceship.Turn(false);
             _spaceship.transform.Rotate(0f, -66f * Time.deltaTime * _agility, 0f);
-            directionRight[i] = Quaternion.AngleAxis(-66f * Time.deltaTime * _agility, _spaceship.transform.up) * directionRight[i];
-            Debug.Log("turn right");
         }
     }
 
