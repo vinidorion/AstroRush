@@ -9,6 +9,7 @@ namespace poly
     public class Beam : Projectile
     {
         Ray ray;
+        float shipSize;
         protected override void Awake()
         {
             _lifeTime = 6f;
@@ -17,7 +18,8 @@ namespace poly
         protected override void Start()
         {
             base.Start();
-            transform.position = _owner.position + new Vector3(1, 0, 0);
+            shipSize = _owner.GetComponent<SpaceShip>().GetSize();
+            transform.position = _owner.position + (_owner.forward * shipSize);
         }
 
         protected override void Update()
@@ -30,7 +32,7 @@ namespace poly
                 transform.localScale = new Vector3(1 , 1, hit.distance);
             }
             else transform.localScale = new Vector3(1, 1, 3);
-            transform.position = _owner.position + _owner.forward;
+            transform.position = _owner.position + (_owner.forward * shipSize);
             transform.rotation = _owner.rotation;
         }
 

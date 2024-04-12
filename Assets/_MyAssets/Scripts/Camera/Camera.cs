@@ -28,7 +28,8 @@ public class Camera : MonoBehaviour
 			Destroy(this.gameObject);
 		}
 
-		foreach(Transform child in GameObject.Find("IntroAnim").transform) {
+		foreach (Transform child in GameObject.Find("IntroAnim").transform)
+		{
 			_listCam.Add(child);
 			child.GetComponent<MeshRenderer>().enabled = false;
 		}

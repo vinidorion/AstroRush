@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InGameHud : MonoBehaviour
 {
 	public static InGameHud Instance; // Singleton
+
+	private SpaceShip _ship;
+	private float _maxSpeed;
+	[SerializeField] private Image _speedBar = default;
 
 	void Awake()
 	{
@@ -15,9 +20,15 @@ public class InGameHud : MonoBehaviour
 		}
 	}
 
-	void Update()
+    private void Start()
+    {
+		_ship = Player.Instance.GetSpaceShip();
+		_maxSpeed = _ship.GetMaxSpeed();
+    }
+
+    void Update()
 	{
-		
+		Speed();
 	}
 
 
@@ -28,6 +39,19 @@ public class InGameHud : MonoBehaviour
 	{
 
 	}
+
+	private void Speed()
+	{
+		_ship.GetSpeed();
+
+		_speedBar.fillAmount = _ship.GetSpeed() / _maxSpeed;
+		Color color = _speedBar.color;
+        color.b = 1 - _ship.GetSpeed() / _maxSpeed;
+		color.r = _ship.GetSpeed() / _maxSpeed;
+        _speedBar.color = color;
+
+		Debug.Log(_ship.GetSpeed() / _maxSpeed);
+    }
 
 	// draw la position (premier, deuxième, etc)
 	private void Pos()

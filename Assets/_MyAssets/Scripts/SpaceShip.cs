@@ -15,6 +15,7 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float agility = default;
 	[SerializeField] private float _slower = default;
 	[SerializeField] private float _maxBoost = default;
+	[SerializeField] private float _size = default;
 	[SerializeField] private float _boost = default;
 
 	private bool _isFrozen = false;
@@ -102,7 +103,8 @@ public class SpaceShip : MonoBehaviour
 		_rb = GetComponent<Rigidbody>();
 		_rb.angularDrag = 10f;
 		_layersToHit = 1 << LayerMask.NameToLayer("track");
-	}
+
+    }
 
 	void Start()
 	{
@@ -111,9 +113,8 @@ public class SpaceShip : MonoBehaviour
 
 	void Update()
 	{
-		current_speed = _rb.velocity;
-		//Debug.Log(_rb.velocity.magnitude);
-	}
+		current_speed = Vector3.Project(_rb.velocity, transform.forward);
+    }
 
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
 	void FixedUpdate()
@@ -331,7 +332,8 @@ public class SpaceShip : MonoBehaviour
 	{
 		if (_rb.velocity.magnitude < max_speed)
 		{
-            _rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
+            _rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/);
+			_rb.AddForce((-transform.forward * _accel /* * (_slower + 1)*/) * (current_speed.magnitude / max_speed));
         }
 	}
 
@@ -376,11 +378,8 @@ public class SpaceShip : MonoBehaviour
 
 	public void UsePU()
 	{
-		Collider col = GetComponent<Collider>();
-        
-
         if (!_isFrozen && _pu != -1) {
-			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * (transform.lossyScale.z/2)), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
+			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * _size), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
 			pu.SetOwner(transform);
 			//_pu = -1;  //en commentaire pour tester
 		}
@@ -428,27 +427,13 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
-	public int GetMaxHP()
-	{
-		return MAX_HP;
-	}
+	public int GetMaxHP() { return MAX_HP; }
 
-	public int GetHP()
-	{
-		return _hp;
-	}
+	public int GetHP() { return _hp; }
 
-	public void GiveHP(int life)
-	{
-		_hp = Mathf.Clamp(_hp + life, 0, MAX_HP);
+	public void GiveHP(int life) { _hp = Mathf.Clamp(_hp + life, 0, MAX_HP); }
 
-		//Debug.Log(life + " (" + _hp + " HP)");
-	}
-
-	public float GetBoost()
-	{
-		return _boost;
-	}
+	public float GetBoost() { return _boost; }
 
 	public void SetBoost(float boost)
 	{
@@ -459,22 +444,13 @@ public class SpaceShip : MonoBehaviour
 	} 
 
 	// méthode publique qui permet de freeze/unfreeze le spaceship
-	public void Freeze(bool isFrozen)
-	{
-		_isFrozen = isFrozen;
-	}
+	public void Freeze(bool isFrozen) { _isFrozen = isFrozen; }
 
 	// méthode publique pour savoir si le spaceship est frozen
-	public bool isFrozen()
-	{
-		return _isFrozen;
-	}
+	public bool isFrozen() { return _isFrozen; }
 
 	// temporaire
-	public Vector3 GetVecGrav()
-	{
-		return _rayDir;
-	}
+	public Vector3 GetVecGrav() { return _rayDir; }
 
 	// méthode publique qui permet de ralentir le spaceship (par les PU)
 	public void Slow(float slow, float slowTime)
@@ -499,8 +475,21 @@ public class SpaceShip : MonoBehaviour
 		return max_speed;
 	}
 
+<<<<<<< Updated upstream
 	public void SetMaxSpeed(float maxSpeed)
 	{
 		max_speed = maxSpeed;
 	}
+=======
+	public float GetSize()
+	{
+		return _size;
+	}
+
+	public float GetSpeed()
+	{
+		return current_speed.magnitude;
+
+    }
+>>>>>>> Stashed changes
 }

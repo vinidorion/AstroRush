@@ -9,12 +9,15 @@ public class Player : MonoBehaviour
 
 	private SpaceShip _spaceship;
 
-	void Awake()
+    public static Player Instance;
+
+    void Awake()
 	{
 		_spaceship = GetComponent<SpaceShip>();
-	}
+        Instance = this;
+    }
 
-	void FixedUpdate()
+	void Update() //garder a Update sinon les PU ne sortent pas
 	{
 		if(!_spaceship.isFrozen()) {
 			move();
@@ -45,5 +48,10 @@ public class Player : MonoBehaviour
 	private void ChangeCameraMode()
 	{
 		if (Input.GetKeyDown(KeyCode.C)) { Camera.Instance.RotateCameraMode(); }
+	}
+
+	public SpaceShip GetSpaceShip()
+	{
+		return _spaceship;
 	}
 }
