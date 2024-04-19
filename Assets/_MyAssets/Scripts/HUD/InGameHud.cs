@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using Unity.VisualScripting;
+using System.Linq;
+using System;
 
 public class InGameHud : MonoBehaviour
 {
@@ -10,15 +14,27 @@ public class InGameHud : MonoBehaviour
 	private SpaceShip _ship;
 	private float _maxSpeed;
 	[SerializeField] private Image _speedBar = default;
+	[SerializeField] private TMP_Text _speedText = default;
+    [SerializeField] private TMP_Text _LapsText = default;
+    [SerializeField] private TMP_Text _PosText = default;
+	[SerializeField] private TMP_ColorGradient[] color_list = default;
+    [SerializeField] private TMP_Text _LapTimeText = default;
+	[SerializeField] private Image _itemImage = default;
+    private float[] _lapTimes_list = default;
+	private string _lapTimes_string = "";
+	private float _time_lap_start = 0;
 
-	void Awake()
+    private Sprite[] _arrPUs;
+
+    void Awake()
 	{
 		if (Instance == null) {
 			Instance = this;
 		} else {
 			Destroy(this.gameObject);
 		}
-	}
+        _arrPUs = Resources.LoadAll("PUs/Images/", typeof(Sprite)).Cast<Sprite>().ToArray();
+    }
 
     private void Start()
     {
@@ -26,9 +42,12 @@ public class InGameHud : MonoBehaviour
 		_maxSpeed = _ship.GetMaxSpeed();
     }
 
-    void Update()
+    void FixedUpdate()
 	{
 		Speed();
+		Laps();
+		Pos();
+		LapTimer();
 	}
 
 
@@ -42,34 +61,64 @@ public class InGameHud : MonoBehaviour
 
 	private void Speed()
 	{
-		_ship.GetSpeed();
+		float speed = _ship.GetSpeed();
 
-		_speedBar.fillAmount = _ship.GetSpeed() / _maxSpeed;
+
+        _speedBar.fillAmount = speed * .8f / _maxSpeed;
 		Color color = _speedBar.color;
-        color.b = 1 - _ship.GetSpeed() / _maxSpeed;
-		color.r = _ship.GetSpeed() / _maxSpeed;
+        color.b = 1 - speed / _maxSpeed;
+		color.r = speed / _maxSpeed;
         _speedBar.color = color;
-
-		Debug.Log(_ship.GetSpeed() / _maxSpeed);
+        if (speed < _maxSpeed) _speedText.text = ((int)(speed / _maxSpeed * 100)).ToString();
+		else _speedText.text = "99";
     }
+
+	private void Laps()
+	{
+		_LapsText.text = "Lap " + (_ship.GetLap() + 1).ToString();
+	}
 
 	// draw la position (premier, deuxième, etc)
 	private void Pos()
 	{
+		int pos = _ship.GetPosition() + 1;
+		if (pos == 1) { _PosText.text = "1st"; _PosText.colorGradientPreset = color_list[0]; }
+		else if (pos == 2) { _PosText.text = "2nd"; _PosText.colorGradientPreset = color_list[1]; }
+        else if (pos == 3) { _PosText.text = "3rd"; _PosText.colorGradientPreset = color_list[2]; }
+        else { _PosText.text = pos + "th"; _PosText.colorGradientPreset = color_list[3]; }
+    }
 
+	// lap time
+	private void LapTimes(float time)
+	{
+		_lapTimes_list[_lapTimes_list.Length] = time;
+
+		string text = "";
+		foreach(float t in _lapTimes_list)
+		{
+			text = text + "\n" + t;
+		}
+		_lapTimes_string = text;
+		_time_lap_start = Time.time;
 	}
 
-	// lap time et total time
-	private void Time()
+	private void LapTimer()
 	{
-		
+		_LapTimeText.text = _lapTimes_string + "\n" + (Time.time - _time_lap_start);
 	}
 
 	// draw l'icone de l'item du joueur
-	private void Item()
+	public void Item(int pu)
 	{
-
-	}
+        if (pu >= 0 && pu < _arrPUs.Length)
+		{
+            _itemImage.sprite = _arrPUs[pu];
+        }
+        else
+        {
+			_itemImage.sprite = null;
+        }
+    }
 
 	// draw la map en 2D (vue de haut)
 	private void Map()
@@ -89,6 +138,7 @@ public class InGameHud : MonoBehaviour
 	// vert si plus rapide (ex: -00:01:00 si une seconde plus court que le meilleur score)
 	public void TimeComp(float timeDiff)
 	{
+		LapTimes(timeDiff);
 		Debug.Log("Lap time: " + timeDiff);
 		// faire timeDiff - son best lap time pour trouver la comparaison
 		// si > 0, color = red, si < 0, color = green, etc

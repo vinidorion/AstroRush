@@ -10,7 +10,7 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float _accel = default;
 	[SerializeField] private float airbrake_power = default;
 	private const int MAX_HP = 100;
-	private int _hp = MAX_HP;
+    [SerializeField] private int _hp = MAX_HP;
 	[SerializeField] private float weight = default;
 	[SerializeField] private float agility = default;
 	[SerializeField] private float _slower = default;
@@ -53,7 +53,7 @@ public class SpaceShip : MonoBehaviour
 
 	// PHYSICS
 	private Vector3 _dragForce;
-	private const float COEF_DRAG = -0.3f;
+	private const float COEF_DRAG = 4f;
 	private Vector3 _prevRayDir = Vector3.down;	
 
 	/********************************************
@@ -228,8 +228,8 @@ public class SpaceShip : MonoBehaviour
 	{
 		//Vector3 force = new Vector3(-max_speed * (current_speed.x / max_speed), -max_speed * (current_speed.y / max_speed), -max_speed * (current_speed.z / max_speed))/2;
 		
-		_dragForce = _rb.velocity * COEF_DRAG;
-		_rb.AddForce((_dragForce * _slower), ForceMode.Acceleration);
+		_dragForce = _rb.velocity * (-GetSpeed() / max_speed) ;
+		_rb.AddForce((_dragForce * _slower));
 	}
 
 	// force appliquée latéralement pour éviter que le spaceship glisse sur le côté
@@ -285,7 +285,8 @@ public class SpaceShip : MonoBehaviour
 		} else {
 			InGameHud.Instance.TimeComp(_listLapTime[_listLapTime.Count - 1] - _listLapTime[_listLapTime.Count - 2]);
 		}
-	}
+
+    }
 
 	// méthode publique qui retourne le nombre de lap du spaceship
 	public int GetLap()
@@ -336,14 +337,24 @@ public class SpaceShip : MonoBehaviour
 		if (_rb.velocity.magnitude < max_speed)
 		{
 			_rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/);
+<<<<<<< Updated upstream
             //_rb.AddForce((-transform.forward * _accel /* * (_slower + 1)*/) * (current_speed.magnitude / max_speed));
         }
+=======
+			//_rb.AddForce((-transform.forward * _accel /* * (_slower + 1)*/) * (current_speed.magnitude / max_speed));
+		}
+>>>>>>> Stashed changes
 	}
 
 	public void backward()
 	{
+<<<<<<< Updated upstream
 		_rb.AddForce(-1 * transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
         Debug.Log("back");
+=======
+        _rb.AddForce(-transform.forward * _accel /* * (_slower + 1)*/);
+        //_rb.AddForce((transform.forward * _accel /* * (_slower + 1)*/) * (current_speed.magnitude / max_speed));
+>>>>>>> Stashed changes
     }
 
 	public void Turn(bool left)
@@ -386,7 +397,8 @@ public class SpaceShip : MonoBehaviour
 		if (!_isFrozen && _pu != -1) {
 			poly.PU pu = Instantiate(_gm.GetGameObjectPU(_pu), transform.position + (transform.forward * _size), Quaternion.LookRotation(transform.forward)).GetComponent<poly.PU>();
 			pu.SetOwner(transform);
-			//_pu = -1;  //en commentaire pour tester
+			_pu = -1;
+			InGameHud.Instance.Item(_pu);
 		}
 	}
 
@@ -430,7 +442,8 @@ public class SpaceShip : MonoBehaviour
 			}
 			random -= listWeight[i];
 		}
-	}
+        InGameHud.Instance.Item(_pu);
+    }
 
 	/********************************************
 						STATS
