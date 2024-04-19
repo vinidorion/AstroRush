@@ -20,11 +20,9 @@ public class WaypointFinder : MonoBehaviour
 		//Debug.Log("waypointPos: " + waypointPos);
 		//Debug.Log("nextwaypointPos: " + nextwaypointPos);
 
-		#if UNITY_EDITOR
-			// pour visualiser à quel waypoint le spaceship est rendu
-			Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
-			Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
-		#endif
+		// pour visualiser à quel waypoint le spaceship est rendu
+		Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
+		Debug.DrawLine(transform.position, nextwaypointPos, Color.blue, Time.fixedDeltaTime);
 
 		// sqrt inutile ici, on compare deux distances
 		float distCurrWaypoint = (transform.position - waypointPos).sqrMagnitude;
