@@ -61,7 +61,7 @@ public class Bot : MonoBehaviour
     private List<GameObject> targets = new List<GameObject>();
     private List<Vector3> directionRight = new List<Vector3>();
     private List<int> passedTargets = new List<int>();
-    protected List<float> difficulty = new List<float>();
+    public List<float> difficulty = new List<float>();
     [SerializeField] private float accelbot = 0;
 
     public Plane Plane
@@ -124,6 +124,7 @@ public class Bot : MonoBehaviour
             _agility = _spaceship.GetAgility();
             _targetSpeed = _spaceship.GetMaxSpeed();
 
+            //Debug.Log(_spaceship.GetMaxSpeed());
             //si le bot est assez proche de sa target on set sa target au prochain waypoint
             if (Vector3.Magnitude(_spaceship.transform.position - targets[i].transform.position) < 2f)
             {
@@ -138,14 +139,13 @@ public class Bot : MonoBehaviour
             }
             Plane = new Plane(Bots[i].transform.up, Bots[i].transform.position);
             Vector3 direction = Plane.ClosestPointOnPlane(targets[i].transform.position) - Bots[i].transform.position;
-            Vector3 direction2nd = Plane.ClosestPointOnPlane(Vector3.Lerp(waypoints[passedTargets[i] + 1].transform.position,
-                optiWaypoints[passedTargets[i] + 1].transform.position, difficulty[i])) - Bots[i].transform.position;
 
             float angle = Vector3.SignedAngle(Bots[i].transform.forward, direction, Bots[i].transform.up);
             float angleVel = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction, Bots[i].transform.up);
-            float angle2ndP = Vector3.SignedAngle(Bots[i].GetComponent<Rigidbody>().velocity, direction2nd, Bots[i].transform.up);
-            /*
+
+            
             Debug.DrawLine(_spaceship.transform.position, targets[i].transform.position, Color.green, Time.fixedDeltaTime);
+            /*
             Debug.DrawLine(_spaceship.transform.position, Vector3.Lerp(waypoints[passedTargets[i] + 1].transform.position,
                     optiWaypoints[passedTargets[i] + 1].transform.position, difficulty[i]), Color.blue, Time.fixedDeltaTime);
             Debug.DrawLine(_spaceship.transform.position, _spaceship.transform.position + Bots[i].GetComponent<Rigidbody>().velocity, Color.red, Time.fixedDeltaTime);
@@ -167,7 +167,6 @@ public class Bot : MonoBehaviour
 
             BotMove(i);
             BotTurn(i, angle, angleVel);
-            
         }
     }
 
@@ -179,6 +178,7 @@ public class Bot : MonoBehaviour
         }
         else if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude > _targetSpeed)
         {
+            Debug.Log("airbraaake");
             _spaceship.AirBrake(false);
             _spaceship.AirBrake(true);
         }
@@ -188,73 +188,58 @@ public class Bot : MonoBehaviour
     {
         if (angleVel > (10 + 100 * difficulty[i]) / _rb.velocity.magnitude)
         {
-            Debug.Log(_rb.velocity.magnitude);
-            if (angleVel > (20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
+            //Debug.Log(_rb.velocity.magnitude);
+            if (angleVel > (20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _targetSpeed)
             {
                 _spaceship.AirBrake(false);
             }
             else
             {
-                _spaceship.transform.Rotate(0f, 66f * Time.deltaTime * _agility, 0f);
+                _spaceship.Turn(false);
             }
             
         }
         else if (angleVel < -(10 + 100 * difficulty[i]) / _rb.velocity.magnitude)
         {
-            if (angleVel < -(20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
+            if (angleVel < -(20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _targetSpeed)
             {
                 _spaceship.AirBrake(true);
             }
             else
             {
-                _spaceship.transform.Rotate(0f, -66f * Time.deltaTime * _agility, 0f);
+                _spaceship.Turn(true);
             }
         }
 
         // Air brakes
-        else if (angle > 50 / _rb.velocity.magnitude && Bots[i].GetComponent<Rigidbody>().velocity.magnitude >= 1)
+        else if (angle > 50 / _rb.velocity.magnitude && _rb.velocity.magnitude >= 1)
         {
             _spaceship.AirBrake(false);
-            _spaceship.transform.Rotate(0f, 100f * Time.deltaTime * _agility, 0f);
         }
         else if (angle < -50 / _rb.velocity.magnitude && _rb.velocity.magnitude >= 1)
         {
             _spaceship.AirBrake(true);
-            _spaceship.transform.Rotate(0f, -100f * Time.deltaTime * _agility, 0f);
         }
+
         // Normal turn
         else if (angle > 0.1f)
         {
-            //_spaceship.Turn(true);
-            _spaceship.transform.Rotate(0f, 66f * Time.deltaTime * _agility, 0f);
+            _spaceship.Turn(false);
         }
         else if (angle < -0.1f)
         {
-            //_spaceship.Turn(false);
-            _spaceship.transform.Rotate(0f, -66f * Time.deltaTime * _agility, 0f);
+            _spaceship.Turn(true);
         }
-    }
-
-    void SetPitch()
-    {
-        /*
-        Ray rayfront = new Ray(front.transform.position, -transform.up);
-        if(Physics.Raycast(rayfront, out RaycastHit hit, 0.5f, _layersToHit, QueryTriggerInteraction.Ignore)) {
-			
-		} else {
-			//Debug.Log("ground not found");
-			Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
-			_onGround = false;
-		}
-        Ray raybackleft = new Ray(backleft.transform.position, -transform.up);
-        Ray raybackright = new Ray(backright.transform.position, -transform.up);
-        Vector3.Cross(FrontVec - BackLeftvec, FrontVec - BackRightVec)
-        */
     }
 
     // get la position du next waypoint
     private Vector3 GetNextPos()
     {
         return WaypointManager.Instance.GetWaypointPos(_spaceship.GetWaypoint() + 1);
+    }
+
+    public float GetDifficulty(int i)
+    {
+        return difficulty[i];
     }
 }

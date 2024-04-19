@@ -185,7 +185,7 @@ public class SpaceShip : MonoBehaviour
 			_onGround = true;
 			_hauteur = hit.distance;
 			PID();
-			KeepUpright(_onGround3);
+			KeepUpright(false);
 			//Debug.Log("found ground");
 
 			#if UNITY_EDITOR
@@ -241,7 +241,7 @@ public class SpaceShip : MonoBehaviour
 	{
 		float lateralSpeed = transform.InverseTransformDirection(_rb.velocity).x;
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
-
+		
 		if(lateralSpeed > 0.5f) {
 			_rb.AddForce(transform.right * -20f * agility);
 		} else if(lateralSpeed < -0.5f)  {
@@ -340,14 +340,15 @@ public class SpaceShip : MonoBehaviour
 		if (_rb.velocity.magnitude < max_speed)
 		{
 			_rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/);
-			_rb.AddForce((-transform.forward * _accel /* * (_slower + 1)*/) * (current_speed.magnitude / max_speed));
-		}
+            //_rb.AddForce((-transform.forward * _accel /* * (_slower + 1)*/) * (current_speed.magnitude / max_speed));
+        }
 	}
 
 	public void backward()
 	{
 		_rb.AddForce(-1 * transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
-	}
+        Debug.Log("back");
+    }
 
 	public void Turn(bool left)
 	{
@@ -356,12 +357,12 @@ public class SpaceShip : MonoBehaviour
 			//float rotation = agility - current_speed.y;
 			//_rb.AddTorque(transform.up * /*_rb.angularDrag **/ -agility, ForceMode.Acceleration);
 			//_rb.angularVelocity = new Vector3(0f, 6f, 0f);
-			transform.Rotate(0f, -66f * Time.deltaTime * agility, 0f);
+			transform.Rotate(0f, -50f * Time.deltaTime * agility, 0f);
 		} else {
 			//Debug.Log("TURNING RIGHT: " + _rb.angularVelocity.magnitude);
 			//_rb.AddTorque(transform.up * /*_rb.angularDrag **/ agility, ForceMode.Acceleration);
 			//float rotation = (agility - current_speed.y) * -1;
-			transform.Rotate(0f, 66f * Time.deltaTime * agility, 0f);
+			transform.Rotate(0f, 50f * Time.deltaTime * agility, 0f);
 		}
 	}
 
@@ -377,7 +378,8 @@ public class SpaceShip : MonoBehaviour
 		
 		Vector3 force = -1 * _rb.velocity * airbrake_power / weight;
 		_rb.AddForce(force * 5f);
-	}
+        
+    }
 
 	/********************************************
 					POWER UPS
