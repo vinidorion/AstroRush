@@ -188,16 +188,12 @@ public class SpaceShip : MonoBehaviour
 			KeepUpright(_onGround3);
 			//Debug.Log("found ground");
 
-			#if UNITY_EDITOR
-				Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
-				Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime);	// normale de la surface (inverse de la direction de la gravité)
-			#endif
+			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
+			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime);	// normale de la surface (inverse de la direction de la gravité)
 		} else {
 			//Debug.Log("ground not found");
 
-			#if UNITY_EDITOR
-				Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
-			#endif
+			Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
 			
 			_onGround = false;
 		}
