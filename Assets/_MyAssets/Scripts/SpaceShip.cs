@@ -57,9 +57,9 @@ public class SpaceShip : MonoBehaviour
 	*********************************************/
 
 	/****** CONSTANTES ******/
-	private const float GRAVITY = 9.81f;					// constante gravité
-	private const float MAX_DIST = 0.5f;					// distance maximale du raycast
-	private const float HAUTEUR_TARGET = MAX_DIST * 0.7f;	// hauteur que le PID vise (70% la distance maximale du raycast)
+	private const float GRAVITY = 9.81f;                    // constante gravité
+	private const float MAX_DIST = 0.8f;                    // distance maximale du raycast
+	private const float HAUTEUR_TARGET = MAX_DIST * 0.7f;   // hauteur que le PID vise (70% la distance maximale du raycast)
 
 	/* (P) PROPORTIONAL
 		multiplie l'erreur,
@@ -81,11 +81,11 @@ public class SpaceShip : MonoBehaviour
 	private const float PID_KD = 500f;
 
 	/****** VARIABLES ******/
-	private LayerMask _layersToHit;				// la seule layer que le Raycast du PID touche
-	private Vector3 _rayDir = Vector3.down;		// direction de la gravité, par défaut vers le bas, toujours normalisé
-	private float _hauteur = 0f;				// hauteur actuelle
-	private float _lastDiffHauteur = 0f;		// même chose que _diffHauteur mais de la dernière frame (du FixedUpdate())
-	private float _PIDForce = 0f;				// force verticale à appliquer pour faire léviter le spaceship (PID)
+	private LayerMask _layersToHit;             // la seule layer que le Raycast du PID touche
+	private Vector3 _rayDir = Vector3.down;     // direction de la gravité, par défaut vers le bas, toujours normalisé
+	private float _hauteur = 0f;                // hauteur actuelle
+	private float _lastDiffHauteur = 0f;        // même chose que _diffHauteur mais de la dernière frame (du FixedUpdate())
+	private float _PIDForce = 0f;               // force verticale à appliquer pour faire léviter le spaceship (PID)
 
 
 	void Awake()
@@ -94,7 +94,7 @@ public class SpaceShip : MonoBehaviour
 		_rb.angularDrag = 10f;
 		_layersToHit = 1 << LayerMask.NameToLayer("track");
 
-		if(max_speed == 0f) {
+		if (max_speed == 0f) {
 			max_speed = 10f;
 		}
 	}
@@ -152,17 +152,17 @@ public class SpaceShip : MonoBehaviour
 		Vector3 directionGrav = _rayDir;
 
 		Ray ray = new Ray(transform.position, _rayDir);
-		if(Physics.Raycast(ray, out RaycastHit hit, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore)) {
+		if (Physics.Raycast(ray, out RaycastHit hit, MAX_DIST, _layersToHit, QueryTriggerInteraction.Ignore)) {
 			_rayDir = -hit.normal;
 			_hauteur = hit.distance;
 			PID();
 			directionGrav *= -_PIDForce;
 			KeepUpright(false);
-			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
-			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime);	// normale de la surface (inverse de la direction de la gravité)
+			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);                          // direction de la gravité
+			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime); // normale de la surface (inverse de la direction de la gravité)
 		} else {
 			directionGrav *= GRAVITY;
-			Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);		// direction de la gravité (sans utiliser hit.point)
+			Debug.DrawLine(transform.position, transform.position + _rayDir, Color.red, Time.fixedDeltaTime);       // direction de la gravité (sans utiliser hit.point)
 		}
 
 		_rb.AddForce(directionGrav, ForceMode.Acceleration); // ForceMode.Acceleration ignore la masse et applique directement l'accèleration
@@ -172,14 +172,14 @@ public class SpaceShip : MonoBehaviour
 	// https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller
 	private void PID()
 	{
-		float _diffHauteur = HAUTEUR_TARGET - _hauteur;						// difference (delta distance) entre la hauteur actuelle et la hauteur que le PID vise
-		float _deriveeHauteur = _diffHauteur - _lastDiffHauteur;			// derivee (taux de variation de l'erreur)
-		// pas de division par deltaTime, c'est toujours 0.02s (FixedUpdate())
-		// donc on fait le calcul directement sur KP, KD et KI
-		// pour éviter de faire le calcul à chaque frame
-		// c'est pourquoi ces constantes ont des valeurs si hautes
-		_PIDForce = _diffHauteur * PID_KP + _deriveeHauteur * PID_KD;		// force PID qu'il faudrait appliquer
-		_lastDiffHauteur = _diffHauteur;									// enregistre le delta distance de la frame actuelle pour l'utiliser comme _lastDiffHauteur dans la prochaine frame
+		float _diffHauteur = HAUTEUR_TARGET - _hauteur;                     // difference (delta distance) entre la hauteur actuelle et la hauteur que le PID vise
+		float _deriveeHauteur = _diffHauteur - _lastDiffHauteur;            // derivee (taux de variation de l'erreur)
+																			// pas de division par deltaTime, c'est toujours 0.02s (FixedUpdate())
+																			// donc on fait le calcul directement sur KP, KD et KI
+																			// pour éviter de faire le calcul à chaque frame
+																			// c'est pourquoi ces constantes ont des valeurs si hautes
+		_PIDForce = _diffHauteur * PID_KP + _deriveeHauteur * PID_KD;       // force PID qu'il faudrait appliquer
+		_lastDiffHauteur = _diffHauteur;                                    // enregistre le delta distance de la frame actuelle pour l'utiliser comme _lastDiffHauteur dans la prochaine frame
 	}
 
 	private void AirResistance()
@@ -187,7 +187,7 @@ public class SpaceShip : MonoBehaviour
 		Vector3 dragForce = _rb.velocity * (-GetSpeed() / max_speed);
 
 		// division par 0 donne des erreurs
-		if(!IsVecValid(dragForce)) {
+		if (!IsVecValid(dragForce)) {
 			return;
 		}
 
@@ -199,10 +199,10 @@ public class SpaceShip : MonoBehaviour
 	{
 		float lateralSpeed = transform.InverseTransformDirection(_rb.velocity).x;
 		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
-		
-		if(lateralSpeed > 0.5f) {
+
+		if (lateralSpeed > 0.5f) {
 			_rb.AddForce(transform.right * -20f * _agility);
-		} else if(lateralSpeed < -0.5f)  {
+		} else if (lateralSpeed < -0.5f) {
 			_rb.AddForce(transform.right * 20f * _agility);
 		}
 	}
@@ -230,11 +230,11 @@ public class SpaceShip : MonoBehaviour
 	{
 		GetComponent<WaypointFinder>().SetWaypoint(0);
 		// if _lap est arrivé au max, return;
-		
+
 
 
 		_lap++; // et changer lap dans le hud
-		
+
 		// check ici si _lap atteint le nombre de lap total, si oui et si c'est le joueur: c'est la fin du jeu
 
 		// Camera.Instance.SetCameraMode(CameraMode.Spectate);
@@ -242,7 +242,7 @@ public class SpaceShip : MonoBehaviour
 
 		_listLapTime.Add(Time.time);
 
-		if(!InGameHud.Instance) {
+		if (!InGameHud.Instance) {
 			return;
 		}
 
@@ -307,19 +307,18 @@ public class SpaceShip : MonoBehaviour
 	public void Backward()
 	{
 		_rb.AddForce(-1 * transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
-		Debug.Log("back");
 	}
 
 	public void Turn(bool left)
 	{
-		ApplyTurnTorque(left);
-	}
+        _rb.AddTorque(transform.up * (_agility * (left ? -1 : 1)), ForceMode.Acceleration);
+    }
 
 	public void AirBrake(bool left)
 	{
-		ApplyTurnTorque(left);
+        _rb.AddTorque(transform.up * _airbrakePower * (left ? -1 : 1) * _rb.velocity.magnitude, ForceMode.Acceleration);
 
-		Vector3 force = -1 * _rb.velocity * _airbrakePower / _weight;
+        Vector3 force = -1 * _rb.velocity * _airbrakePower / _weight;
 
 		// division par 0 donne des erreurs
 		if(!IsVecValid(force)) {
@@ -327,11 +326,6 @@ public class SpaceShip : MonoBehaviour
 		}
 
 		_rb.AddForce(force * 5f);
-	}
-
-	private void ApplyTurnTorque(bool left)
-	{
-		_rb.AddTorque(transform.up * (_agility * (left ? -1 : 1)), ForceMode.Acceleration);
 	}
 
 	/********************************************
