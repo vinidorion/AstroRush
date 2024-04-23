@@ -75,7 +75,7 @@ public class VolumeManager : MonoBehaviour
 			} else if(audioSource.tag == "MUS") {
 				audioSource.volume = (float)_GlobalVolMUS / 10f;
 			} else {
-				Debug.Log(audioSource + " HAS NO TAG");
+				Debug.Log($"{audioSource} HAS NO TAG");
 			}
 		}
 	}

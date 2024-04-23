@@ -6,9 +6,9 @@ public class GameData : MonoBehaviour
 {
 	public static GameData Instance; // Singleton
 
-	private int _numBot;
+	private int _numBot = -1;
 	private int _plyShip; // ou passer le nom du préfab (string)?? ou le préfab lui même (gameobject)???
-	private int _numLap;
+	private int _numLap = -1;
 	private string _trackName;
 
 	void Awake()

@@ -16,6 +16,8 @@ public class AsyncLoadingScreen : MonoBehaviour
 	private Fade _fadeOut;
 	private AudioFade _audio;
 
+	private ShineText _txt;
+
 	void Awake()
 	{
 		if(Instance == null) {
@@ -26,6 +28,7 @@ public class AsyncLoadingScreen : MonoBehaviour
 
 		_gameData = GameData.Instance;
 		_logo = GameObject.Find("logo").GetComponent<LoadingScreenLogo>();
+		_txt = GameObject.Find("TxtSkip").GetComponent<ShineText>();
 
 		_fadeOut = GameObject.Find("FadeOut").GetComponent<Fade>();
 		AudioSource audio = GameObject.Find("Ambient").GetComponent<AudioSource>();
@@ -60,6 +63,7 @@ public class AsyncLoadingScreen : MonoBehaviour
 	public void CanSkip()
 	{
 		_canSkip = true;
+		_txt.Shine();
 	}
 
 	// coroutine qui fade to black et fade out l'audio, puis load la scene

@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
 
 	private void ChangeCameraMode()
 	{
-		if (Input.GetKeyDown(KeyCode.C)) { Camera.Instance.RotateCameraMode(); }
+		if (Input.GetKeyDown(KeyCode.C)) { CameraController.Instance.RotateCameraMode(); }
 	}
 
 	public SpaceShip GetSpaceShip()

@@ -33,6 +33,9 @@ public class Menu : MonoBehaviour
 	private Fade _fadeOut;
 	private AudioFade _music;
 
+	private Camera _camBackgroundColor;
+	private bool _isFadingBackground = false;
+
 	void Awake()
 	{
 		if(Instance == null) {
@@ -44,6 +47,10 @@ public class Menu : MonoBehaviour
 		_cam = GameObject.Find("Main Camera").transform;
 		_fadeOut = GameObject.Find("FadeOut").GetComponent<Fade>();
 		_music = GameObject.Find("Opening").GetComponent<AudioFade>();
+
+		_camBackgroundColor = _cam.GetComponent<Camera>();
+		_camBackgroundColor.clearFlags = CameraClearFlags.SolidColor;
+		_camBackgroundColor.backgroundColor = Color.white;
 
 		_choix = GameObject.Find("choix").transform; // keep this as a transform
 		_mainMenuPos = _choix.localPosition;
@@ -76,11 +83,29 @@ public class Menu : MonoBehaviour
 		_choix.localPosition += (_mainMenuTargetPos - _choix.localPosition) * Time.deltaTime * BUTTON_SPEED;
 		_retour.localPosition += (_retourTargetPos - _retour.localPosition) * Time.deltaTime * BUTTON_SPEED;
 		_play.localPosition += (_playTargetPos - _play.localPosition) * Time.deltaTime * BUTTON_SPEED;
+
+		if(_isFadingBackground) {
+			Color color = _camBackgroundColor.backgroundColor;
+			float ratio = color.r * Time.deltaTime;
+			color.r -= ratio;
+			color.g -= ratio;
+			color.b -= ratio;
+			_camBackgroundColor.backgroundColor = color;
+
+			if(color.r <= 0f) {
+				_isFadingBackground = false;
+			}
+		}
 	}
 
 	public void ToggleCameraMovement(bool isCameraMoving)
 	{
 		_isCameraMoving = isCameraMoving;
+	}
+
+	public void FadeBackground()
+	{
+		_isFadingBackground = true;
 	}
 
 	public void SetCamPos(int pos)

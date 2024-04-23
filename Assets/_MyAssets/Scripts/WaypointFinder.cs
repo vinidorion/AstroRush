@@ -9,7 +9,6 @@ public class WaypointFinder : MonoBehaviour
 	void FixedUpdate()
 	{
 		Waypoints(); // expensive, ne pas mettre dans Update()
-		SendInfo();
 	}
 
 	private void Waypoints()
@@ -17,8 +16,8 @@ public class WaypointFinder : MonoBehaviour
 		Vector3 waypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint);			// position du current waypoint
 		Vector3 nextwaypointPos = WaypointManager.Instance.GetWaypointPos(_waypoint + 1);	// position du next waypoint
 
-		//Debug.Log("waypointPos: " + waypointPos);
-		//Debug.Log("nextwaypointPos: " + nextwaypointPos);
+		//Debug.Log($"waypointPos: {waypointPos}");
+		//Debug.Log($"nextwaypointPos: {nextwaypointPos}");
 
 		// pour visualiser à quel waypoint le spaceship est rendu
 		Debug.DrawLine(transform.position, waypointPos, Color.green, Time.fixedDeltaTime);
@@ -39,28 +38,13 @@ public class WaypointFinder : MonoBehaviour
 		}
 	}
 
-	private void SendInfo()
-	{
-		if (GetComponent<SpaceShip>() != null) 
-		{
-            GetComponent<SpaceShip>().SetWaypoint(_waypoint);
-		} 
-		else if (GetComponent<poly.Missile>() != null) 
-		{
-            GetComponent<poly.Missile>().SetWaypoint(_waypoint);
-        } 
-		else if (GetComponent<poly.Quake>() != null)
-		{
-            GetComponent<poly.Quake>().SetWaypoint(_waypoint);
-        }
-		else
-        {
-			Debug.Log(this.gameObject + " HAS WAYPOINTFINDER BUT ISNT A SPACESHIP NOR A MISSILE");
-		}
-	}
-
 	public void SetWaypoint(int waypoint)
 	{
 		_waypoint = waypoint;
+	}
+
+	public int GetWaypoint()
+	{
+		return _waypoint;
 	}
 }

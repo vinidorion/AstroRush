@@ -8,36 +8,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Bot : MonoBehaviour
 {
-/* -- NE PAS SUPPRIMER
-
-	private float testcooldown = 0f;
-
-	void Awake()
-	{
-		_spaceship = GetComponent<SpaceShip>();
-		if(_spaceship == null) {
-			Debug.Log(this.gameObject + " N'A PAS DE SPACESHIP");
-		}
-	}
-
-	void Update()
-	{
-		//_spaceship.Forward();
-		if(testcooldown < Time.time) {
-			//Debug.Log("angle: " + Quaternion.Angle(transform.rotation, Quaternion.LookRotation(GetNextPos() - transform.position, GetGravDir())));
-			testcooldown = Time.time + 1f;
-		}
-	}
-
-	
-
-	// get la direction de la gravité
-	private Vector3 GetGravDir()
-	{
-		return -_spaceship.GetVecGrav(); // pour le moment
-	}
-*/
-
     // Start is called before the first frame update
     [SerializeField] private GameObject listeWaypoint;
     [SerializeField] private GameObject listeOptiWaypoint;
@@ -135,7 +105,7 @@ public class Bot : MonoBehaviour
                 {
                     passedTargets[i] = 0;
                 }
-                _spaceship.SetWaypoint(passedTargets[i]);
+                //_spaceship.SetWaypoint(passedTargets[i]);
             }
             Plane = new Plane(Bots[i].transform.up, Bots[i].transform.position);
             Vector3 direction = Plane.ClosestPointOnPlane(targets[i].transform.position) - Bots[i].transform.position;
@@ -230,12 +200,6 @@ public class Bot : MonoBehaviour
         {
             _spaceship.Turn(true);
         }
-    }
-
-    // get la position du next waypoint
-    private Vector3 GetNextPos()
-    {
-        return WaypointManager.Instance.GetWaypointPos(_spaceship.GetWaypoint() + 1);
     }
 
     public float GetDifficulty(int i)

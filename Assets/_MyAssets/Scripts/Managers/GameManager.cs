@@ -51,9 +51,9 @@ public class GameManager : MonoBehaviour
 	}
 
 	// méthode publique qui start la race
-	// doit être publique pour être called dans la classe Camera (quand l'anim d'intro est fini)
+	// doit être publique pour être called dans la classe CameraController (quand l'anim d'intro est fini)
 	public void StartRace() {
-		Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
+		CameraController.Instance.SetCameraMode(CameraMode.ThirdPerson);
 		StartCoroutine(CountdownCoroutine());
 		_isIntro = false;
 	}

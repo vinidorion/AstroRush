@@ -76,6 +76,7 @@ public class title : MonoBehaviour
 		Menu.Instance.ToggleCameraMovement(true);
 		yield return new WaitForSeconds(1f);
 		Menu.Instance.ShowMainMenu(true);
+		Menu.Instance.FadeBackground();
 	}
 
 	void Update()

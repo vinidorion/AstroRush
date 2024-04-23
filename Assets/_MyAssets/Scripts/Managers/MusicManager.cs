@@ -78,7 +78,7 @@ public class MusicManager : MonoBehaviour
 		_audio.Play();
 
 		/*Debug.Log("===========================");
-		Debug.Log("NOW PLAYING: " + _listMusic[_musicIndex].name);*/
+		Debug.Log($"NOW PLAYING: {_listMusic[_musicIndex].name}");*/
 
 		_musicIndex++;
 		if(_musicIndex >= _listMusic.Length) {

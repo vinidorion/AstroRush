@@ -8,8 +8,7 @@ namespace poly
 	[AddComponentMenu("POLYMORPHISM: Missile")]
 	public class Missile : Rocket
 	{
-		private int _waypoint;
-
+		private WaypointFinder _waypoint;
 		protected Transform _target = null;
 		protected SpaceShip _ship;
 
@@ -25,8 +24,8 @@ namespace poly
 			_ship = _owner.GetComponent<SpaceShip>();
 
 			if (_target == null) FindTarget();
-			_waypoint = _ship.GetWaypoint();
-			GetComponent<WaypointFinder>().SetWaypoint(_waypoint);
+			_waypoint = GetComponent<WaypointFinder>();
+			_waypoint.SetWaypoint(_ship.GetComponent<WaypointFinder>().GetWaypoint());
 		}
 
 		protected override void Update()
@@ -35,7 +34,7 @@ namespace poly
 
 			if(_target) {
 				Vector3 vecTarget = _target.transform.position - transform.position;
-				Vector3 vecNxtWpt = WaypointManager.Instance.GetWaypointPos(_waypoint + 1) - transform.position;
+				Vector3 vecNxtWpt = WaypointManager.Instance.GetWaypointPos(_waypoint.GetWaypoint() + 1) - transform.position;
 
 				// pas besoin de sqrt quand c'est une comparaison de distance
 				if (vecTarget.sqrMagnitude <= vecNxtWpt.sqrMagnitude) {
@@ -46,9 +45,9 @@ namespace poly
 			}
 			else
 			{
-                Vector3 vecNxtWpt = WaypointManager.Instance.GetWaypointPos(_waypoint + 1) - transform.position;
+				Vector3 vecNxtWpt = WaypointManager.Instance.GetWaypointPos(_waypoint.GetWaypoint() + 1) - transform.position;
 				SetDirection(vecNxtWpt.normalized);
-            }
+			}
 		}
 
 		protected virtual void FindTarget()
@@ -63,15 +62,9 @@ namespace poly
 			}
 		}
 
-		// utilisé dans WaypointFinder
-		public void SetWaypoint(int waypoint)
-		{
-			_waypoint = waypoint;
-		}
-
 		public void SetTarget(int target)
 		{
-            _target = PosManager.Instance.GetShipFromPos(target).transform;
-        }
+			_target = PosManager.Instance.GetShipFromPos(target).transform;
+		}
 	}
 }

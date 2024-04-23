@@ -24,7 +24,7 @@ public class OutOfBounds : MonoBehaviour
 	{
 		yield return new WaitForSeconds(DELAY);
 
-		int shipWayptIndex = spaceship.GetWaypoint();
+		int shipWayptIndex = spaceship.GetComponent<WaypointFinder>().GetWaypoint();
 		Vector3 respawnPos = WaypointManager.Instance.GetWaypointPos(shipWayptIndex);
 		Vector3 nextWaypoint = WaypointManager.Instance.GetWaypointPos(shipWayptIndex + 1);
 

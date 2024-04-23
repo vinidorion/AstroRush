@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Camera : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
-	public static Camera Instance; // Singleton
+	public static CameraController Instance; // Singleton
 
 	private CameraMode _currentMode;
 	private Transform _plyPos;

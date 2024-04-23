@@ -44,7 +44,7 @@ public class InGameHud : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		CameraMode camMode = Camera.Instance.GetCameraMode();
+		CameraMode camMode = CameraController.Instance.GetCameraMode();
 		if(camMode == CameraMode.Intro || camMode == CameraMode.Spectate) {
 			return; // ne pas draw le hud dans l'intro ou spectate
 		}
@@ -64,7 +64,7 @@ public class InGameHud : MonoBehaviour
 
 	private void Speed()
 	{
-		float speed = _ship.GetSpeed();
+		float speed = _ship.GetForwardSpeed();
 
 
 		_speedBar.fillAmount = speed * .8f / _maxSpeed;
@@ -142,7 +142,7 @@ public class InGameHud : MonoBehaviour
 	public void TimeComp(float timeDiff)
 	{
 		LapTimes(timeDiff);
-		Debug.Log("Lap time: " + timeDiff);
+		Debug.Log($"Lap time: {timeDiff}");
 		// faire timeDiff - son best lap time pour trouver la comparaison
 		// si > 0, color = red, si < 0, color = green, etc
 	}
