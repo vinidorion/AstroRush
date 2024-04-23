@@ -4,35 +4,35 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-	private float inputx = 0;
-	private float inputz = 0;
-
-	private SpaceShip _spaceship;
-
 	public static Player Instance;
+	private SpaceShip _spaceship;
 
 	void Awake()
 	{
 		_spaceship = GetComponent<SpaceShip>();
-		Instance = this;
+		if (Instance == null) {
+			Instance = this;
+		} else {
+			Destroy(this.gameObject);
+		}
 	}
 
 	// controles dans l'Update() et non dans FixedUpdate()
 	void Update()
 	{
 		if(!_spaceship.isFrozen()) {
-			move();
+			Move();
 			UsePU();
 			ChangeCameraMode();
 		}
 	}
 
-	private void move()
+	private void Move()
 	{
-		inputx = Input.GetAxis("Horizontal");
-		inputz = Input.GetAxis("Vertical");
+		float inputx = Input.GetAxis("Horizontal");
+		float inputz = Input.GetAxis("Vertical");
 		if (inputz > 0) _spaceship.Forward();
-		if (inputz < 0) _spaceship.backward();
+		if (inputz < 0) _spaceship.Backward();
 		if (inputx > 0) _spaceship.Turn(false);
 		if (inputx < 0) _spaceship.Turn(true);
 		if (Input.GetKey(KeyCode.Mouse0)) _spaceship.AirBrake(true);

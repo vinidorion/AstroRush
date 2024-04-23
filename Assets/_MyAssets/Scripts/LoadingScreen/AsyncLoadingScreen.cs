@@ -56,11 +56,13 @@ public class AsyncLoadingScreen : MonoBehaviour
 		}
 	}
 
+	// méthode publique qui permet de rendre le loading screen skipable
 	public void CanSkip()
 	{
 		_canSkip = true;
 	}
 
+	// coroutine qui fade to black et fade out l'audio, puis load la scene
 	IEnumerator LoadSceneCoroutine()
 	{
 		_fadeOut.ToggleFade(false);

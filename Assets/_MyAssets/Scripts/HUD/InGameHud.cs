@@ -15,41 +15,44 @@ public class InGameHud : MonoBehaviour
 	private float _maxSpeed;
 	[SerializeField] private Image _speedBar = default;
 	[SerializeField] private TMP_Text _speedText = default;
-    [SerializeField] private TMP_Text _LapsText = default;
-    [SerializeField] private TMP_Text _PosText = default;
+	[SerializeField] private TMP_Text _LapsText = default;
+	[SerializeField] private TMP_Text _PosText = default;
 	[SerializeField] private TMP_ColorGradient[] color_list = default;
-    [SerializeField] private TMP_Text _LapTimeText = default;
+	[SerializeField] private TMP_Text _LapTimeText = default;
 	[SerializeField] private Image _itemImage = default;
-    private float[] _lapTimes_list = default;
+	private float[] _lapTimes_list = default;
 	private string _lapTimes_string = "";
 	private float _time_lap_start = 0;
 
-    private Sprite[] _arrPUs;
+	private Sprite[] _arrPUs;
 
-    void Awake()
+	void Awake()
 	{
 		if (Instance == null) {
 			Instance = this;
 		} else {
 			Destroy(this.gameObject);
 		}
-        _arrPUs = Resources.LoadAll("PUs/Images/", typeof(Sprite)).Cast<Sprite>().ToArray();
-    }
+		_arrPUs = Resources.LoadAll("PUs/Images/", typeof(Sprite)).Cast<Sprite>().ToArray();
+	}
 
-    private void Start()
-    {
+	void Start()
+	{
 		_ship = Player.Instance.GetSpaceShip();
 		_maxSpeed = _ship.GetMaxSpeed();
-    }
+	}
 
-    void FixedUpdate()
+	void FixedUpdate()
 	{
+		CameraMode camMode = Camera.Instance.GetCameraMode();
+		if(camMode == CameraMode.Intro || camMode == CameraMode.Spectate) {
+			return; // ne pas draw le hud dans l'intro ou spectate
+		}
 		Speed();
 		Laps();
 		Pos();
 		LapTimer();
 	}
-
 
 	// les fonctions dessous s'occupent de ceci: https://github.com/vinidorion/AstroRush/blob/main/Autre/ingame_hud.PNG
 
@@ -64,14 +67,14 @@ public class InGameHud : MonoBehaviour
 		float speed = _ship.GetSpeed();
 
 
-        _speedBar.fillAmount = speed * .8f / _maxSpeed;
+		_speedBar.fillAmount = speed * .8f / _maxSpeed;
 		Color color = _speedBar.color;
-        color.b = 1 - speed / _maxSpeed;
+		color.b = 1 - speed / _maxSpeed;
 		color.r = speed / _maxSpeed;
-        _speedBar.color = color;
-        if (speed < _maxSpeed) _speedText.text = ((int)(speed / _maxSpeed * 100)).ToString();
+		_speedBar.color = color;
+		if (speed < _maxSpeed) _speedText.text = ((int)(speed / _maxSpeed * 100)).ToString();
 		else _speedText.text = "99";
-    }
+	}
 
 	private void Laps()
 	{
@@ -84,9 +87,9 @@ public class InGameHud : MonoBehaviour
 		int pos = _ship.GetPosition() + 1;
 		if (pos == 1) { _PosText.text = "1st"; _PosText.colorGradientPreset = color_list[0]; }
 		else if (pos == 2) { _PosText.text = "2nd"; _PosText.colorGradientPreset = color_list[1]; }
-        else if (pos == 3) { _PosText.text = "3rd"; _PosText.colorGradientPreset = color_list[2]; }
-        else { _PosText.text = pos + "th"; _PosText.colorGradientPreset = color_list[3]; }
-    }
+		else if (pos == 3) { _PosText.text = "3rd"; _PosText.colorGradientPreset = color_list[2]; }
+		else { _PosText.text = pos + "th"; _PosText.colorGradientPreset = color_list[3]; }
+	}
 
 	// lap time
 	private void LapTimes(float time)
@@ -110,15 +113,15 @@ public class InGameHud : MonoBehaviour
 	// draw l'icone de l'item du joueur
 	public void Item(int pu)
 	{
-        if (pu >= 0 && pu < _arrPUs.Length)
+		if (pu >= 0 && pu < _arrPUs.Length)
 		{
-            _itemImage.sprite = _arrPUs[pu];
-        }
-        else
-        {
+			_itemImage.sprite = _arrPUs[pu];
+		}
+		else
+		{
 			_itemImage.sprite = null;
-        }
-    }
+		}
+	}
 
 	// draw la map en 2D (vue de haut)
 	private void Map()
@@ -126,7 +129,7 @@ public class InGameHud : MonoBehaviour
 
 	}
 
-	// draw la progression sur la track (utiliser le current checkpoint du joueur sur le nb total de checkpoint)
+	// draw la progression sur la track (utiliser le current waypoint du joueur sur le nb total de waypoint)
 	private void Prog()
 	{
 

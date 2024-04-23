@@ -21,41 +21,55 @@ public class GameData : MonoBehaviour
 		}
 	}
 
+	// méthode publique qui assigne le nombre de bot
+	// utilisé dans le menu
 	public void SetNumBot(int numBot)
 	{
 		_numBot = numBot;
 	}
 
+	// méthode publique qui retourne le nombre de bot
+	// utilisé dans la scene de jeu
 	public int GetNumBot()
 	{
 		return _numBot;
 	}
 
+	// méthode publique qui assigne le ship du joueur
 	public void SetPlyShip(int plyShip)
 	{
 		_plyShip = plyShip;
 	}
 
+	// méthode publique qui retourne le ship du joueur
 	public int GetPlyShip()
 	{
 		return _plyShip;
 	}
 
+	// méthode publique qui assigne le nom de la scene à loader
+	// utlisé dans le menu
 	public void SetTrackName(string trackName)
 	{
 		_trackName = trackName;
 	}
 
+	// méthode publique qui retourne le nom de la scene à loader
+	// utilisé dans la scene loading screen
 	public string GetTrackName()
 	{
 		return _trackName;
 	}
 
+	// méthode publique qui assigne le nombre de tours
+	// utilisé dans le menu
 	public void SetNumLap(int numLap)
 	{
 		_numLap = numLap;
 	}
 
+	// méthode publique qui retourne le nombre de tours
+	// utilisé dans la scene de jeu
 	public int GetNumLap()
 	{
 		return _numLap;

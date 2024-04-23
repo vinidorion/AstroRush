@@ -1,15 +1,13 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class PosManager : MonoBehaviour
 {
 	public static PosManager Instance; // Singleton
 	
 	private float _nextUpdate = 0f;
-	private const float COOLDOWN = 2f; // ne pas oublier de réduire ce cooldown
+	private const float COOLDOWN = 1f; // ne pas oublier de réduire ce cooldown
 	
 	private List<SpaceShip> _listSpaceship = new List<SpaceShip>(); 
 
@@ -69,6 +67,7 @@ public class PosManager : MonoBehaviour
 		return _listSpaceship[pos];
 	}
 
+	// méthode publique qui obtient le dernier spaceship
 	public SpaceShip GetLastShip()
 	{
 		return _listSpaceship[_listSpaceship.Count - 1];

@@ -19,7 +19,9 @@ public class MusicManager : MonoBehaviour
 
 		ShuffleMusicList();
 
-		_audio = GameObject.Find("MusicAudioSource").GetComponent<AudioSource>(); // ne pas oublier de mettre le tag MUS sur cet objet dans l'inspecteur
+		// ne pas oublier de mettre le tag MUS sur cet objet dans l'inspecteur
+		// c'est impossible ici
+		_audio = GameObject.Find("MusicAudioSource").GetComponent<AudioSource>();
 	}
 
 	void Start()
@@ -27,6 +29,7 @@ public class MusicManager : MonoBehaviour
 		StartCoroutine(StartMusicCoroutine());
 	}
 
+	// méthode privée qui mélange la playlist de musique
 	private void ShuffleMusicList()
 	{
 		System.Random rnd = new System.Random();
@@ -39,13 +42,14 @@ public class MusicManager : MonoBehaviour
 			_listMusic[i] = temp;
 		}
 
-		Debug.Log("====== NEW MUSIC PLAYLIST ======");
+		/*Debug.Log("====== NEW MUSIC PLAYLIST ======");
 		foreach(AudioClip audio in _listMusic) {
 			Debug.Log(audio.name);
 		}
-		Debug.Log("===========================");
+		Debug.Log("===========================");*/
 	}
 
+	// méthode publique qui pause la musique
 	public void PauseMusic()
 	{
 		if(_audio.isPlaying) {
@@ -67,13 +71,14 @@ public class MusicManager : MonoBehaviour
 		}
 	}
 
+	// coroutine qui controle quand jouer la prochaine musique
 	IEnumerator StartMusicCoroutine()
 	{
 		_audio.clip = _listMusic[_musicIndex];
 		_audio.Play();
 
-		Debug.Log("===========================");
-		Debug.Log("NOW PLAYING: " + _listMusic[_musicIndex].name);
+		/*Debug.Log("===========================");
+		Debug.Log("NOW PLAYING: " + _listMusic[_musicIndex].name);*/
 
 		_musicIndex++;
 		if(_musicIndex >= _listMusic.Length) {
@@ -85,10 +90,10 @@ public class MusicManager : MonoBehaviour
 		StartCoroutine(StartMusicCoroutine());
 	}
 
+	// méthode publique qui retourne le nom de l'audio clip
 	// pour l'affichage de "currently playing" dans le menu pause
 	public string GetCurrentMusicName()
 	{
 		return _audio.clip.name;
 	}
-
 }

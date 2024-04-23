@@ -22,7 +22,6 @@ public class OutOfBounds : MonoBehaviour
 
 	IEnumerator RespawnCoroutine(SpaceShip spaceship)
 	{
-		// fade to black ici
 		yield return new WaitForSeconds(DELAY);
 
 		int shipWayptIndex = spaceship.GetWaypoint();

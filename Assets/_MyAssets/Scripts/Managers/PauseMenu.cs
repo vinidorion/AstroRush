@@ -25,6 +25,7 @@ public class PauseMenu : MonoBehaviour
 		}
 	}
 
+	// méthode publique qui toggle le menu pause
 	public void TogglePause()
 	{
 		if(_canPause) { // va probablement être utilisé en dehors de cette classe, donc check _canPause ici
@@ -54,11 +55,14 @@ public class PauseMenu : MonoBehaviour
 		}
 	}
 
+	// méthode publique qui permet de changer si le jouer peut ouvrir le menu ou non
+	// (il peut seulement l'ouvrir quand le countdown atteint 0)
 	public void SetCanPause(bool canPause)
 	{
 		_canPause = canPause;
 	}
 
+	// méthode publique qui retourne si le menu pause est ouvert ou non
 	public bool GetIsPaused()
 	{
 		return _isPaused;

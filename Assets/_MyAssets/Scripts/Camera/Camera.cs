@@ -7,11 +7,10 @@ public class Camera : MonoBehaviour
 	public static Camera Instance; // Singleton
 
 	private CameraMode _currentMode;
-	private Player[] _plyArray;
 	private Transform _plyPos;
 
 	/***** SPECTATE *****/
-	private float _camRotSpeed = 10f;
+	private const float CAM_ROT_SPEED = 10f;
 
 	/***** INTRO *****/
 	private const float CAM_SPEED = 0.5f;
@@ -61,37 +60,26 @@ public class Camera : MonoBehaviour
 		}
 	}
 
-	// à mettre dans un singleton pour trouver le joueur une fois et ensuite tous les scripts accèdent à ce singleton pour avoir le player
+	// méthode privée qui trouve le transform du joueur
 	private void FindPly() {
-		_plyArray = FindObjectsOfType<Player>();
-
-		int plyArrLen = _plyArray.Length;
-
-		if(plyArrLen == 1) {
-			// player found
-			_plyPos = _plyArray[0].transform;
-		} else if(plyArrLen == 0) {
-			// no player found
-			Debug.Log("PLAYER NOT FOUND");
+		if(Player.Instance) {
+			_plyPos = Player.Instance.transform;
 		} else {
-			// there's more than one player
-			Debug.Log("THERE'S MORE THAN ONE PLAYER");
+			Debug.Log("PLAYER NOT FOUND");
 		}
 	}
 
+	// méthode publique qui switch entre le mode firstperson et thirdperson
 	public void RotateCameraMode()
 	{
-		if(_currentMode != CameraMode.FirstPerson && _currentMode != CameraMode.ThirdPerson) { // ne pas switch de CameraMode sur Intro ou Spectate
-			return;
-		}
-
 		if (_currentMode == CameraMode.FirstPerson) {
 			_currentMode = CameraMode.ThirdPerson;
-		} else {
+		} else if(_currentMode == CameraMode.ThirdPerson) {
 			_currentMode = CameraMode.FirstPerson;
 		}
 	}
 
+	// méthode publique qui change le CameraMode
 	// enum CameraMode:
 		// Intro
 		// FirstPerson
@@ -102,14 +90,10 @@ public class Camera : MonoBehaviour
 		_currentMode = mode;
 	}
 
+	// méthode publique qui retourne le CameraMode actuel
 	public CameraMode GetCameraMode()
 	{
 		return _currentMode;
-	}
-
-	public void SetCamPos(Vector3 newPos)
-	{
-		transform.position = newPos;
 	}
 
 	// avant que la course commence, la caméra montre la map
@@ -118,7 +102,7 @@ public class Camera : MonoBehaviour
 			_camIndex += 2;
 			if(_camIndex >= _listCam.Count) {
 				//_camIndex = 0; -- uncomment to loop throught camera pairs
-				_currentMode = CameraMode.ThirdPerson;
+				GameManager.Instance.StartRace();
 				return;
 			}
 			transform.position = _listCam[_camIndex].position;
@@ -136,7 +120,6 @@ public class Camera : MonoBehaviour
 	}
 
 	// caméra attaché derrière le spaceship en hauteur
-	// mouvement latéral? https://github.com/phoboslab/wipeout-rewrite/blob/90702ce17115484b6cfc1155dd4617b5fa3762cd/src/wipeout/camera.c#L42
 	private void ThirdPerson() {
 		transform.position = _plyPos.position + (_plyPos.forward * -1.5f) + (_plyPos.up * 0.3f);
 		transform.rotation = _plyPos.rotation;
@@ -146,7 +129,7 @@ public class Camera : MonoBehaviour
 	private void Spectate()
 	{
 		Quaternion targetRotation = Quaternion.LookRotation(_plyPos.position - transform.position);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _camRotSpeed * Time.deltaTime);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, CAM_ROT_SPEED * Time.deltaTime);
 	}
 
 	// méthode public pour faire shaker la caméra

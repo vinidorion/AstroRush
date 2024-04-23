@@ -34,11 +34,13 @@ public class LoadingScreenLogo : MonoBehaviour
 		}
 	}
 
+	// méthode privée qui change la couleur d'une pièce du logo
 	private void ChangeColor(Transform logoPiece, Color newColor)
 	{
 		logoPiece.GetComponent<Renderer>().material.color = newColor;
 	}
 
+	// méthode publique qui start l'animation du logo
 	public void StartLogoAnim()
 	{
 		_doAnim = true;

@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour
 
 	private GameObject[] _arrPUs;
 
-	//private float _testCooldown = 0f;
-
 	void Awake()
 	{
 		if (Instance == null) {
@@ -31,9 +29,9 @@ public class GameManager : MonoBehaviour
 		_arrPUs = Resources.LoadAll("PUs/poly/", typeof(GameObject)).Cast<GameObject>().ToArray();
 
 		// print la liste de PU pour debug
-		//foreach (GameObject pu in _arrPUs) {
-		//	Debug.Log(pu.name.Substring(3));
-		//}
+		/*foreach (GameObject pu in _arrPUs) {
+			Debug.Log(pu.name.Substring(3));
+		}*/
 	}
 
 	void Start()
@@ -45,20 +43,22 @@ public class GameManager : MonoBehaviour
 
 	void Update()
 	{
-		if(_isIntro) {
+		if(_isIntro) { // ne pas merge ces deux check de conditions
 			if (Input.anyKeyDown) { // tout ce qui est dans ce block est called sur une seule frame (une seule fois)
-				Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
-				StartCoroutine(CountdownCoroutine());
-				_isIntro = false;
+				StartRace();
 			}
 		}
-
-		/*if(_testCooldown < Time.time) {
-			FindObjectsOfType<Player>()[0].GetComponent<SpaceShip>().GivePU();
-			_testCooldown = Time.time + 1f;
-		}*/
 	}
 
+	// méthode publique qui start la race
+	// doit être publique pour être called dans la classe Camera (quand l'anim d'intro est fini)
+	public void StartRace() {
+		Camera.Instance.SetCameraMode(CameraMode.ThirdPerson);
+		StartCoroutine(CountdownCoroutine());
+		_isIntro = false;
+	}
+
+	// coroutine du countdown
 	IEnumerator CountdownCoroutine()
 	{
 		// draw le in game hud ici
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	// méthode publique qui get le nombre de PUs,
-	// sera utile pour trouver un PU random
+	// utile dans la sélection aléatoire de PU
 	public int GetNumPUs()
 	{
 		return _arrPUs.Length;

@@ -8,8 +8,7 @@ public class SpectateZone : MonoBehaviour
 	
 	void Awake()
 	{
-		// GetComponent<MeshRenderer>().enabled = false;
-
+		GetComponent<MeshRenderer>().enabled = false;
 		foreach(Transform child in transform) {
 			_camPos = child.position;
 		}
@@ -18,9 +17,11 @@ public class SpectateZone : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		SpaceShip spaceship = other.GetComponent<SpaceShip>();
-		if (spaceship != null && Camera.Instance.GetCameraMode() == CameraMode.Spectate) {
-			Camera.Instance.SetCamPos(_camPos);
-			Camera.Instance.transform.LookAt(other.transform, Vector3.up);
+		if (spaceship != null) { // ne pas merge ce check de condition
+			if(Camera.Instance.GetCameraMode() == CameraMode.Spectate) {
+				Camera.Instance.transform.position = _camPos;
+				Camera.Instance.transform.LookAt(other.transform, Vector3.up);
+			}
 		}
 	}
 }

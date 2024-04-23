@@ -33,7 +33,7 @@ public class title : MonoBehaviour
 				}
 			} else if(child.name == "black_bg") {
 				_blackBG = child;
-			}  else if(child.name == "black_fg") {
+			} else if(child.name == "black_fg") {
 				_blackFG = child.GetComponent<Horbar>();
 			} else if(child.name == "Opening") {
 				child.GetComponent<AudioSource>().time = 25f;

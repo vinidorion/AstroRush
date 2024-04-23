@@ -25,7 +25,8 @@ public class WaypointManager : MonoBehaviour
 		}
 	}
 
-	// donner le membre _waypoint du spaceship par argument pour obtenir sa position
+	// méthode publique qui permet d'obtenir la position d'un waypoint
+	// (donner le membre _waypoint du spaceship par argument pour obtenir sa position)
 	public Vector3 GetWaypointPos(int index)
 	{
 		if(index >= _listWaypoint.Count) {
@@ -35,7 +36,8 @@ public class WaypointManager : MonoBehaviour
 		}
 	}
 
-	// pour savoir si c'est le waypoint final, si oui ça reset à 0 dans la classe spaceship
+	// méthode publique qui sert à savoir si c'est le waypoint final
+	// (si oui ça reset à 0 dans la classe spaceship)
 	public bool IsFinalWaypoint(int index)
 	{
 		if(index == _listWaypoint.Count) {
@@ -45,6 +47,7 @@ public class WaypointManager : MonoBehaviour
 		}
 	}
 
+	// méthode publique qui retourne le nombre de waypoint total
 	// pour le hud
 	public int GetLapNb()
 	{
