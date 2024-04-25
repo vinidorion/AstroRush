@@ -26,7 +26,6 @@ public class LoadingScreenLogo : MonoBehaviour
 			_indexPiece++;
 			if(_indexPiece >= _logoPiece.Count) {
 				AsyncLoadingScreen.Instance.CanSkip();
-				// et "appuyez sur une touche pour continuer"
 				_doAnim = false;
 			}
 			_nextCooldown /= 2f;

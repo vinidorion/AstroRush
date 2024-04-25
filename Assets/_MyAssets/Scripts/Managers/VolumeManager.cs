@@ -24,7 +24,7 @@ public class VolumeManager : MonoBehaviour
 		}
 	}
 
-	// // méthode publique qui incremente le volume SFX (sound effects)
+	// méthode publique qui incremente le volume SFX (sound effects)
 	// isIncrease:
 	//    true	- augmenter de 1
 	//    false	- baisser de 1
@@ -38,7 +38,7 @@ public class VolumeManager : MonoBehaviour
 		UpdateVolume();
 	}
 
-	// // méthode publique qui incremente le volume MUS (musique)
+	// méthode publique qui incremente le volume MUS (musique)
 	// isIncrease:
 	//    true	- augmenter de 1
 	//    false	- baisser de 1
@@ -52,13 +52,13 @@ public class VolumeManager : MonoBehaviour
 		UpdateVolume();
 	}
 
-	// // méthode publique qui retourne le volume global SFX
+	// méthode publique qui retourne le volume global SFX
 	public int GetVolSFX()
 	{
 		return _GlobalVolSFX;
 	}
 
-	// // méthode publique qui retourne le volume global MUS
+	// méthode publique qui retourne le volume global MUS
 	public int GetVolMUS()
 	{
 		return _GlobalVolMUS;

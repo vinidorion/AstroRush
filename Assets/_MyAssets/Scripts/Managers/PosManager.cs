@@ -7,7 +7,7 @@ public class PosManager : MonoBehaviour
 	public static PosManager Instance; // Singleton
 	
 	private float _nextUpdate = 0f;
-	private const float COOLDOWN = 1f; // ne pas oublier de réduire ce cooldown
+	private const float COOLDOWN = 1f;
 	
 	private List<SpaceShip> _listSpaceship = new List<SpaceShip>(); 
 

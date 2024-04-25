@@ -29,7 +29,8 @@ public class InGameHud : MonoBehaviour
 	private Image _itemImage;
 	private List<string> _lapTimes_list = new List<string>();
 	private string _lapTimes_string = "";
-	private string last_lap_time = "";
+	private float _time_lap_start = 0;
+	private bool _hasStarted = false;
 
 	// progression bar
 	private Image _progBar;
@@ -37,7 +38,7 @@ public class InGameHud : MonoBehaviour
 	//HealthBar
 	private Image _healthBar;
 	private int maxHP = 0;
-	
+
 	private SpaceShip _plyShip;
 	private WaypointFinder _plyWptFinder;
 	private Sprite[] _arrPUs;
@@ -55,6 +56,7 @@ public class InGameHud : MonoBehaviour
 		_canvasGroup = GetComponent<CanvasGroup>(); 
 		
 		foreach(Transform child in transform) {
+			// TODO: mettre en switch case ici
 			if(child.name == "Speed_Bar") {
 				foreach(Transform grandchild in child) {
 					if(grandchild.name == "Speed_Bar_Img") {
@@ -77,15 +79,14 @@ public class InGameHud : MonoBehaviour
 						_progBar = grandchild.GetComponent<Image>();
 					}
 				}
-            }
-            else if (child.name == "HealthBar") {
-                foreach (Transform grandchild in child) {
-                    if (grandchild.name == "HealthBarFill") {
-                        _healthBar = grandchild.GetComponent<Image>();
-                    }
-                }
-            }
-        }
+			} else if (child.name == "HealthBar") {
+				foreach (Transform grandchild in child) {
+					if (grandchild.name == "HealthBarFill") {
+						_healthBar = grandchild.GetComponent<Image>();
+					}
+				}
+			}
+		}
 
 		_arrPUs = Resources.LoadAll("PUs/Images/", typeof(Sprite)).Cast<Sprite>().ToArray();
 	}
@@ -106,7 +107,9 @@ public class InGameHud : MonoBehaviour
 		}
 		Speed();
 		Pos();
-		LapTimer();
+		if(_hasStarted) { // TODO: probablement une meilleure facon de faire ca
+			LapTimer();
+		}
 		ProgressionBar();
 	}
 
@@ -142,12 +145,12 @@ public class InGameHud : MonoBehaviour
 	{
 		_lapsText.text = "Lap " + (_plyShip.GetLap() + 1).ToString();
 
-        float lapTime = _plyShip.GetTimeSinceLastLap();
-        int minutes = Mathf.FloorToInt(lapTime / 60f);
-        int seconds = Mathf.FloorToInt(lapTime % 60f);
-        int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
-		_lapTimes_list.Add(last_lap_time);
-    }
+		/*float lapTime = _plyShip.GetTimeSinceLastLap();
+		int minutes = Mathf.FloorToInt(lapTime / 60f);
+		int seconds = Mathf.FloorToInt(lapTime % 60f);
+		int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
+		_lapTimes_list.Add(last_lap_time);*/
+	}
 
 	// draw la position (premier, deuxième, etc)
 	private void Pos()
@@ -172,15 +175,18 @@ public class InGameHud : MonoBehaviour
 		int minutes = Mathf.FloorToInt(lapTime / 60f);
 		int seconds = Mathf.FloorToInt(lapTime % 60f);
 		int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
-		_lapTimes_string = "";
-        foreach (string time in _lapTimes_list) 
+		_lapTimeText.text = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
+
+
+		/*_lapTimes_string = "";
+		foreach (string time in _lapTimes_list) 
 		{ 
 			_lapTimes_string = _lapTimes_string + "\n" + time;
-        }
+		}
 		_lapTimeText.text = _lapTimes_string + "\n" + string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
-		last_lap_time = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
+		last_lap_time = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);*/
 
-    }
+	}
 
 	// draw la map en 2D (vue de haut)
 	private void Map()
@@ -200,6 +206,12 @@ public class InGameHud : MonoBehaviour
 	public void ResetProgBar()
 	{
 		_progBar.fillAmount = 0f;
+	}
+
+	// méthode publique pour informer que la course a commencé
+	public void StartTimer()
+	{
+		_hasStarted = true;
 	}
 
 	// draw l'icone de l'item du joueur

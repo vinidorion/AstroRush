@@ -297,10 +297,11 @@ public class SpaceShip : MonoBehaviour
 	// plus haute = premier
 	// plus basse = dernier
 	// faut juste sort en ordre décroissant pour trouver l'ordre des spaceships (le sort se fait dans la classe PosManager)
-	// la multiplication par 1000 ici implique qu'on ne peut avoir que 1000 waypoints max
+	// la multiplication de _lap par le nombre de waypoints donne
+	// un grand nombre qui ne sera jamais dépassé par le nombre de waypoints
 	public int GetPosValue()
 	{
-		return (_lap * 1000) + _waypoint.GetWaypoint();
+		return (_lap * WaypointManager.Instance.GetNbWpt()) + _waypoint.GetWaypoint();
 	}
 
 	/********************************************

@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
 	{
 		_numSpaceship = FindObjectsOfType<SpaceShip>().Length;
 		PauseMenu.Instance.SetCanPause(false);
-		// freeze tout les spaceships ici avec FreezeAll(true)
+		FreezeAll(true);
 		if(InGameHud.Instance) {
 			InGameHud.Instance.ToggleDrawHUD(false);
 		}
@@ -78,26 +78,26 @@ public class GameManager : MonoBehaviour
 	// coroutine du countdown
 	IEnumerator CountdownCoroutine()
 	{
-		yield return null;
-		//yield return new WaitForSeconds(2f);
-		// 3
+		yield return new WaitForSeconds(2f);
+		NumberCountdown.Instance.Count();
 
-		//yield return new WaitForSeconds(1f);
-		// 2
+		yield return new WaitForSeconds(1f);
+		NumberCountdown.Instance.Count();
 
-		//yield return new WaitForSeconds(1f);
-		// 1
+		yield return new WaitForSeconds(1f);
+		NumberCountdown.Instance.Count();
 
-		//yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(1f);
 		// start race ici
-		// unfreeze tout les spaceships ici avec FreezeAll(false)
-
+		NumberCountdown.Instance.Go();
+		FreezeAll(false);
 		PauseMenu.Instance.SetCanPause(true);
 
 		// comme le _startTime est le même pour tout le monde, 
 		// je le store ici pour pas le store dans chaque classe spaceship
 		// utilisez la méthode publique GetStartTime() pour obtenir _startTime
 		_startTime = Time.time;
+		InGameHud.Instance.StartTimer();
 	}
 
 	// méthode publique qui retourne le Time.time quand la course a commencé
