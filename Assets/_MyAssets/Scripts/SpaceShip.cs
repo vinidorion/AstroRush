@@ -44,14 +44,14 @@ public class SpaceShip : MonoBehaviour
 
 	// le Time.time quand le lap est complété
 	// premier lap :		_listLapTime[0] - _startTime
-	// autre que premier : 	_listLapTime[n] - _listLapTime[n - 1]
+	// autre que premier :	_listLapTime[n] - _listLapTime[n - 1]
 	// temps total :		_listLapTime[_listLapTime.Count - 1] - _startTime
 	private List<float> _listLapTime = new List<float>();
 
 	private const float COEF_DRAG = -0.2f;
+	private Vector3 _forwardSpeed = Vector3.zero;
 
 	private bool _isFrozen = false;
-	private Vector3 _forwardSpeed = Vector3.zero;
 	private Rigidbody _rb;
 	private GameManager _gm;
 
@@ -202,12 +202,12 @@ public class SpaceShip : MonoBehaviour
 	private void LateralStability()
 	{
 		float lateralSpeed = transform.InverseTransformDirection(_rb.velocity).x;
-		//Debug.Log("lateral speed: " + lateralSpeed.ToString("F2"));
+		//Debug.Log($"lateral speed: {lateralSpeed.ToString("F2")}");
 		
 		if(lateralSpeed > 0.5f) {
-			_rb.AddForce(transform.right * -5f * _agility);
-		} else if(lateralSpeed < -0.5f)  {
-			_rb.AddForce(transform.right * 5f * _agility);
+			_rb.AddForce(transform.right * -5f * _agility, ForceMode.Acceleration);
+		} else if(lateralSpeed < -0.5f) {
+			_rb.AddForce(transform.right * 5f * _agility, ForceMode.Acceleration);
 		}
 	}
 
@@ -232,11 +232,13 @@ public class SpaceShip : MonoBehaviour
 	// utilisé dans la classe LapComplete
 	public void LapCompleted()
 	{
+		Debug.Log("LapCompleted() called");
 		_waypoint.SetWaypoint(0);
 
 		_listLapTime.Add(Time.time);
 
-		_lap++; // et changer lap dans le hud
+		_lap++;
+		bool isPly = this.gameObject == Player.Instance.gameObject;
 
 		if(!GameData.Instance) {
 			Debug.Log("NO GAMEDATA OBJECT");
@@ -252,26 +254,24 @@ public class SpaceShip : MonoBehaviour
 
 		if(_lap > numLap) {
 			return;
-		} else if(_lap == numLap && this.gameObject == Player.Instance.gameObject) {
-			// c'est la fin du jeu
+		} else if(_lap == numLap && isPly) { // dernier lap, c'est la fin du jeu
 
 			CameraController.Instance.SetCameraMode(CameraMode.Spectate);
-			// enlever le hud
+			if(InGameHud.Instance) {
+				InGameHud.Instance.ToggleDrawHUD(false);
+			}
 			// activer le component bot du joueur
 			// afficher rank
 			// save _listLapTime si le joueur bat son record
-
-
 		}
 
 		if (!InGameHud.Instance) {
 			return;
 		}
-
-		if (_listLapTime.Count == 1) {
-			InGameHud.Instance.TimeComp(_listLapTime[0] - GameManager.Instance.GetStartTime());
-		} else {
-			InGameHud.Instance.TimeComp(_listLapTime[_listLapTime.Count - 1] - _listLapTime[_listLapTime.Count - 2]);
+		// ne pas merge ce check de condition
+		if(isPly) {
+			InGameHud.Instance.ResetProgBar();
+			InGameHud.Instance.UpdateLap();
 		}
 	}
 
@@ -361,7 +361,7 @@ public class SpaceShip : MonoBehaviour
 	// y = a * ( x - 0.5 ) + 0.5
 	public void GivePU()
 	{
-		int numShip = FindObjectsOfType<SpaceShip>().Length;
+		int numShip = _gm.GetNumSpaceships();
 		int pos = _position;
 		int numPU = _gm.GetNumPUs();
 		int[] listWeight = new int[numPU];
@@ -434,6 +434,20 @@ public class SpaceShip : MonoBehaviour
 	// méthode publique qui retourne la direction de la gravité
 	// utilisé dans OutOfBounds
 	public Vector3 GetVecGrav() { return _rayDir; }
+
+	public float GetTimeSinceLastLap()
+	{
+		if(_listLapTime.Count == 0) {
+			return Time.time - GameManager.Instance.GetStartTime();
+		} else {
+			return Time.time - _listLapTime[_listLapTime.Count - 1];
+		}
+	}
+
+	public float GetLastLapTime()
+	{
+		return _listLapTime[_listLapTime.Count - 1] - GameManager.Instance.GetStartTime();
+	}
 
 	// méthode publique qui permet de ralentir le spaceship (par les PU)
 	public void Slow(float slow, float slowTime)

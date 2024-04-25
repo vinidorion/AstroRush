@@ -11,20 +11,34 @@ public class InGameHud : MonoBehaviour
 {
 	public static InGameHud Instance; // Singleton
 
-	private SpaceShip _ship;
+	// speedbar
 	private float _maxSpeed;
-	[SerializeField] private Image _speedBar = default;
-	[SerializeField] private TMP_Text _speedText = default;
-	[SerializeField] private TMP_Text _LapsText = default;
-	[SerializeField] private TMP_Text _PosText = default;
+	private Image _speedBar;
+	private TMP_Text _speedText;
+
+	// laps
+	private TMP_Text _lapsText;
+
+	// position
+	private TMP_Text _posText;
 	[SerializeField] private TMP_ColorGradient[] color_list = default;
-	[SerializeField] private TMP_Text _LapTimeText = default;
-	[SerializeField] private Image _itemImage = default;
+	private readonly string[] ORDINAL_INDICATORS = { "st", "nd", "rd" };
+
+	// lap time
+	private TMP_Text _lapTimeText;
+	private Image _itemImage;
 	private float[] _lapTimes_list = default;
 	private string _lapTimes_string = "";
 	private float _time_lap_start = 0;
 
+	// progression bar
+	private Image _progBar;
+
+	
+	private SpaceShip _plyShip;
+	private WaypointFinder _plyWptFinder;
 	private Sprite[] _arrPUs;
+	private CanvasGroup _canvasGroup;
 
 	void Awake()
 	{
@@ -33,13 +47,44 @@ public class InGameHud : MonoBehaviour
 		} else {
 			Destroy(this.gameObject);
 		}
+
+		// changer la propriété alpha de cette variable permet de turn on/off (1f / 0f) le hud au complet (tous les child objects de cet objet)
+		_canvasGroup = GetComponent<CanvasGroup>(); 
+		
+		foreach(Transform child in transform) {
+			if(child.name == "Speed_Bar") {
+				foreach(Transform grandchild in child) {
+					if(grandchild.name == "Speed_Bar_Img") {
+						_speedBar = grandchild.GetComponent<Image>();
+					} else if(grandchild.name == "Speed_Text") {
+						_speedText = grandchild.GetComponent<TMP_Text>();
+					}
+				}
+			} else if(child.name == "Laps_Text") {
+				_lapsText = child.GetComponent<TMP_Text>();
+			} else if(child.name == "Pos_Text") {
+				_posText = child.GetComponent<TMP_Text>();
+			} else if(child.name == "LapTimes_Text") {
+				_lapTimeText = child.GetComponent<TMP_Text>();
+			} else if(child.name == "Item_Image") {
+				_itemImage = child.GetComponent<Image>();
+			} else if(child.name == "ProgressionBar") {
+				foreach(Transform grandchild in child) {
+					if(grandchild.name == "ProgressionBarFill") {
+						_progBar = grandchild.GetComponent<Image>();
+					}
+				}
+			}
+		}
+
 		_arrPUs = Resources.LoadAll("PUs/Images/", typeof(Sprite)).Cast<Sprite>().ToArray();
 	}
 
 	void Start()
 	{
-		_ship = Player.Instance.GetSpaceShip();
-		_maxSpeed = _ship.GetMaxSpeed();
+		_plyShip = Player.Instance.GetComponent<SpaceShip>();
+		_plyWptFinder = _plyShip.GetComponent<WaypointFinder>();
+		_maxSpeed = _plyShip.GetMaxSpeed();
 	}
 
 	void FixedUpdate()
@@ -49,9 +94,9 @@ public class InGameHud : MonoBehaviour
 			return; // ne pas draw le hud dans l'intro ou spectate
 		}
 		Speed();
-		Laps();
 		Pos();
 		LapTimer();
+		ProgressionBar();
 	}
 
 	// les fonctions dessous s'occupent de ceci: https://github.com/vinidorion/AstroRush/blob/main/Autre/ingame_hud.PNG
@@ -64,7 +109,7 @@ public class InGameHud : MonoBehaviour
 
 	private void Speed()
 	{
-		float speed = _ship.GetForwardSpeed();
+		float speed = _plyShip.GetForwardSpeed();
 
 
 		_speedBar.fillAmount = speed * .8f / _maxSpeed;
@@ -76,38 +121,60 @@ public class InGameHud : MonoBehaviour
 		else _speedText.text = "99";
 	}
 
-	private void Laps()
+	// méthode publique pour set le numéro du lap
+	// called dans LapCompleted()
+	// pour éviter de set le lap 50x par seconde
+	// on passe pas le _lap par argument pour être
+	// capable de le caller de n'importe où
+	public void UpdateLap()
 	{
-		_LapsText.text = "Lap " + (_ship.GetLap() + 1).ToString();
+		_lapsText.text = "Lap " + (_plyShip.GetLap() + 1).ToString();
 	}
 
 	// draw la position (premier, deuxième, etc)
 	private void Pos()
 	{
-		int pos = _ship.GetPosition() + 1;
-		if (pos == 1) { _PosText.text = "1st"; _PosText.colorGradientPreset = color_list[0]; }
-		else if (pos == 2) { _PosText.text = "2nd"; _PosText.colorGradientPreset = color_list[1]; }
-		else if (pos == 3) { _PosText.text = "3rd"; _PosText.colorGradientPreset = color_list[2]; }
-		else { _PosText.text = pos + "th"; _PosText.colorGradientPreset = color_list[3]; }
+		int pos = _plyShip.GetPosition();
+
+		_posText.text = (pos + 1).ToString();
+
+		if(pos < 3) {
+			_posText.colorGradientPreset = color_list[pos];
+			_posText.text += ORDINAL_INDICATORS[pos];
+		} else {
+			_posText.colorGradientPreset = color_list[3];
+			_posText.text += "th";
+		}
 	}
 
 	// lap time
-	private void LapTimes(float time)
-	{
-		_lapTimes_list[_lapTimes_list.Length] = time;
-
-		string text = "";
-		foreach(float t in _lapTimes_list)
-		{
-			text = text + "\n" + t;
-		}
-		_lapTimes_string = text;
-		_time_lap_start = Time.time;
-	}
-
 	private void LapTimer()
 	{
-		_LapTimeText.text = _lapTimes_string + "\n" + (Time.time - _time_lap_start);
+		float lapTime = _plyShip.GetTimeSinceLastLap();
+		int minutes = Mathf.FloorToInt(lapTime / 60f);
+		int seconds = Mathf.FloorToInt(lapTime % 60f);
+		int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
+		_lapTimeText.text = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
+	}
+
+	// draw la map en 2D (vue de haut)
+	private void Map()
+	{
+
+	}
+
+	// draw la progression sur la track (utiliser le current waypoint du joueur sur le nb total de waypoint)
+	private void ProgressionBar()
+	{
+		float value = (float)_plyWptFinder.GetWaypoint() / WaypointManager.Instance.GetNbWpt();
+		float diff = value - _progBar.fillAmount;
+		_progBar.fillAmount += diff >= 0f ? diff * Time.fixedDeltaTime : Time.fixedDeltaTime;
+	}
+
+	// méthode publique pour reset la barre de progression
+	public void ResetProgBar()
+	{
+		_progBar.fillAmount = 0f;
 	}
 
 	// draw l'icone de l'item du joueur
@@ -123,28 +190,25 @@ public class InGameHud : MonoBehaviour
 		}
 	}
 
-	// draw la map en 2D (vue de haut)
-	private void Map()
-	{
-
-	}
-
-	// draw la progression sur la track (utiliser le current waypoint du joueur sur le nb total de waypoint)
-	private void Prog()
-	{
-
-	}
-
+	// TODO: caller à la fin de LapCompleted() pour être sûr d'obtenir le bon GetTimeSinceLastLap()
 	// draw time comparison, your current lap time vs your best lap time
-	// s'affiche pendant quelques secondes
+	// s'affiche pendant 2s
 	// rouge si plus lent (ex: +00:01:00 si une seconde plus long que le meilleur score)
 	// vert si plus rapide (ex: -00:01:00 si une seconde plus court que le meilleur score)
-	public void TimeComp(float timeDiff)
+	public void TimeComp()
 	{
-		LapTimes(timeDiff);
-		Debug.Log($"Lap time: {timeDiff}");
-		// faire timeDiff - son best lap time pour trouver la comparaison
+		//LapTimes(timeDiff);
+
+		// faire GetLastLapTime() - son best lap time pour trouver la comparaison
 		// si > 0, color = red, si < 0, color = green, etc
 	}
 
+	// méthode publique qui permet de turn on/off le hud
+	// (c'est juste l'alpha du canvasgroup qui et set à 0 ou 1)
+	// true :	afficher
+	// false :	enlever
+	public void ToggleDrawHUD(bool drawHUD)
+	{
+		_canvasGroup.alpha = drawHUD ? 1f : 0f;
+	}
 }

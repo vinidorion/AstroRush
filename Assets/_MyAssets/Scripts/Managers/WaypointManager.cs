@@ -18,7 +18,7 @@ public class WaypointManager : MonoBehaviour
 			Destroy(this.gameObject);
 		}
 
-		// trouve tout les waypoints
+		// trouve tous les waypoints
 		foreach (Transform waypoint in _parentWaypoint) {
 			waypoint.GetComponent<MeshRenderer>().enabled = false;
 			_listWaypoint.Add(waypoint.position);
@@ -26,7 +26,7 @@ public class WaypointManager : MonoBehaviour
 	}
 
 	// méthode publique qui permet d'obtenir la position d'un waypoint
-	// (donner le membre _waypoint du spaceship par argument pour obtenir sa position)
+	// (donner le numéro du waypoint par argument pour obtenir sa position)
 	public Vector3 GetWaypointPos(int index)
 	{
 		if(index >= _listWaypoint.Count) {
@@ -40,16 +40,11 @@ public class WaypointManager : MonoBehaviour
 	// (si oui ça reset à 0 dans la classe spaceship)
 	public bool IsFinalWaypoint(int index)
 	{
-		if(index == _listWaypoint.Count) {
-			return true;
-		} else {
-			return false;
-		}
+		return index >= _listWaypoint.Count;
 	}
 
 	// méthode publique qui retourne le nombre de waypoint total
-	// pour le hud
-	public int GetLapNb()
+	public int GetNbWpt()
 	{
 		return _listWaypoint.Count;
 	}

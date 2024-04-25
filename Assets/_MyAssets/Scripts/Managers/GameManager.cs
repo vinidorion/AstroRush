@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 	private float _startTime = 0f; // Time.time when the race starts
 
 	private GameObject[] _arrPUs;
+	private int _numSpaceship;
 
 	void Awake()
 	{
@@ -32,13 +33,25 @@ public class GameManager : MonoBehaviour
 		/*foreach (GameObject pu in _arrPUs) {
 			Debug.Log(pu.name.Substring(3));
 		}*/
+		UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks); // garder cette ligne ici
 	}
 
 	void Start()
 	{
-		UnityEngine.Random.InitState((int)System.DateTime.Now.Ticks);
+		_numSpaceship = FindObjectsOfType<SpaceShip>().Length;
 		PauseMenu.Instance.SetCanPause(false);
 		// freeze tout les spaceships ici avec FreezeAll(true)
+		if(InGameHud.Instance) {
+			InGameHud.Instance.ToggleDrawHUD(false);
+		}
+		if(GameData.Instance) {
+			// TODO: NE PAS OUBLIER D'ENLEVER
+			int nbdelap = 3;
+			GameData.Instance.SetNumLap(nbdelap);
+			Debug.Log($"nombre de lap: {nbdelap}");
+		} else {
+			Debug.Log("NO GAMEDATA OBJECT");
+		}
 	}
 
 	void Update()
@@ -55,24 +68,27 @@ public class GameManager : MonoBehaviour
 	public void StartRace() {
 		CameraController.Instance.SetCameraMode(CameraMode.ThirdPerson);
 		StartCoroutine(CountdownCoroutine());
+		if(InGameHud.Instance) {
+			InGameHud.Instance.ToggleDrawHUD(true);
+			InGameHud.Instance.UpdateLap();
+		}
 		_isIntro = false;
 	}
 
 	// coroutine du countdown
 	IEnumerator CountdownCoroutine()
 	{
-		// draw le in game hud ici
-
-		yield return new WaitForSeconds(2f);
+		yield return null;
+		//yield return new WaitForSeconds(2f);
 		// 3
 
-		yield return new WaitForSeconds(1f);
+		//yield return new WaitForSeconds(1f);
 		// 2
 
-		yield return new WaitForSeconds(1f);
+		//yield return new WaitForSeconds(1f);
 		// 1
 
-		yield return new WaitForSeconds(1f);
+		//yield return new WaitForSeconds(1f);
 		// start race ici
 		// unfreeze tout les spaceships ici avec FreezeAll(false)
 
@@ -114,6 +130,11 @@ public class GameManager : MonoBehaviour
 	public int GetNumPUs()
 	{
 		return _arrPUs.Length;
+	}
+
+	public int GetNumSpaceships()
+	{
+		return _numSpaceship;
 	}
 
 }

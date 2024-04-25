@@ -23,9 +23,8 @@ public class LapComplete : MonoBehaviour
 		// (pour empecher le joueur de faire immédiatement demi tour et entrer dans cette triggerbox plusieurs fois)
 		// la ligne d'arrivée est une triggerbox et non le moment ou le spaceship passe du dernier au premier waypoint
 		// parce que c'est plus facile d'ajuster la position de la triggerbox dans unity que d'ajuster les waypoints dans blender
-		if(spaceship.GetComponent<WaypointFinder>().GetWaypoint() / (float)WaypointManager.Instance.GetLapNb() > 0.75f) {
+		if(spaceship.GetComponent<WaypointFinder>().GetWaypoint() / (float)WaypointManager.Instance.GetNbWpt() > 0.75f) {
 			spaceship.LapCompleted();
-			Debug.Log("LAP COMPLETED CALLED");
 		}
 	}
 }

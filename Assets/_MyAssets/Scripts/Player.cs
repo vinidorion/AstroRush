@@ -50,9 +50,4 @@ public class Player : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.C)) { CameraController.Instance.RotateCameraMode(); }
 	}
-
-	public SpaceShip GetSpaceShip()
-	{
-		return _spaceship;
-	}
 }
