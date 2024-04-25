@@ -27,13 +27,16 @@ public class InGameHud : MonoBehaviour
 	// lap time
 	private TMP_Text _lapTimeText;
 	private Image _itemImage;
-	private float[] _lapTimes_list = default;
+	private List<string> _lapTimes_list = new List<string>();
 	private string _lapTimes_string = "";
-	private float _time_lap_start = 0;
+	private string last_lap_time = "";
 
 	// progression bar
 	private Image _progBar;
 
+	//HealthBar
+	private Image _healthBar;
+	private int maxHP = 0;
 	
 	private SpaceShip _plyShip;
 	private WaypointFinder _plyWptFinder;
@@ -74,8 +77,15 @@ public class InGameHud : MonoBehaviour
 						_progBar = grandchild.GetComponent<Image>();
 					}
 				}
-			}
-		}
+            }
+            else if (child.name == "HealthBar") {
+                foreach (Transform grandchild in child) {
+                    if (grandchild.name == "HealthBarFill") {
+                        _healthBar = grandchild.GetComponent<Image>();
+                    }
+                }
+            }
+        }
 
 		_arrPUs = Resources.LoadAll("PUs/Images/", typeof(Sprite)).Cast<Sprite>().ToArray();
 	}
@@ -85,6 +95,7 @@ public class InGameHud : MonoBehaviour
 		_plyShip = Player.Instance.GetComponent<SpaceShip>();
 		_plyWptFinder = _plyShip.GetComponent<WaypointFinder>();
 		_maxSpeed = _plyShip.GetMaxSpeed();
+		maxHP = _plyShip.GetMaxHP();
 	}
 
 	void FixedUpdate()
@@ -104,7 +115,8 @@ public class InGameHud : MonoBehaviour
 	// draw la vie du joueur
 	private void HP()
 	{
-
+		int hp = _plyShip.GetHP();
+		_healthBar.fillAmount = hp / maxHP;
 	}
 
 	private void Speed()
@@ -129,7 +141,13 @@ public class InGameHud : MonoBehaviour
 	public void UpdateLap()
 	{
 		_lapsText.text = "Lap " + (_plyShip.GetLap() + 1).ToString();
-	}
+
+        float lapTime = _plyShip.GetTimeSinceLastLap();
+        int minutes = Mathf.FloorToInt(lapTime / 60f);
+        int seconds = Mathf.FloorToInt(lapTime % 60f);
+        int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
+		_lapTimes_list.Add(last_lap_time);
+    }
 
 	// draw la position (premier, deuxième, etc)
 	private void Pos()
@@ -154,8 +172,15 @@ public class InGameHud : MonoBehaviour
 		int minutes = Mathf.FloorToInt(lapTime / 60f);
 		int seconds = Mathf.FloorToInt(lapTime % 60f);
 		int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
-		_lapTimeText.text = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
-	}
+		_lapTimes_string = "";
+        foreach (string time in _lapTimes_list) 
+		{ 
+			_lapTimes_string = _lapTimes_string + "\n" + time;
+        }
+		_lapTimeText.text = _lapTimes_string + "\n" + string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
+		last_lap_time = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
+
+    }
 
 	// draw la map en 2D (vue de haut)
 	private void Map()
