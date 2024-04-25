@@ -23,6 +23,7 @@ public class Bot : MonoBehaviour
     private Rigidbody _rb;
     protected float _agility;
     protected float _targetSpeed;
+    public float _TSpeed = 100;
     protected List<float> _maxSpeed;
 
     private List<GameObject> waypoints = new List<GameObject>();
@@ -76,10 +77,6 @@ public class Bot : MonoBehaviour
                 optiWaypoints[passedTargets[i]].transform.position, difficulty[i]);
             directionRight[i] = Bots[i].transform.right;
         }
-        for (int i = 0; i < 4; i++)
-        {
-            _maxSpeed.Add(Bots[i].GetComponent<SpaceShip>().GetMaxSpeed());
-        }
     }
 
     // Update is called once per frame
@@ -93,7 +90,11 @@ public class Bot : MonoBehaviour
             _rb = _spaceship.GetComponent<Rigidbody>();
             _agility = _spaceship.GetAgility();
             _targetSpeed = _spaceship.GetMaxSpeed();
-
+            if (_TSpeed < _targetSpeed)
+            {
+                _targetSpeed = _TSpeed;
+            }
+            Debug.Log(_targetSpeed);
             //Debug.Log(_spaceship.GetMaxSpeed());
             //si le bot est assez proche de sa target on set sa target au prochain waypoint
             if (Vector3.Magnitude(_spaceship.transform.position - targets[i].transform.position) < 2f)
@@ -205,5 +206,10 @@ public class Bot : MonoBehaviour
     public float GetDifficulty(int i)
     {
         return difficulty[i];
+    }
+
+    public void SetTSpeed(float TSpeed)
+    {
+        _TSpeed = TSpeed;
     }
 }
