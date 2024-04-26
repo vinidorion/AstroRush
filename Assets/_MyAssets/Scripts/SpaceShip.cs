@@ -324,12 +324,12 @@ public class SpaceShip : MonoBehaviour
 
 	public void Turn(bool left)
 	{
-		_rb.AddTorque(transform.up * (_agility * (left ? -5 : 5)), ForceMode.Acceleration);
+		_rb.AddTorque(transform.up * (_agility * (left ? -1 : 1)), ForceMode.Acceleration);
 	}
 
 	public void AirBrake(bool left)
 	{
-		_rb.AddTorque(transform.up * _airbrakePower * (left ? -15f : 15f) /* _rb.velocity.magnitude*/, ForceMode.Acceleration);
+		_rb.AddTorque(transform.up * _airbrakePower * (left ? -1f : 1f) /* _rb.velocity.magnitude*/, ForceMode.Acceleration);
 
 		Vector3 force = -1 * _rb.velocity * _airbrakePower / _weight;
 

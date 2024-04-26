@@ -220,10 +220,12 @@ public class InGameHud : MonoBehaviour
 		if (pu >= 0 && pu < _arrPUs.Length)
 		{
 			_itemImage.sprite = _arrPUs[pu];
+			_itemImage.color = Color.white;
 		}
 		else
 		{
 			_itemImage.sprite = null;
+			_itemImage.color = new Color(0, 0, 0, 0);
 		}
 	}
 
