@@ -29,11 +29,7 @@ public class WaypointManager : MonoBehaviour
 	// (donner le numéro du waypoint par argument pour obtenir sa position)
 	public Vector3 GetWaypointPos(int index)
 	{
-		if(index >= _listWaypoint.Count) {
-			return _listWaypoint[0];
-		} else {
-			return _listWaypoint[index];
-		}
+		return index >= _listWaypoint.Count ? _listWaypoint[0] : _listWaypoint[index];
 	}
 
 	// méthode publique qui sert à savoir si c'est le waypoint final

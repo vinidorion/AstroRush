@@ -28,16 +28,17 @@ public class InGameHud : MonoBehaviour
 	private TMP_Text _lapTimeText;
 	private Image _itemImage;
 	private List<string> _lapTimes_list = new List<string>();
-	private string _lapTimes_string = "";
+	private string last_lap_time = "";
 	private float _time_lap_start = 0;
 	private bool _hasStarted = false;
 
 	// progression bar
 	private Image _progBar;
 
-	//HealthBar
+	// health bar
 	private Image _healthBar;
 	private int maxHP = 0;
+
 
 	private SpaceShip _plyShip;
 	private WaypointFinder _plyWptFinder;
@@ -54,37 +55,45 @@ public class InGameHud : MonoBehaviour
 
 		// changer la propriété alpha de cette variable permet de turn on/off (1f / 0f) le hud au complet (tous les child objects de cet objet)
 		_canvasGroup = GetComponent<CanvasGroup>(); 
-		
-		foreach(Transform child in transform) {
-			// TODO: mettre en switch case ici
-			if(child.name == "Speed_Bar") {
-				foreach(Transform grandchild in child) {
-					if(grandchild.name == "Speed_Bar_Img") {
-						_speedBar = grandchild.GetComponent<Image>();
-					} else if(grandchild.name == "Speed_Text") {
-						_speedText = grandchild.GetComponent<TMP_Text>();
+
+		foreach (Transform child in transform) {
+			switch (child.name)
+			{
+				case "Speed_Bar":
+					foreach (Transform grandchild in child) {
+						if(grandchild.name == "Speed_Bar_Img") {
+							_speedBar = grandchild.GetComponent<Image>();
+						} else if(grandchild.name == "Speed_Text") {
+							_speedText = grandchild.GetComponent<TMP_Text>();
+						}
 					}
-				}
-			} else if(child.name == "Laps_Text") {
-				_lapsText = child.GetComponent<TMP_Text>();
-			} else if(child.name == "Pos_Text") {
-				_posText = child.GetComponent<TMP_Text>();
-			} else if(child.name == "LapTimes_Text") {
-				_lapTimeText = child.GetComponent<TMP_Text>();
-			} else if(child.name == "Item_Image") {
-				_itemImage = child.GetComponent<Image>();
-			} else if(child.name == "ProgressionBar") {
-				foreach(Transform grandchild in child) {
-					if(grandchild.name == "ProgressionBarFill") {
-						_progBar = grandchild.GetComponent<Image>();
+					break;
+				case "Laps_Text":
+					_lapsText = child.GetComponent<TMP_Text>();
+					break;
+				case "Pos_Text":
+					_posText = child.GetComponent<TMP_Text>();
+					break;
+				case "LapTimes_Text":
+					_lapTimeText = child.GetComponent<TMP_Text>();
+					break;
+				case "Item_Image":
+					_itemImage = child.GetComponent<Image>();
+					break;
+				case "ProgressionBar":
+					foreach(Transform grandchild in child) {
+						if(grandchild.name == "ProgressionBarFill") {
+							_progBar = grandchild.GetComponent<Image>();
+						}
 					}
-				}
-			} else if (child.name == "HealthBar") {
-				foreach (Transform grandchild in child) {
-					if (grandchild.name == "HealthBarFill") {
-						_healthBar = grandchild.GetComponent<Image>();
+					break;
+				case "HealthBar":
+					foreach (Transform grandchild in child) {
+						if (grandchild.name == "HealthBarFill") {
+							_healthBar = grandchild.GetComponent<Image>();
+						}
 					}
-				}
+					break;
 			}
 		}
 
@@ -107,7 +116,7 @@ public class InGameHud : MonoBehaviour
 		}
 		Speed();
 		Pos();
-		if(_hasStarted) { // TODO: probablement une meilleure facon de faire ca
+		if(_hasStarted) {
 			LapTimer();
 		}
 		ProgressionBar();
@@ -136,22 +145,6 @@ public class InGameHud : MonoBehaviour
 		else _speedText.text = "99";
 	}
 
-	// méthode publique pour set le numéro du lap
-	// called dans LapCompleted()
-	// pour éviter de set le lap 50x par seconde
-	// on passe pas le _lap par argument pour être
-	// capable de le caller de n'importe où
-	public void UpdateLap()
-	{
-		_lapsText.text = "Lap " + (_plyShip.GetLap() + 1).ToString();
-
-		/*float lapTime = _plyShip.GetTimeSinceLastLap();
-		int minutes = Mathf.FloorToInt(lapTime / 60f);
-		int seconds = Mathf.FloorToInt(lapTime % 60f);
-		int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
-		_lapTimes_list.Add(last_lap_time);*/
-	}
-
 	// draw la position (premier, deuxième, etc)
 	private void Pos()
 	{
@@ -175,17 +168,15 @@ public class InGameHud : MonoBehaviour
 		int minutes = Mathf.FloorToInt(lapTime / 60f);
 		int seconds = Mathf.FloorToInt(lapTime % 60f);
 		int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
-		_lapTimeText.text = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
 
-
-		/*_lapTimes_string = "";
-		foreach (string time in _lapTimes_list) 
-		{ 
-			_lapTimes_string = _lapTimes_string + "\n" + time;
+		string strLapTime = "";
+		foreach (string time in _lapTimes_list) { 
+			strLapTime += "\n" + time;
 		}
-		_lapTimeText.text = _lapTimes_string + "\n" + string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
-		last_lap_time = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);*/
 
+		string formatedStr = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
+		_lapTimeText.text = strLapTime + "\n" + formatedStr;
+		last_lap_time = formatedStr;
 	}
 
 	// draw la map en 2D (vue de haut)
@@ -208,25 +199,36 @@ public class InGameHud : MonoBehaviour
 		_progBar.fillAmount = 0f;
 	}
 
-	// méthode publique pour informer que la course a commencé
+	// méthode publique pour informer cette classe que la course a commencé
 	public void StartTimer()
 	{
 		_hasStarted = true;
 	}
 
+	// méthode publique pour set le numéro du lap
+	// called dans LapCompleted()
+	// pour éviter de set le lap 50x par seconde
+	// on passe pas le _lap par argument pour être
+	// capable de le caller de n'importe où
+	public void UpdateLap()
+	{
+		_lapsText.text = "Lap " + (_plyShip.GetLap() + 1).ToString();
+
+		float lapTime = _plyShip.GetTimeSinceLastLap();
+		int minutes = Mathf.FloorToInt(lapTime / 60f);
+		int seconds = Mathf.FloorToInt(lapTime % 60f);
+		int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
+		_lapTimes_list.Add(last_lap_time);
+	}
+
 	// draw l'icone de l'item du joueur
+	// (check si c'est within range, otherwise return null)
 	public void Item(int pu)
 	{
-		if (pu >= 0 && pu < _arrPUs.Length)
-		{
-			_itemImage.sprite = _arrPUs[pu];
-			_itemImage.color = Color.white;
-		}
-		else
-		{
-			_itemImage.sprite = null;
-			_itemImage.color = new Color(0, 0, 0, 0);
-		}
+		bool isWithinRange = pu >= 0 && pu < _arrPUs.Length;
+
+		_itemImage.sprite = isWithinRange ? _arrPUs[pu] : null;
+		_itemImage.color = isWithinRange ? Color.white : Color.clear;
 	}
 
 	// TODO: caller à la fin de LapCompleted() pour être sûr d'obtenir le bon GetTimeSinceLastLap()
@@ -237,7 +239,7 @@ public class InGameHud : MonoBehaviour
 	public void TimeComp()
 	{
 		//LapTimes(timeDiff);
-
+		Debug.Log($"GetLastLapTime() : {_plyShip.GetLastLapTime()}");
 		// faire GetLastLapTime() - son best lap time pour trouver la comparaison
 		// si > 0, color = red, si < 0, color = green, etc
 	}

@@ -272,6 +272,7 @@ public class SpaceShip : MonoBehaviour
 		if(isPly) {
 			InGameHud.Instance.ResetProgBar();
 			InGameHud.Instance.UpdateLap();
+			InGameHud.Instance.TimeComp();
 		}
 	}
 
@@ -299,6 +300,7 @@ public class SpaceShip : MonoBehaviour
 	// faut juste sort en ordre décroissant pour trouver l'ordre des spaceships (le sort se fait dans la classe PosManager)
 	// la multiplication de _lap par le nombre de waypoints donne
 	// un grand nombre qui ne sera jamais dépassé par le nombre de waypoints
+	// donc en fait ça compte de nombre de waypoints parcourus au total
 	public int GetPosValue()
 	{
 		return (_lap * WaypointManager.Instance.GetNbWpt()) + _waypoint.GetWaypoint();
@@ -324,7 +326,7 @@ public class SpaceShip : MonoBehaviour
 
 	public void Turn(bool left)
 	{
-		_rb.AddTorque(transform.up * (_agility * (left ? -1 : 1)), ForceMode.Acceleration);
+		_rb.AddTorque(transform.up * _agility * (left ? -1 : 1), ForceMode.Acceleration);
 	}
 
 	public void AirBrake(bool left)
@@ -436,18 +438,20 @@ public class SpaceShip : MonoBehaviour
 	// utilisé dans OutOfBounds
 	public Vector3 GetVecGrav() { return _rayDir; }
 
+	// méthode publique qui retourne le temps depuis que le dernier lap a été complété
 	public float GetTimeSinceLastLap()
 	{
-		if(_listLapTime.Count == 0) {
-			return Time.time - GameManager.Instance.GetStartTime();
-		} else {
-			return Time.time - _listLapTime[_listLapTime.Count - 1];
-		}
+		float timeSinceLastLap = Time.time;
+		timeSinceLastLap -= _listLapTime.Count == 0 ? GameManager.Instance.GetStartTime() : _listLapTime[_listLapTime.Count - 1];
+		return timeSinceLastLap;
 	}
 
+	// méthode publique qui retourne le temps du dernier lap complété
 	public float GetLastLapTime()
 	{
-		return _listLapTime[_listLapTime.Count - 1] - GameManager.Instance.GetStartTime();
+		float timeWhenLastLap = _listLapTime[_listLapTime.Count - 1];
+		timeWhenLastLap -= _listLapTime.Count == 1 ? GameManager.Instance.GetStartTime() : _listLapTime[_listLapTime.Count - 2];
+		return timeWhenLastLap;
 	}
 
 	// méthode publique qui permet de ralentir le spaceship (par les PU)

@@ -967,15 +967,11 @@ MonoBehaviour:
   listeOptiWaypoint: {fileID: 0}
   listeBots: {fileID: 0}
   listeTargets: {fileID: 0}
-  _layersToHit:
-    serializedVersion: 2
-    m_Bits: 0
   difficulty1: 1
   difficulty2: 1
   difficulty3: 0.5
   difficulty4: 0
   difficulty5: 0
-  _TSpeed: 100
   difficulty: []
   accelbot: 0
 --- !u!114 &200272826
@@ -6684,15 +6680,11 @@ MonoBehaviour:
   listeOptiWaypoint: {fileID: 0}
   listeBots: {fileID: 0}
   listeTargets: {fileID: 0}
-  _layersToHit:
-    serializedVersion: 2
-    m_Bits: 0
   difficulty1: 1
   difficulty2: 1
   difficulty3: 0.5
   difficulty4: 0
   difficulty5: 0
-  _TSpeed: 100
   difficulty: []
   accelbot: 0
 --- !u!114 &502237050
@@ -7622,15 +7614,11 @@ MonoBehaviour:
   listeOptiWaypoint: {fileID: 0}
   listeBots: {fileID: 0}
   listeTargets: {fileID: 0}
-  _layersToHit:
-    serializedVersion: 2
-    m_Bits: 0
   difficulty1: 1
   difficulty2: 1
   difficulty3: 0.5
   difficulty4: 0
   difficulty5: 0
-  _TSpeed: 100
   difficulty: []
   accelbot: 0
 --- !u!114 &987917734
@@ -8615,15 +8603,11 @@ MonoBehaviour:
   listeOptiWaypoint: {fileID: 0}
   listeBots: {fileID: 0}
   listeTargets: {fileID: 0}
-  _layersToHit:
-    serializedVersion: 2
-    m_Bits: 0
   difficulty1: 1
   difficulty2: 1
   difficulty3: 0.5
   difficulty4: 0
   difficulty5: 0
-  _TSpeed: 100
   difficulty: []
   accelbot: 0
 --- !u!114 &1515247656
@@ -8941,7 +8925,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587733994}
   m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: 4.721, y: -4.801, z: -3.546}
+  m_LocalPosition: {x: 4.721, y: -4.801, z: -3.786}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -9694,15 +9678,11 @@ MonoBehaviour:
   listeOptiWaypoint: {fileID: 0}
   listeBots: {fileID: 0}
   listeTargets: {fileID: 0}
-  _layersToHit:
-    serializedVersion: 2
-    m_Bits: 0
   difficulty1: 1
   difficulty2: 1
   difficulty3: 0.5
   difficulty4: 0
   difficulty5: 0
-  _TSpeed: 100
   difficulty: []
   accelbot: 0
 --- !u!114 &1784292772

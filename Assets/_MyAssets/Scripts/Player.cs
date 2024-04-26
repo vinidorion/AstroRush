@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
 
 	private void UsePU()
 	{
-		if (Input.GetKeyDown(KeyCode.Space) && !_spaceship.isFrozen()) {
+		if (Input.GetKeyDown(KeyCode.Space)) { // deja un check isFrozen() avant l'utilisation de cette méthode
 			_spaceship.UsePU();
 		}
 	}
