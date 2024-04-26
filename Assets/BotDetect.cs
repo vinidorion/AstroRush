@@ -18,14 +18,13 @@ public class BotDetect : MonoBehaviour
             difBotMod = 2 - dif;
 
             float TSpeed;
-            TSpeed = collision.gameObject.GetComponent<BotSpeedZone>().BotSpeed * agiBot / difBotMod;
+            TSpeed = (collision.gameObject.GetComponent<BotSpeedZone>().BotSpeed * agiBot) / difBotMod;
 
             if (TSpeed > gameObject.GetComponent<SpaceShip>().GetMaxSpeed())
             {
                 TSpeed = gameObject.GetComponent<SpaceShip>().GetMaxSpeed();
             }
-            Debug.Log(TSpeed);
-            BotManager.SetTSpeed(TSpeed);
+            BotManager.SetTSpeed(TSpeed, index);
         }
     }
 }

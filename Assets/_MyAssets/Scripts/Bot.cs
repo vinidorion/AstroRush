@@ -13,7 +13,6 @@ public class Bot : MonoBehaviour
     [SerializeField] private GameObject listeOptiWaypoint;
     [SerializeField] private GameObject listeBots;
     [SerializeField] private GameObject listeTargets;
-    [SerializeField] private LayerMask _layersToHit;
     [SerializeField] private float difficulty1 = 1;
     [SerializeField] private float difficulty2 = 1;
     [SerializeField] private float difficulty3 = 0.5f;
@@ -22,9 +21,7 @@ public class Bot : MonoBehaviour
     private SpaceShip _spaceship;
     private Rigidbody _rb;
     protected float _agility;
-    protected float _targetSpeed;
-    public float _TSpeed = 100;
-    protected List<float> _maxSpeed;
+    private List<float> _maxSpeed = new List<float>();
 
     private List<GameObject> waypoints = new List<GameObject>();
     private List<GameObject> optiWaypoints = new List<GameObject>();
@@ -39,11 +36,6 @@ public class Bot : MonoBehaviour
     {
         private set;
         get;
-    }
-
-    private void Awake()
-    {
-        _layersToHit = 1 << LayerMask.NameToLayer("track");
     }
 
     private void Start()
@@ -76,25 +68,24 @@ public class Bot : MonoBehaviour
             targets[i].transform.position = Vector3.Lerp(waypoints[passedTargets[i]].transform.position,
                 optiWaypoints[passedTargets[i]].transform.position, difficulty[i]);
             directionRight[i] = Bots[i].transform.right;
+            
+        }
+        for (int i = 0; i < Bots.Count; i++)
+        {
+            _maxSpeed.Add(Bots[i].GetComponent<SpaceShip>().GetMaxSpeed());
         }
     }
 
     // Update is called once per frame
-    private void FixedUpdate()
+    private void Update()
     {
-        
         // boucle qui fait les actions de tout les bots 1 par 1
         for (int i = 0; i < Bots.Count; i++)
         {
             _spaceship = Bots[i].GetComponent<SpaceShip>();
             _rb = _spaceship.GetComponent<Rigidbody>();
             _agility = _spaceship.GetAgility();
-            _targetSpeed = _spaceship.GetMaxSpeed();
-            if (_TSpeed < _targetSpeed)
-            {
-                _targetSpeed = _TSpeed;
-            }
-            Debug.Log(_targetSpeed);
+
             //Debug.Log(_spaceship.GetMaxSpeed());
             //si le bot est assez proche de sa target on set sa target au prochain waypoint
             if (Vector3.Magnitude(_spaceship.transform.position - targets[i].transform.position) < 2f)
@@ -120,34 +111,21 @@ public class Bot : MonoBehaviour
             Debug.DrawLine(_spaceship.transform.position, Vector3.Lerp(waypoints[passedTargets[i] + 1].transform.position,
                     optiWaypoints[passedTargets[i] + 1].transform.position, difficulty[i]), Color.blue, Time.fixedDeltaTime);
             Debug.DrawLine(_spaceship.transform.position, _spaceship.transform.position + Bots[i].GetComponent<Rigidbody>().velocity, Color.red, Time.fixedDeltaTime);
-
-            if (angle2ndP > 20 || angle2ndP < -20)
-            {
-                _targetSpeed = _maxSpeed - (Mathf.Abs(angle2ndP) / 180 * _maxSpeed / _agility) * (2 - difficulty[i]);
-                if (_targetSpeed > _maxSpeed)
-                {
-                    _targetSpeed = _maxSpeed;
-                }
-                else if (_targetSpeed < 0)
-                {
-                    _targetSpeed = 0;
-                }
-            }
             */
-            //Debug.Log(i);
-
             BotMove(i);
             BotTurn(i, angle, angleVel);
+            Debug.Log(_rb.velocity.magnitude);
         }
     }
 
+
     void BotMove(int i)
     {
-        if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude < _targetSpeed)
+        if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude < _maxSpeed[i])
         {
             _spaceship.Forward();
         }
-        else if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude > _targetSpeed)
+        else if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude > _maxSpeed[i])
         {
             Debug.Log("airbraaake");
             _spaceship.AirBrake(false);
@@ -160,7 +138,7 @@ public class Bot : MonoBehaviour
         if (angleVel > (10 + 100 * difficulty[i]) / _rb.velocity.magnitude)
         {
             //Debug.Log(_rb.velocity.magnitude);
-            if (angleVel > (20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _targetSpeed)
+            if (angleVel > (20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
             {
                 _spaceship.AirBrake(false);
             }
@@ -172,7 +150,7 @@ public class Bot : MonoBehaviour
         }
         else if (angleVel < -(10 + 100 * difficulty[i]) / _rb.velocity.magnitude)
         {
-            if (angleVel < -(20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _targetSpeed)
+            if (angleVel < -(20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
             {
                 _spaceship.AirBrake(true);
             }
@@ -208,8 +186,8 @@ public class Bot : MonoBehaviour
         return difficulty[i];
     }
 
-    public void SetTSpeed(float TSpeed)
+    public void SetTSpeed(float TSpeed, int index)
     {
-        _TSpeed = TSpeed;
+        _maxSpeed[index] = TSpeed;
     }
 }
