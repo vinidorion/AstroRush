@@ -21,6 +21,7 @@ public class SpaceShip : MonoBehaviour
 	[SerializeField] private float _boost = default;
 
 	[SerializeField] private int _pu = -1; //[SerializeField] temporaire pour tester
+	[SerializeField] private GameObject fire = default;
 
 	// keep upright
 	private Vector3 _rayDirFront = Vector3.down;
@@ -111,6 +112,7 @@ public class SpaceShip : MonoBehaviour
 	void Update()
 	{
 		_forwardSpeed = Vector3.Project(_rb.velocity, transform.forward);
+		if(!Input.GetKey(KeyCode.W) && fire.activeSelf) fire.SetActive(false);
 	}
 
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
@@ -314,14 +316,15 @@ public class SpaceShip : MonoBehaviour
 	{
 		//_rb.AddForce(transform.forward * FORWARD_ACCEL, ForceMode.Acceleration);
 		if (_rb.velocity.magnitude < max_speed) {
-			_rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
+			_rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/);
 		}
+		fire.SetActive(true);
 	}
 
 	public void Backward()
 	{
 		//_rb.AddForce(transform.forward * BACKWARD_ACCEL, ForceMode.Acceleration);
-		_rb.AddForce(-1 * transform.forward * _accel /* * (_slower + 1)*/, ForceMode.Acceleration);
+		_rb.AddForce(-1 * transform.forward * _accel /* * (_slower + 1)*/);
 	}
 
 	public void Turn(bool left)
@@ -341,6 +344,22 @@ public class SpaceShip : MonoBehaviour
 		}
 
 		_rb.AddForce(force * 6f);
+	}
+
+	public void Orbit()
+	{
+		Debug.Log(Orbite.Instance.GetListCount());
+		for(int i=0; i<Orbite.Instance.GetListCount(); i++) 
+		{
+			if((Orbite.Instance.GetOrbitePos(i) - transform.position).magnitude < 5)
+			{
+                Debug.DrawLine(transform.position, Orbite.Instance.GetOrbitePos(i), Color.green, Time.fixedDeltaTime);
+				Vector3 direction = (Orbite.Instance.GetOrbitePos(i) - transform.position);
+				direction.Normalize();
+
+				_rb.AddForce(direction * Orbite.Instance.GetOrbiteScale(i) * 5);
+            }
+		}
 	}
 
 	/********************************************

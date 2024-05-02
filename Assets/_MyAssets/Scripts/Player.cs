@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
 		if (inputx < 0) _spaceship.Turn(true);
 		if (Input.GetKey(KeyCode.Mouse0)) _spaceship.AirBrake(true);
 		if (Input.GetKey(KeyCode.Mouse1)) _spaceship.AirBrake(false);
+		if (Input.GetKey(KeyCode.X)) _spaceship.Orbit();
 	}
 
 	private void UsePU()
