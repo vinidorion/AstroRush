@@ -257,7 +257,6 @@ public class SpaceShip : MonoBehaviour
 		if(_lap > numLap) {
 			return;
 		} else if(_lap == numLap && isPly) { // dernier lap, c'est la fin du jeu
-
 			CameraController.Instance.SetCameraMode(CameraMode.Spectate);
 			if(InGameHud.Instance) {
 				InGameHud.Instance.ToggleDrawHUD(false);
@@ -274,7 +273,7 @@ public class SpaceShip : MonoBehaviour
 		if(isPly) {
 			InGameHud.Instance.ResetProgBar();
 			InGameHud.Instance.UpdateLap();
-			InGameHud.Instance.TimeComp();
+			InGameHud.Instance.DrawTimeComp();
 		}
 	}
 

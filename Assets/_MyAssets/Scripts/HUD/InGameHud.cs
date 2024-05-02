@@ -128,7 +128,7 @@ public class InGameHud : MonoBehaviour
 	private void HP()
 	{
 		int hp = _plyShip.GetHP();
-		_healthBar.fillAmount = hp / maxHP;
+		_healthBar.fillAmount = hp / maxHP; // TODO: si ça marche pas, il faut probablement cast en float
 	}
 
 	private void Speed()
@@ -164,21 +164,18 @@ public class InGameHud : MonoBehaviour
 	// lap time
 	private void LapTimer()
 	{
-		float lapTime = _plyShip.GetTimeSinceLastLap();
-		int minutes = Mathf.FloorToInt(lapTime / 60f);
-		int seconds = Mathf.FloorToInt(lapTime % 60f);
-		int milliseconds = Mathf.FloorToInt((lapTime * 1000f) % 1000f);
-
 		string strLapTime = "";
 		foreach (string time in _lapTimes_list) { 
 			strLapTime += "\n" + time;
 		}
 
-		string formatedStr = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
+		string formatedStr = FormatTime(_plyShip.GetTimeSinceLastLap());
+
 		_lapTimeText.text = strLapTime + "\n" + formatedStr;
 		last_lap_time = formatedStr;
 	}
 
+	// TODO: delete si on s'en sert pas
 	// draw la map en 2D (vue de haut)
 	private void Map()
 	{
@@ -233,15 +230,22 @@ public class InGameHud : MonoBehaviour
 
 	// TODO: caller à la fin de LapCompleted() pour être sûr d'obtenir le bon GetTimeSinceLastLap()
 	// draw time comparison, your current lap time vs your best lap time
-	// s'affiche pendant 2s
+	// s'affiche pendant 2s (voir la classe TimeComp)
 	// rouge si plus lent (ex: +00:01:00 si une seconde plus long que le meilleur score)
 	// vert si plus rapide (ex: -00:01:00 si une seconde plus court que le meilleur score)
-	public void TimeComp()
+	public void DrawTimeComp()
 	{
 		//LapTimes(timeDiff);
 		Debug.Log($"GetLastLapTime() : {_plyShip.GetLastLapTime()}");
-		// faire GetLastLapTime() - son best lap time pour trouver la comparaison
-		// si > 0, color = red, si < 0, color = green, etc
+
+		float myLap = _plyShip.GetLastLapTime();
+		float bestLap = 0f;		// TODO: trouver best lap
+
+		bool boolColor = myLap < bestLap;
+
+		string timeComp = (boolColor ? "-" : "+") + FormatTime(Mathf.Abs(myLap - bestLap));
+
+		TimeComp.Instance.DrawTimeComp(timeComp, boolColor);
 	}
 
 	// méthode publique qui permet de turn on/off le hud
@@ -251,5 +255,15 @@ public class InGameHud : MonoBehaviour
 	public void ToggleDrawHUD(bool drawHUD)
 	{
 		_canvasGroup.alpha = drawHUD ? 1f : 0f;
+	}
+
+	// format time 00:00:00
+	// mettre publique si on veut format le temps comme ça en dehors de cette classe
+	private string FormatTime(float time)
+	{
+		int minutes = Mathf.FloorToInt(time / 60f);
+		int seconds = Mathf.FloorToInt(time % 60f);
+		int milliseconds = Mathf.FloorToInt((time * 1000f) % 1000f);
+		return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
 	}
 }
