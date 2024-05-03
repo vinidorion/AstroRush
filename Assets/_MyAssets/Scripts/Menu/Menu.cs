@@ -30,11 +30,17 @@ public class Menu : MonoBehaviour
 
 	private bool _playCalledOnce = true;
 
+	private Transform _options;
+	private Vector3 _optionsPos;
+	private Vector3 _optionsTargetPos;
+
 	private Fade _fadeOut;
 	private AudioFade _music;
 
 	private Camera _camBackgroundColor;
 	private bool _isFadingBackground = false;
+
+	private int _trackIndex;
 
 	void Awake()
 	{
@@ -67,6 +73,11 @@ public class Menu : MonoBehaviour
 		_playTargetPos = new Vector3(_playPos.x, -700f, _playPos.z);
 		_play.localPosition = _playTargetPos;
 
+		_options = GameObject.Find("options").transform;
+		_optionsPos = _options.localPosition;
+		_optionsTargetPos = new Vector3(_optionsPos.x, -700f, _optionsPos.z);
+		_options.localPosition = _optionsTargetPos;
+
 		foreach (Transform camPos in GameObject.Find("CamPosList").transform) {
 			camPos.GetComponent<MeshRenderer>().enabled = false;
 			_camList.Add(camPos);
@@ -83,6 +94,7 @@ public class Menu : MonoBehaviour
 		_choix.localPosition += (_mainMenuTargetPos - _choix.localPosition) * Time.deltaTime * BUTTON_SPEED;
 		_retour.localPosition += (_retourTargetPos - _retour.localPosition) * Time.deltaTime * BUTTON_SPEED;
 		_play.localPosition += (_playTargetPos - _play.localPosition) * Time.deltaTime * BUTTON_SPEED;
+		_options.localPosition += (_optionsTargetPos - _options.localPosition) * Time.deltaTime * BUTTON_SPEED;
 
 		if(_isFadingBackground) {
 			Color color = _camBackgroundColor.backgroundColor;
@@ -122,6 +134,7 @@ public class Menu : MonoBehaviour
 
 	public void Quitter()
 	{
+		Debug.Log("QUITTER() CALLED");
 		Application.Quit();
 	}
 
@@ -131,6 +144,15 @@ public class Menu : MonoBehaviour
 			_mainMenuTargetPos = _mainMenuPos;
 		} else {
 			_mainMenuTargetPos = new Vector3(-1400f, _mainMenuPos.y, _mainMenuPos.z);
+		}
+	}
+
+	public void ShowOptions(bool showMainMenu)
+	{
+		if(showMainMenu) {
+			_optionsTargetPos = _optionsPos;
+		} else {
+			_optionsTargetPos = new Vector3(-1400f, _optionsPos.y, _optionsPos.z);
 		}
 	}
 
@@ -160,6 +182,14 @@ public class Menu : MonoBehaviour
 		_playCalledOnce = false;
 
 		StartCoroutine(FadeOutPlayCoroutine());
+	}
+
+	public void NextMapButton()
+	{
+		string trackName = "test_track_loop 1";
+		// find next track name with _trackIndex
+		GameData.Instance.SetTrackName(trackName);
+		Debug.Log($"selected map: {trackName}");
 	}
 
 	IEnumerator FadeOutPlayCoroutine()

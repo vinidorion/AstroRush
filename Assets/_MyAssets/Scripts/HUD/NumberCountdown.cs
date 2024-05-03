@@ -53,4 +53,12 @@ public class NumberCountdown : MonoBehaviour
 		_txt.transform.localScale = Vector3.one;
 		_scale = 1f;
 	}
+
+	// méthode publique qui affiche la position à la fin du jeu (1st, 2nd, etc.)
+	public void Position()
+	{
+		_txt.text = InGameHud.Instance.GetPosOrdinal();
+		_txt.transform.localScale = Vector3.one;
+		_scale = 1f;
+	}
 }

@@ -46,7 +46,7 @@ public class AsyncLoadingScreen : MonoBehaviour
 			return;
 		}
 
-		_scene = SceneManager.LoadSceneAsync("test_track_loop 1"/*_gameData.GetTrackName()*/); // TODO: ALLER CHERCHER LE NOM DE LA SCENE DANS GAMEDATA
+		_scene = SceneManager.LoadSceneAsync(/*"test_track_loop 1"*/_gameData.GetTrackName()); // TODO: ALLER CHERCHER LE NOM DE LA SCENE DANS GAMEDATA
 		_scene.allowSceneActivation = false;
 		_logo.StartLogoAnim();
 	}

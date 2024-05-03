@@ -266,7 +266,7 @@ public class SpaceShip : MonoBehaviour
 			}
 			GetComponent<Player>().enabled = false;
 			GetComponent<testbot.Bot>().enabled = true;
-			// afficher rank
+			NumberCountdown.Instance.Position(); // c'est le NumberCountdown qui affiche la position finale (1st, 2nd, 3rd, etc.)
 			// save _listLapTime si le joueur bat son record
 		}
 
@@ -389,6 +389,11 @@ public class SpaceShip : MonoBehaviour
 		int[] listWeight = new int[numPU];
 		float ratioPos = ((1f - (pos / (float)(numShip - 1))) * 2f) - 1f;
 
+		if(numShip < 2) {
+			_pu = Random.Range(0, numPU); // min inclusive et max exclusif https://docs.unity3d.com/ScriptReference/Random.Range.html#:~:text=public%20static%20int%20Range(int%20minInclusive%2C%20int%20maxExclusive)%3B
+			return;
+		}
+
 		// distribution de poids
 		for (int i = 0; i < numPU; i++) {
 			listWeight[i] = Mathf.RoundToInt((ratioPos * ((i / (float)(numPU - 1)) - 0.5f) + 0.5f) * numPU * 100f);
@@ -410,7 +415,6 @@ public class SpaceShip : MonoBehaviour
 			if (random < listWeight[i]) {
 				_pu = i;
 				Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
-				
 				if(_isPly) {
 					if(InGameHud.Instance) {
 						InGameHud.Instance.Item(_pu);
@@ -418,7 +422,6 @@ public class SpaceShip : MonoBehaviour
 				} else {
 					UsePU();
 				}
-
 				return;
 			}
 			random -= listWeight[i];

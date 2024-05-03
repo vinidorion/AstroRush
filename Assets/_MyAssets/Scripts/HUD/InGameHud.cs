@@ -266,4 +266,9 @@ public class InGameHud : MonoBehaviour
 		int milliseconds = Mathf.FloorToInt((time * 1000f) % 1000f);
 		return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
 	}
+
+	public string GetPosOrdinal()
+	{
+		return _posText.text;
+	}
 }
