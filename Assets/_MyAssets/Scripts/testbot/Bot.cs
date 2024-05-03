@@ -45,12 +45,12 @@ namespace testbot {
 			}
 			
 			// TURN
-			if(angNxtWpt > -_angTurn) {
-				_spaceship.Turn(false);
-			} else if(angNxtWpt < _angTurn) {
+			if(angNxtWpt < -_angTurn) {
 				_spaceship.Turn(true);
+			} else if(angNxtWpt > _angTurn) {
+				_spaceship.Turn(false);
 			}
-			
+
 			// AIRBRAKE
 			if(angNxtWpt < -_angAirBrake) {
 				_spaceship.AirBrake(true);
