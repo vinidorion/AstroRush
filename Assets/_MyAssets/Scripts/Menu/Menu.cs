@@ -34,7 +34,15 @@ public class Menu : MonoBehaviour
 	private Vector3 _optionsPos;
 	private Vector3 _optionsTargetPos;
 
-	private Fade _fadeOut;
+    private Transform _leaderboard;
+    private Vector3 _leaderboardPos;
+    private Vector3 _leaderboardTargetPos;
+
+    private Transform _credit;
+    private Vector3 _creditPos;
+    private Vector3 _creditTargetPos;
+
+    private Fade _fadeOut;
 	private AudioFade _music;
 
 	private Camera _camBackgroundColor;
@@ -78,7 +86,17 @@ public class Menu : MonoBehaviour
 		_optionsTargetPos = new Vector3(_optionsPos.x, -700f, _optionsPos.z);
 		_options.localPosition = _optionsTargetPos;
 
-		foreach (Transform camPos in GameObject.Find("CamPosList").transform) {
+        _leaderboard = GameObject.Find("leaderboard").transform;
+        _leaderboardPos = _leaderboard.localPosition;
+        _leaderboardTargetPos = new Vector3(_leaderboardPos.x, -700f, _optionsPos.z);
+        _leaderboard.localPosition = _leaderboardTargetPos;
+
+        _credit = GameObject.Find("credits").transform;
+        _creditPos = _credit.localPosition;
+        _creditTargetPos = new Vector3(_creditPos.x, -700f, _creditPos.z);
+        _credit.localPosition = _creditTargetPos;
+
+        foreach (Transform camPos in GameObject.Find("CamPosList").transform) {
 			camPos.GetComponent<MeshRenderer>().enabled = false;
 			_camList.Add(camPos);
 		}
@@ -95,8 +113,10 @@ public class Menu : MonoBehaviour
 		_retour.localPosition += (_retourTargetPos - _retour.localPosition) * Time.deltaTime * BUTTON_SPEED;
 		_play.localPosition += (_playTargetPos - _play.localPosition) * Time.deltaTime * BUTTON_SPEED;
 		_options.localPosition += (_optionsTargetPos - _options.localPosition) * Time.deltaTime * BUTTON_SPEED;
+        _leaderboard.localPosition += (_leaderboardTargetPos - _leaderboard.localPosition) * Time.deltaTime * BUTTON_SPEED;
+        _credit.localPosition += (_creditTargetPos - _credit.localPosition) * Time.deltaTime * BUTTON_SPEED;
 
-		if(_isFadingBackground) {
+        if (_isFadingBackground) {
 			Color color = _camBackgroundColor.backgroundColor;
 			float ratio = color.r * Time.deltaTime;
 			color.r -= ratio;
