@@ -22,14 +22,14 @@ public class Bot : MonoBehaviour
     private Rigidbody _rb;
     protected float _agility;
     private List<float> _maxSpeed = new List<float>();
+    private float time = 0;
 
     private List<GameObject> waypoints = new List<GameObject>();
     private List<GameObject> optiWaypoints = new List<GameObject>();
     protected List<GameObject> Bots = new List<GameObject>();
     private List<GameObject> targets = new List<GameObject>();
-    private List<Vector3> directionRight = new List<Vector3>();
     private List<int> passedTargets = new List<int>();
-    public List<float> difficulty = new List<float>();
+    private List<float> difficulty = new List<float>();
     [SerializeField] private float accelbot = 0;
 
     public Plane Plane
@@ -56,7 +56,6 @@ public class Bot : MonoBehaviour
         foreach (Transform child in listeBots.transform)
         {
             Bots.Add(child.gameObject);
-            directionRight.Add(child.gameObject.transform.right);
             passedTargets.Add(0);
         }
         foreach (Transform child in listeTargets.transform)
@@ -67,13 +66,13 @@ public class Bot : MonoBehaviour
         {
             targets[i].transform.position = Vector3.Lerp(waypoints[passedTargets[i]].transform.position,
                 optiWaypoints[passedTargets[i]].transform.position, difficulty[i]);
-            directionRight[i] = Bots[i].transform.right;
             
         }
         for (int i = 0; i < Bots.Count; i++)
         {
             _maxSpeed.Add(Bots[i].GetComponent<SpaceShip>().GetMaxSpeed());
         }
+        time = Time.time;
     }
 
     // Update is called once per frame
@@ -96,6 +95,7 @@ public class Bot : MonoBehaviour
                 if (passedTargets[i] == 37)
                 {
                     passedTargets[i] = 0;
+                    Debug.Log(Time.time - time);
                 }
                 //_spaceship.SetWaypoint(passedTargets[i]);
             }
@@ -114,7 +114,7 @@ public class Bot : MonoBehaviour
             */
             BotMove(i);
             BotTurn(i, angle, angleVel);
-            Debug.Log(_rb.velocity.magnitude);
+            //Debug.Log(_rb.velocity.magnitude);
         }
     }
 
@@ -127,7 +127,6 @@ public class Bot : MonoBehaviour
         }
         else if (Bots[i].GetComponent<Rigidbody>().velocity.magnitude > _maxSpeed[i])
         {
-            Debug.Log("airbraaake");
             _spaceship.AirBrake(false);
             _spaceship.AirBrake(true);
         }
@@ -135,10 +134,9 @@ public class Bot : MonoBehaviour
 
     void BotTurn(int i, float angle, float angleVel)
     {
-        if (angleVel > (10 + 100 * difficulty[i]) / _rb.velocity.magnitude)
+        if (angleVel > (50 + 70 * difficulty[i]) / _rb.velocity.magnitude)
         {
-            //Debug.Log(_rb.velocity.magnitude);
-            if (angleVel > (20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
+            if (angleVel > (60 + 100 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
             {
                 _spaceship.AirBrake(false);
             }
@@ -148,9 +146,9 @@ public class Bot : MonoBehaviour
             }
             
         }
-        else if (angleVel < -(10 + 100 * difficulty[i]) / _rb.velocity.magnitude)
+        else if (angleVel < -(50 + 70 * difficulty[i]) / _rb.velocity.magnitude)
         {
-            if (angleVel < -(20 + 130 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
+            if (angleVel < -(60 + 100 * difficulty[i]) / _rb.velocity.magnitude && _rb.velocity.magnitude > 0.125f * _maxSpeed[i])
             {
                 _spaceship.AirBrake(true);
             }
@@ -171,11 +169,11 @@ public class Bot : MonoBehaviour
         }
 
         // Normal turn
-        else if (angle > 0.1f)
+        else if (angle > 0.5f)
         {
             _spaceship.Turn(false);
         }
-        else if (angle < -0.1f)
+        else if (angle < -0.5f)
         {
             _spaceship.Turn(true);
         }

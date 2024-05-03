@@ -210,9 +210,9 @@ public class SpaceShip : MonoBehaviour
 		float lateralSpeed = transform.InverseTransformDirection(_rb.velocity).x;
 		//Debug.Log($"lateral speed: {lateralSpeed.ToString("F2")}");
 		
-		if(lateralSpeed > 0.5f) {
+		if(lateralSpeed > 1f) {
 			_rb.AddForce(transform.right * -5f * _agility, ForceMode.Acceleration);
-		} else if(lateralSpeed < -0.5f) {
+		} else if(lateralSpeed < -1f) {
 			_rb.AddForce(transform.right * 5f * _agility, ForceMode.Acceleration);
 		}
 	}
