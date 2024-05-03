@@ -554,27 +554,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5017003701735442970, guid: b17882d066aba394dac85746d25eadfd, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.1
+      value: 0.035
       objectReference: {fileID: 0}
     - target: {fileID: 5017003701735442970, guid: b17882d066aba394dac85746d25eadfd, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.1
+      value: 0.035
       objectReference: {fileID: 0}
     - target: {fileID: 5017003701735442970, guid: b17882d066aba394dac85746d25eadfd, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.1
+      value: 0.035
       objectReference: {fileID: 0}
     - target: {fileID: 5017003701735442970, guid: b17882d066aba394dac85746d25eadfd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 44.1
+      value: -5.9150004
       objectReference: {fileID: 0}
     - target: {fileID: 5017003701735442970, guid: b17882d066aba394dac85746d25eadfd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 6.123
       objectReference: {fileID: 0}
     - target: {fileID: 5017003701735442970, guid: b17882d066aba394dac85746d25eadfd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 59.6
+      value: 8.921
       objectReference: {fileID: 0}
     - target: {fileID: 5017003701735442970, guid: b17882d066aba394dac85746d25eadfd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -649,6 +649,21 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 721608799864582647, guid: e84db841a9a98e444bd4466e423506d2, type: 3}
+--- !u!114 &1362746745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482896336525270643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1abc4af026a06fd4cac57b067592cff0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 1
+  dif: 0.75
+  BotManager: {fileID: 0}
 --- !u!114 &598098818160462884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -661,29 +676,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4df6e437b40a9214ea301161e551c16c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2290210428958603614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1482896336525270643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4a775d77fd9b7e40ae2979ac378e856, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  listeWaypoint: {fileID: 0}
-  listeOptiWaypoint: {fileID: 0}
-  listeBots: {fileID: 0}
-  listeTargets: {fileID: 0}
-  difficulty1: 1
-  difficulty2: 1
-  difficulty3: 0.5
-  difficulty4: 0
-  difficulty5: 0
-  difficulty: []
-  accelbot: 0
 --- !u!114 &2314248644441017035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -696,13 +688,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1da57de4749fb7a4caf5c059c872663f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_speed: 0
-  _accel: 0
-  _airbrakePower: 0
-  _weight: 0
-  _agility: 0
-  _slower: 0
-  _maxBoost: 0
+  max_speed: 20
+  _accel: 0.1
+  _airbrakePower: 1
+  _weight: 1
+  _agility: 1
+  _slower: 0.8
+  _maxBoost: 10
   _size: 0
   _boost: 0
   _pu: -1

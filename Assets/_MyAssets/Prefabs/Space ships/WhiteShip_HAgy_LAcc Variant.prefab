@@ -448,29 +448,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3970065785520323010, guid: 28b1d9ddb5f2e054f9a6863d6edce326, type: 3}
---- !u!114 &1466585622146059191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7954197034249002652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4a775d77fd9b7e40ae2979ac378e856, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  listeWaypoint: {fileID: 0}
-  listeOptiWaypoint: {fileID: 0}
-  listeBots: {fileID: 0}
-  listeTargets: {fileID: 0}
-  difficulty1: 1
-  difficulty2: 1
-  difficulty3: 0.5
-  difficulty4: 0
-  difficulty5: 0
-  difficulty: []
-  accelbot: 0
 --- !u!114 &1489574928326162735
 MonoBehaviour:
   m_ObjectHideFlags: 0

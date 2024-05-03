@@ -42,7 +42,9 @@ public class GameManager : MonoBehaviour
 			bot.InitializeDifficulty(5);
 		}
 		_numSpaceship = FindObjectsOfType<SpaceShip>().Length;
-		PauseMenu.Instance.SetCanPause(false);
+		if(PauseMenu.Instance) {
+			PauseMenu.Instance.SetCanPause(false);
+		}
 		FreezeAll(true);
 		if(InGameHud.Instance) {
 			InGameHud.Instance.ToggleDrawHUD(false);
@@ -50,7 +52,7 @@ public class GameManager : MonoBehaviour
 
 		// TODO: NE PAS OUBLIER D'ENLEVER
 		if(GameData.Instance) {
-			int nbdelap = 3;
+			int nbdelap = 1;
 			GameData.Instance.SetNumLap(nbdelap);
 			Debug.Log($"nombre de lap: {nbdelap}");
 		} else {
@@ -92,10 +94,12 @@ public class GameManager : MonoBehaviour
 		NumberCountdown.Instance.Count();
 
 		yield return new WaitForSeconds(1f);
-		// start race ici
+		// RACE STARTS HERE
 		NumberCountdown.Instance.Go();
 		FreezeAll(false);
-		PauseMenu.Instance.SetCanPause(true);
+		if(PauseMenu.Instance) {
+			PauseMenu.Instance.SetCanPause(false);
+		}
 
 		// comme le _startTime est le même pour tout le monde, 
 		// je le store ici pour pas le store dans chaque classe spaceship

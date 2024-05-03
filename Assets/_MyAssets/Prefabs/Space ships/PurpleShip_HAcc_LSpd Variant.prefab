@@ -348,27 +348,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1609296970580738469, guid: ac02b746f53c1d9469d0fc7ce156481e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.1
+      value: 0.035
       objectReference: {fileID: 0}
     - target: {fileID: 1609296970580738469, guid: ac02b746f53c1d9469d0fc7ce156481e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.1
+      value: 0.035
       objectReference: {fileID: 0}
     - target: {fileID: 1609296970580738469, guid: ac02b746f53c1d9469d0fc7ce156481e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.1
+      value: 0.035
       objectReference: {fileID: 0}
     - target: {fileID: 1609296970580738469, guid: ac02b746f53c1d9469d0fc7ce156481e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 31.3
+      value: -6.8090005
       objectReference: {fileID: 0}
     - target: {fileID: 1609296970580738469, guid: ac02b746f53c1d9469d0fc7ce156481e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 6.123
       objectReference: {fileID: 0}
     - target: {fileID: 1609296970580738469, guid: ac02b746f53c1d9469d0fc7ce156481e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 73.6
+      value: 8.925
       objectReference: {fileID: 0}
     - target: {fileID: 1609296970580738469, guid: ac02b746f53c1d9469d0fc7ce156481e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -443,7 +443,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5476703506552565936, guid: c8d435581e6164343a43e3402af38b64, type: 3}
---- !u!114 &1859581496160364387
+--- !u!114 &1550741144
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -452,20 +452,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2732657572222181818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4a775d77fd9b7e40ae2979ac378e856, type: 3}
+  m_Script: {fileID: 11500000, guid: 1abc4af026a06fd4cac57b067592cff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  listeWaypoint: {fileID: 0}
-  listeOptiWaypoint: {fileID: 0}
-  listeBots: {fileID: 0}
-  listeTargets: {fileID: 0}
-  difficulty1: 1
-  difficulty2: 1
-  difficulty3: 0.5
-  difficulty4: 0
-  difficulty5: 0
-  difficulty: []
-  accelbot: 0
+  index: 3
+  dif: 0.75
+  BotManager: {fileID: 0}
 --- !u!114 &5654740579496555125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,13 +482,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1da57de4749fb7a4caf5c059c872663f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_speed: 0
-  _accel: 0
-  _airbrakePower: 0
-  _weight: 0
-  _agility: 0
-  _slower: 0
-  _maxBoost: 0
+  max_speed: 20
+  _accel: 0.1
+  _airbrakePower: 1
+  _weight: 1
+  _agility: 1
+  _slower: 0.8
+  _maxBoost: 10
   _size: 0
   _boost: 0
   _pu: -1

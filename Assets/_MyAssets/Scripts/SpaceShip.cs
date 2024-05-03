@@ -266,6 +266,10 @@ public class SpaceShip : MonoBehaviour
 			}
 			GetComponent<Player>().enabled = false;
 			GetComponent<testbot.Bot>().enabled = true;
+			// ajouter le spaceship du player dans botmanager
+			if(Bot.Instance) {
+				Bot.Instance.AddPlayerToBots();
+			}
 			NumberCountdown.Instance.Position(); // c'est le NumberCountdown qui affiche la position finale (1st, 2nd, 3rd, etc.)
 			// save _listLapTime si le joueur bat son record
 		}
@@ -391,6 +395,14 @@ public class SpaceShip : MonoBehaviour
 
 		if(numShip < 2) {
 			_pu = Random.Range(0, numPU); // min inclusive et max exclusif https://docs.unity3d.com/ScriptReference/Random.Range.html#:~:text=public%20static%20int%20Range(int%20minInclusive%2C%20int%20maxExclusive)%3B
+			Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
+			if(_isPly) {
+				if(InGameHud.Instance) {
+					InGameHud.Instance.Item(_pu);
+				}
+			} else {
+				UsePU();
+			}
 			return;
 		}
 
