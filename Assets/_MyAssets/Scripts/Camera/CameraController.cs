@@ -6,6 +6,7 @@ public class CameraController : MonoBehaviour
 {
 	public static CameraController Instance; // Singleton
 
+	private Camera _cam;
 	private CameraMode _currentMode;
 	private Transform _plyPos;
 
@@ -26,6 +27,8 @@ public class CameraController : MonoBehaviour
 		} else {
 			Destroy(this.gameObject);
 		}
+
+		_cam = GetComponent<Camera>();
 
 		foreach (Transform child in GameObject.Find("IntroAnim").transform) {
 			_listCam.Add(child);
@@ -130,6 +133,10 @@ public class CameraController : MonoBehaviour
 	{
 		Quaternion targetRotation = Quaternion.LookRotation(_plyPos.position - transform.position);
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, CAM_ROT_SPEED * Time.deltaTime);
+		float newFov = (Player.Instance.transform.position - transform.position).sqrMagnitude;
+		newFov = 0.000663f * Mathf.Pow(newFov -300f, 2f);
+		newFov = Mathf.Clamp(newFov, 7f, 60f);
+		_cam.fieldOfView += (newFov - _cam.fieldOfView) * Time.deltaTime * 2f;
 	}
 
 	// méthode public pour faire shaker la caméra

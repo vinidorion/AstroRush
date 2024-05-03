@@ -52,6 +52,7 @@ public class SpaceShip : MonoBehaviour
 	private const float COEF_DRAG = -0.2f;
 	private Vector3 _forwardSpeed = Vector3.zero;
 
+	private bool _isPly = false;
 	private bool _isFrozen = false;
 	private Rigidbody _rb;
 	private GameManager _gm;
@@ -107,12 +108,15 @@ public class SpaceShip : MonoBehaviour
 	void Start()
 	{
 		_gm = GameManager.Instance;
+		_isPly = this.gameObject == Player.Instance.gameObject;
 	}
 
 	void Update()
 	{
 		_forwardSpeed = Vector3.Project(_rb.velocity, transform.forward);
-		if(!Input.GetKey(KeyCode.W) && fire.activeSelf) fire.SetActive(false);
+		if(fire) {
+			if(!Input.GetKey(KeyCode.W) && fire.activeSelf) fire.SetActive(false);
+		}
 	}
 
 	// called à chaque Time.fixedDeltaTime (0.02s par défaut)
@@ -240,7 +244,6 @@ public class SpaceShip : MonoBehaviour
 		_listLapTime.Add(Time.time);
 
 		_lap++;
-		bool isPly = this.gameObject == Player.Instance.gameObject;
 
 		if(!GameData.Instance) {
 			Debug.Log("NO GAMEDATA OBJECT");
@@ -256,12 +259,13 @@ public class SpaceShip : MonoBehaviour
 
 		if(_lap > numLap) {
 			return;
-		} else if(_lap == numLap && isPly) { // dernier lap, c'est la fin du jeu
+		} else if(_lap == numLap && _isPly) { // dernier lap, c'est la fin du jeu
 			CameraController.Instance.SetCameraMode(CameraMode.Spectate);
 			if(InGameHud.Instance) {
 				InGameHud.Instance.ToggleDrawHUD(false);
 			}
-			// activer le component bot du joueur
+			GetComponent<Player>().enabled = false;
+			GetComponent<testbot.Bot>().enabled = true;
 			// afficher rank
 			// save _listLapTime si le joueur bat son record
 		}
@@ -270,7 +274,7 @@ public class SpaceShip : MonoBehaviour
 			return;
 		}
 		// ne pas merge ce check de condition
-		if(isPly) {
+		if(_isPly) {
 			InGameHud.Instance.ResetProgBar();
 			InGameHud.Instance.UpdateLap();
 			InGameHud.Instance.DrawTimeComp();
@@ -295,13 +299,8 @@ public class SpaceShip : MonoBehaviour
 		return _position;
 	}
 
-	// cette valeur représente la "position" du spaceship
-	// plus haute = premier
-	// plus basse = dernier
+	// nombre de waypoints parcourus au total
 	// faut juste sort en ordre décroissant pour trouver l'ordre des spaceships (le sort se fait dans la classe PosManager)
-	// la multiplication de _lap par le nombre de waypoints donne
-	// un grand nombre qui ne sera jamais dépassé par le nombre de waypoints
-	// donc en fait ça compte de nombre de waypoints parcourus au total
 	public int GetPosValue()
 	{
 		return (_lap * WaypointManager.Instance.GetNbWpt()) + _waypoint.GetWaypoint();
@@ -317,7 +316,9 @@ public class SpaceShip : MonoBehaviour
 		if (_rb.velocity.magnitude < max_speed) {
 			_rb.AddForce(transform.forward * _accel /* * (_slower + 1)*/);
 		}
-		fire.SetActive(true);
+		if(fire) {
+			fire.SetActive(true);
+		}
 	}
 
 	public void Backward()
@@ -386,7 +387,7 @@ public class SpaceShip : MonoBehaviour
 		int pos = _position;
 		int numPU = _gm.GetNumPUs();
 		int[] listWeight = new int[numPU];
-		float ratioPos = ((1f - (pos / (float)numShip)) * 2f) - 1f;
+		float ratioPos = ((1f - (pos / (float)(numShip - 1))) * 2f) - 1f;
 
 		// distribution de poids
 		for (int i = 0; i < numPU; i++) {
@@ -405,9 +406,15 @@ public class SpaceShip : MonoBehaviour
 			if (random < listWeight[i]) {
 				_pu = i;
 				Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
-				if(InGameHud.Instance) {
-					InGameHud.Instance.Item(_pu);
+				
+				if(_isPly) {
+					if(InGameHud.Instance) {
+						InGameHud.Instance.Item(_pu);
+					}
+				} else {
+					UsePU();
 				}
+
 				return;
 			}
 			random -= listWeight[i];
@@ -455,6 +462,9 @@ public class SpaceShip : MonoBehaviour
 	// méthode publique qui retourne la direction de la gravité
 	// utilisé dans OutOfBounds
 	public Vector3 GetVecGrav() { return _rayDir; }
+
+	// méthode publique qui retourne un bool true si c'est le joueur
+	public bool IsPlayer() { return _isPly; }
 
 	// méthode publique qui retourne le temps depuis que le dernier lap a été complété
 	public float GetTimeSinceLastLap()

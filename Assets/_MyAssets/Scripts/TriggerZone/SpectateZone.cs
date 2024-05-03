@@ -17,14 +17,20 @@ public class SpectateZone : MonoBehaviour
 	void OnTriggerEnter(Collider other)
 	{
 		SpaceShip spaceship = other.GetComponent<SpaceShip>();
-		if (spaceship == null) {
+
+		// ne pas merge	
+		if (!spaceship) {
+			return;
+		}
+
+		if(!spaceship.IsPlayer()) {
 			return;
 		}
 	
-		// ne pas merge ce check de condition
 		if(CameraController.Instance.GetCameraMode() == CameraMode.Spectate) {
 			CameraController.Instance.transform.position = _camPos;
 			CameraController.Instance.transform.LookAt(other.transform, Vector3.up);
+			CameraController.Instance.GetComponent<Camera>().fieldOfView = 60f;
 		}
 	}
 }

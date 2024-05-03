@@ -25,20 +25,27 @@ public class title : MonoBehaviour
 	void Awake()
 	{
 		foreach(Transform child in transform) {
-			if(child.name == "title") {
-				_titleParent = child;
-				foreach(Transform titlePiece in child) {
-					ChangeColor(titlePiece, Color.black);
-					_titlePiece.Add(titlePiece);
-				}
-			} else if(child.name == "black_bg") {
-				_blackBG = child;
-			} else if(child.name == "black_fg") {
-				_blackFG = child.GetComponent<Horbar>();
-			} else if(child.name == "Opening") {
-				child.GetComponent<AudioSource>().time = 25f;
-			} else if(child.name == "horbar") {
-				_horbar = child.GetComponent<Horbar>();
+			switch (child.name)
+			{
+				case "title":
+					_titleParent = child;
+					foreach (Transform titlePiece in child) {
+						ChangeColor(titlePiece, Color.black);
+						_titlePiece.Add(titlePiece);
+					}
+					break;
+				case "black_bg":
+					_blackBG = child;
+					break;
+				case "black_fg":
+					_blackFG = child.GetComponent<Horbar>();
+					break;
+				case "Opening":
+					child.GetComponent<AudioSource>().time = 25f;
+					break;
+				case "horbar":
+					_horbar = child.GetComponent<Horbar>();
+					break;
 			}
 		}
 		_topBar = GameObject.Find("blackbar_top").GetComponent<RectTransform>();

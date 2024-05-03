@@ -38,15 +38,19 @@ public class GameManager : MonoBehaviour
 
 	void Start()
 	{
+		foreach(testbot.Bot bot in FindObjectsOfType<testbot.Bot>()) {
+			bot.InitializeDifficulty(5);
+		}
 		_numSpaceship = FindObjectsOfType<SpaceShip>().Length;
 		PauseMenu.Instance.SetCanPause(false);
 		FreezeAll(true);
 		if(InGameHud.Instance) {
 			InGameHud.Instance.ToggleDrawHUD(false);
 		}
+
+		// TODO: NE PAS OUBLIER D'ENLEVER
 		if(GameData.Instance) {
-			// TODO: NE PAS OUBLIER D'ENLEVER
-			int nbdelap = 3;
+			int nbdelap = 1;
 			GameData.Instance.SetNumLap(nbdelap);
 			Debug.Log($"nombre de lap: {nbdelap}");
 		} else {
@@ -117,12 +121,8 @@ public class GameManager : MonoBehaviour
 	// méthode publique qui retourne le GameObject PU en fonction de l'index
 	public GameObject GetGameObjectPU(int index)
 	{
-		if (index >= 0 && index < _arrPUs.Length) {
-			return _arrPUs[index];
-		} else {
-			Debug.Log("PU INDEX OUT OF RANGE OF THE PU ARRAY");
-			return _arrPUs[0]; // il faut retourner qqch, donc retourner le premier par défaut
-		}
+		bool isWithinRange = index >= 0 && index < _arrPUs.Length;
+		return isWithinRange ? _arrPUs[index] : _arrPUs[0];
 	}
 
 	// méthode publique qui get le nombre de PUs,
