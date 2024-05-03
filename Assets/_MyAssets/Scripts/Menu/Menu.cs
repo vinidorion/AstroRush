@@ -169,4 +169,9 @@ public class Menu : MonoBehaviour
 		yield return new WaitForSeconds(1f);
 		SceneManager.LoadScene("LoadingScreen");
 	}
+
+	public void SetCameraTypeToSkyBox()
+    {
+		_camBackgroundColor.clearFlags = CameraClearFlags.Skybox;
+    }
 }

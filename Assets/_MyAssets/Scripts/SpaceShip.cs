@@ -399,8 +399,12 @@ public class SpaceShip : MonoBehaviour
 			Debug.Log($"{i} : {listWeight[i]}");
 		}*/
 
+		int somme = listWeight.Sum();
+
+        Debug.Log($"somme: {somme}");
+
 		// algorithme de sélection aléatoire pondérée 
-		int random = Random.Range(0, listWeight.Sum());
+		int random = Random.Range(0, somme);
 
 		for (int i = 0; i < numPU; i++) {
 			if (random < listWeight[i]) {

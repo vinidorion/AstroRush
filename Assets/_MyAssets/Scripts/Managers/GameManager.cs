@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
 
 		// TODO: NE PAS OUBLIER D'ENLEVER
 		if(GameData.Instance) {
-			int nbdelap = 1;
+			int nbdelap = 3;
 			GameData.Instance.SetNumLap(nbdelap);
 			Debug.Log($"nombre de lap: {nbdelap}");
 		} else {
