@@ -265,7 +265,7 @@ public class SpaceShip : MonoBehaviour
 				InGameHud.Instance.ToggleDrawHUD(false);
 			}
 			GetComponent<Player>().enabled = false;
-			GetComponent<testbot.Bot>().enabled = true;
+			//GetComponent<testbot.Bot>().enabled = true;
 			// ajouter le spaceship du player dans botmanager
 			if(Bot.Instance) {
 				Bot.Instance.AddPlayerToBots();
