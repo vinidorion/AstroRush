@@ -47,13 +47,12 @@ public class title : MonoBehaviour
 				case "horbar":
 					_horbar = child.GetComponent<Horbar>();
 					break;
-				case "Ship":
-					_ship = child.gameObject;
-					break;
-            }
+			}
 		}
 		_topBar = GameObject.Find("blackbar_top").GetComponent<RectTransform>();
 		_botBar = GameObject.Find("blackbar_bottom").GetComponent<RectTransform>();
+		_ship = GameObject.Find("Ship");
+		_ship.gameObject.SetActive(false);
 	}
 
 	void Start()
@@ -85,14 +84,10 @@ public class title : MonoBehaviour
 		Destroy(_blackBG.gameObject);
 		yield return new WaitForSeconds(0.5f);
 		Menu.Instance.ToggleCameraMovement(true);
-        _ship.gameObject.SetActive(true);
+		_ship.gameObject.SetActive(true);
 		yield return new WaitForSeconds(1f);
-		Menu.Instance.ShowMainMenu(true);
-		Menu.Instance.FadeBackground();
-        yield return new WaitForSeconds(1f);
-        Menu.Instance.SetCameraTypeToSkyBox();
-
-    }
+		Menu.Instance.ShowUIElement("choix");
+	}
 
 	void Update()
 	{

@@ -10,15 +10,18 @@ public class CameraController : MonoBehaviour
 	private CameraMode _currentMode;
 	private Transform _plyPos;
 
-	/***** SPECTATE *****/
-	private const float CAM_ROT_SPEED = 10f;
-
 	/***** INTRO *****/
 	private const float CAM_SPEED = 0.5f;
 	private const float COOLDOWN = 2f;
-	private List<Transform> _listCam = new List<Transform>();
-	private int _camIndex = 0;
+	private List<Transform> _listCamIntro = new List<Transform>();
+	private int _camIntroIndex = 0;
 	private float _nextCooldown;
+
+	/***** SPECTATE *****/
+	private const float CAM_ROT_SPEED = 10f;
+	private List<Vector3> _listCamSpecPos = new List<Vector3>();
+	private int _camSpecIndex = 0;
+
 
 	void Awake()
 	{
@@ -31,7 +34,11 @@ public class CameraController : MonoBehaviour
 		_cam = GetComponent<Camera>();
 
 		foreach (Transform child in GameObject.Find("IntroAnim").transform) {
-			_listCam.Add(child);
+			_listCamIntro.Add(child);
+			child.GetComponent<MeshRenderer>().enabled = false;
+		}
+		foreach (Transform child in GameObject.Find("SpectateAnim").transform) {
+			_listCamSpecPos.Add(child.position);
 			child.GetComponent<MeshRenderer>().enabled = false;
 		}
 	}
@@ -102,18 +109,18 @@ public class CameraController : MonoBehaviour
 	// avant que la course commence, la caméra montre la map
 	private void Intro() {
 		if(Time.time > _nextCooldown) {
-			_camIndex += 2;
-			if(_camIndex >= _listCam.Count) {
-				//_camIndex = 0; -- uncomment to loop throught camera pairs
+			_camIntroIndex += 2;
+			if(_camIntroIndex >= _listCamIntro.Count) {
+				//_camIntroIndex = 0; -- uncomment to loop throught camera pairs
 				GameManager.Instance.StartRace();
 				return;
 			}
-			transform.position = _listCam[_camIndex].position;
-			transform.LookAt(transform.position + _listCam[_camIndex].forward);
+			transform.position = _listCamIntro[_camIntroIndex].position;
+			transform.LookAt(transform.position + _listCamIntro[_camIntroIndex].forward);
 			_nextCooldown = Time.time + COOLDOWN;
 		}
-		transform.position += (_listCam[_camIndex + 1].position - transform.position) * Time.deltaTime * CAM_SPEED;
-		transform.rotation = Quaternion.Slerp(transform.rotation, _listCam[_camIndex + 1].rotation, CAM_SPEED * Time.deltaTime);
+		transform.position += (_listCamIntro[_camIntroIndex + 1].position - transform.position) * Time.deltaTime * CAM_SPEED;
+		transform.rotation = Quaternion.Slerp(transform.rotation, _listCamIntro[_camIntroIndex + 1].rotation, CAM_SPEED * Time.deltaTime);
 	}
 
 	// caméra attaché juste devant le spaceship
@@ -131,12 +138,39 @@ public class CameraController : MonoBehaviour
 	// quand la course est fini
 	private void Spectate()
 	{
+		// rotation
 		Quaternion targetRotation = Quaternion.LookRotation(_plyPos.position - transform.position);
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, CAM_ROT_SPEED * Time.deltaTime);
+		
+		// zoom
 		float newFov = (Player.Instance.transform.position - transform.position).sqrMagnitude;
 		newFov = 0.000663f * Mathf.Pow(newFov -300f, 2f);
 		newFov = Mathf.Clamp(newFov, 7f, 60f);
 		_cam.fieldOfView += (newFov - _cam.fieldOfView) * Time.deltaTime * 2f;
+
+		// position
+		if(_listCamSpecPos.Count == 0) {
+			return;
+		}
+
+		int nextCamIndex = _camSpecIndex + 1;
+		nextCamIndex = nextCamIndex >= _listCamSpecPos.Count ? 0 : nextCamIndex;
+
+		float distCurrCam = (_plyPos.position - _listCamSpecPos[_camSpecIndex]).sqrMagnitude;
+		float distNextCam = (_plyPos.position - _listCamSpecPos[nextCamIndex]).sqrMagnitude;
+
+		//Debug.DrawLine(_plyPos.position, _listCamSpecPos[_camSpecIndex], Color.green, Time.deltaTime);
+		//Debug.DrawLine(_plyPos.position, _listCamSpecPos[nextCamIndex], Color.blue, Time.deltaTime);
+
+		if (distNextCam < distCurrCam) {
+			_camSpecIndex++;
+			if (_camSpecIndex >= _listCamSpecPos.Count) {
+				_camSpecIndex = 0;
+			}
+			transform.position = _listCamSpecPos[_camSpecIndex];
+			transform.LookAt(_plyPos.position, Vector3.up);
+			_cam.fieldOfView = 60f;
+		}
 	}
 
 	// méthode public pour faire shaker la caméra

@@ -97,7 +97,7 @@ public class Bot : MonoBehaviour
 	{
 		// boucle qui fait les actions de tout les bots 1 par 1
 		for (int i = 0; i < nbBots; i++)
-			{
+		{
 			_spaceship = Bots[i].GetComponent<SpaceShip>();
 			_rb = _spaceship.GetComponent<Rigidbody>();
 			_agility = _spaceship.GetAgility();
@@ -206,6 +206,7 @@ public class Bot : MonoBehaviour
 		_maxSpeed[index] = TSpeed;
 	}
 
+	// méthode publique qui augmente de un le nombre d'itération de la boucle dans l'Update()
 	public void AddPlayerToBots()
 	{
 		nbBots++;
