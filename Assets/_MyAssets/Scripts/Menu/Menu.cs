@@ -115,7 +115,7 @@ public class Menu : MonoBehaviour
 	}
 
 	// on peut pas mettre plus de deux arguments dans l'inspecteur sur OnClick()
-	// donc on a deux méthode, Show et Hide
+	// donc on a deux méthodes, Show et Hide
 	public void ShowUIElement(string name)
 	{
 		MoveUIElement(name, true);
