@@ -153,9 +153,9 @@ public class SpaceShip : MonoBehaviour
 	// méthode privée qui fait léviter le spaceship
 	private void Levitate()
 	{
-		/*ThrowRay(ref _onGround1, ref _fronthit, ref _rayDirFront, ref _front);
+		ThrowRay(ref _onGround1, ref _fronthit, ref _rayDirFront, ref _front);
 		ThrowRay(ref _onGround2, ref _backlefthit, ref _rayDirBackLeft, ref _backleft);
-		ThrowRay(ref _onGround3, ref _backrighthit, ref _rayDirBackRight, ref _backright);*/
+		ThrowRay(ref _onGround3, ref _backrighthit, ref _rayDirBackRight, ref _backright);
 
 		_onGround3 = _onGround1 && _onGround2 && _onGround3;
 
@@ -219,13 +219,13 @@ public class SpaceShip : MonoBehaviour
 
 	private void KeepUpright(bool ground)
 	{
-		Vector3 direction = -_rayDir;
+		Vector3 direction; //= -_rayDir;
 
-		if (ground) {
-			Vector3 frontToLeft = _fronthit - _backlefthit;
-			Vector3 frontToRight = _fronthit - _backrighthit;
-			direction = Vector3.Cross(frontToRight, frontToLeft);
-		}
+		//if (ground) {
+		Vector3 frontToLeft = _fronthit - _backlefthit;
+		Vector3 frontToRight = _fronthit - _backrighthit;
+		direction = Vector3.Cross(frontToRight, frontToLeft);
+		//}
 
 		Quaternion targetRotation = Quaternion.FromToRotation(transform.up, direction) * transform.rotation;
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 4f * Time.fixedDeltaTime);
@@ -416,12 +416,8 @@ public class SpaceShip : MonoBehaviour
 			Debug.Log($"{i} : {listWeight[i]}");
 		}*/
 
-		int somme = listWeight.Sum();
-
-        Debug.Log($"somme: {somme}");
-
 		// algorithme de sélection aléatoire pondérée 
-		int random = Random.Range(0, somme);
+		int random = Random.Range(0, listWeight.Sum());
 
 		for (int i = 0; i < numPU; i++) {
 			if (random < listWeight[i]) {

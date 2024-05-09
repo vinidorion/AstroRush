@@ -228,7 +228,6 @@ public class InGameHud : MonoBehaviour
 		_itemImage.color = isWithinRange ? Color.white : Color.clear;
 	}
 
-	// TODO: caller à la fin de LapCompleted() pour être sûr d'obtenir le bon GetTimeSinceLastLap()
 	// draw time comparison, your current lap time vs your best lap time
 	// s'affiche pendant 2s (voir la classe TimeComp)
 	// rouge si plus lent (ex: +00:01:00 si une seconde plus long que le meilleur score)

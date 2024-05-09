@@ -99,11 +99,10 @@ public class Bot : MonoBehaviour
 		for (int i = 0; i < nbBots; i++)
 		{
 			_spaceship = Bots[i].GetComponent<SpaceShip>();
-            if (_spaceship.isFrozen())
-            {
-                return;
-            }
-            _rb = _spaceship.GetComponent<Rigidbody>();
+			if(_spaceship.isFrozen()) {
+				return;
+			}
+			_rb = _spaceship.GetComponent<Rigidbody>();
 			_agility = _spaceship.GetAgility();
 
 			
