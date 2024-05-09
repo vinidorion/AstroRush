@@ -2432,7 +2432,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 355708256}
   m_LocalRotation: {x: -0.7071079, y: -0, z: -0, w: 0.70710564}
-  m_LocalPosition: {x: 26.5, y: -0.64, z: -10.82}
+  m_LocalPosition: {x: 26.38, y: -0.64, z: -10.32}
   m_LocalScale: {x: 11.1427355, y: 11.142734, z: 11.142734}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12051,6 +12051,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BOT1
       objectReference: {fileID: 0}
+    - target: {fileID: 8424497930618537613, guid: 465ad5658f65d3745b59b9549ad90063, type: 3}
+      propertyPath: _accel
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8424497930618537613, guid: 465ad5658f65d3745b59b9549ad90063, type: 3}
+      propertyPath: _agility
+      value: 1.25
+      objectReference: {fileID: 0}
     - target: {fileID: 8486368861032350940, guid: 465ad5658f65d3745b59b9549ad90063, type: 3}
       propertyPath: listeBots
       value: 
@@ -13069,7 +13077,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1929765013
 MonoBehaviour:
   m_ObjectHideFlags: 0

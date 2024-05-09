@@ -99,9 +99,14 @@ public class Bot : MonoBehaviour
 		for (int i = 0; i < nbBots; i++)
 		{
 			_spaceship = Bots[i].GetComponent<SpaceShip>();
-			_rb = _spaceship.GetComponent<Rigidbody>();
+            if (_spaceship.isFrozen())
+            {
+                return;
+            }
+            _rb = _spaceship.GetComponent<Rigidbody>();
 			_agility = _spaceship.GetAgility();
 
+			
 			//Debug.Log(_spaceship.GetMaxSpeed());
 			//si le bot est assez proche de sa target on set sa target au prochain waypoint
 			if (Vector3.Magnitude(_spaceship.transform.position - targets[i].transform.position) < 2f)
