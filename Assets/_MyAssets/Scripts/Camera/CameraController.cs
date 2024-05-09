@@ -74,6 +74,7 @@ public class CameraController : MonoBehaviour
 	private void FindPly() {
 		if(Player.Instance) {
 			_plyPos = Player.Instance.transform;
+			Debug.Log(Player.Instance.gameObject.name);
 		} else {
 			Debug.Log("PLAYER NOT FOUND");
 		}
