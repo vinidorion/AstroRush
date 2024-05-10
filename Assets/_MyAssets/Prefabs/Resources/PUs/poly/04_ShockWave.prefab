@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6942303928283109357}
   - component: {fileID: -1237800583045042270}
   m_Layer: 0
-  m_Name: 11_ShockWave
+  m_Name: 04_ShockWave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

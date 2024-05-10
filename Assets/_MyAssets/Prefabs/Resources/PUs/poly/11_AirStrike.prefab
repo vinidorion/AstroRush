@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3631038060110787697}
   - component: {fileID: -4781115359438148781}
   m_Layer: 0
-  m_Name: 07_AirStrike
+  m_Name: 11_AirStrike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

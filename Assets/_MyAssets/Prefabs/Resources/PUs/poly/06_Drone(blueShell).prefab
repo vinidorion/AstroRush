@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6466241842119718488}
   - component: {fileID: 1611903868453177578}
   m_Layer: 0
-  m_Name: 05_Drone(blueShell)
+  m_Name: 06_Drone(blueShell)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

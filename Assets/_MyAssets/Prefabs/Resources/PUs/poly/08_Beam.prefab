@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 5813099877244860242}
   - component: {fileID: 7037013266177300122}
   m_Layer: 3
-  m_Name: 06_Beam
+  m_Name: 08_Beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
