@@ -4,32 +4,31 @@ using UnityEngine;
 
 public class PitStop : MonoBehaviour
 {
-	private const float COOLDOWN = 1f;
-	private float _nextCooldown;
-	
-	private bool _testBool = false;
+	private bool _isActive = true;
 
 	void Awake()
 	{
 		GetComponent<MeshRenderer>().enabled = false;
+		StartCoroutine(CooldownCoroutine());
 	}
 
-	// on physic timer (called every 0.02s comme dans FixedUpdate())
+	IEnumerator CooldownCoroutine()
+	{
+		yield return new WaitForSeconds(_isActive ? 0.1f : 1f);
+		_isActive = !_isActive;
+		StartCoroutine(CooldownCoroutine());
+	}
+
 	void OnTriggerStay(Collider other)
 	{
-		if(_testBool) {
+		if(!_isActive) {
 			return;
 		}
 		
-		_testBool = true;
+		SpaceShip spaceship = other.GetComponent<SpaceShip>();
 
-		/*if(Time.time > _nextCooldown) {
-			SpaceShip spaceship = other.GetComponent<SpaceShip>();
-
-			if (spaceship != null) {
-				spaceship.GiveHP(5); // tester avec différentes valeurs
-			}
-			_nextCooldown = Time.time + COOLDOWN;
-		}*/
+		if (spaceship != null) {
+			spaceship.GiveHP(5);
+		}
 	}
 }

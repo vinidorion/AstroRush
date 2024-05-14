@@ -144,18 +144,19 @@ public class SpaceShip : MonoBehaviour
 			rayOrigin = hit.point;
 			rayDir = -hit.normal;
 			onGround = true;
-			//Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);
+			Debug.DrawLine(ob.transform.position, hit.point, Color.cyan, Time.fixedDeltaTime);
 		} else {
 			onGround = false;
+			Debug.DrawLine(ob.transform.position, transform.position + rayDir, Color.yellow, Time.fixedDeltaTime);
 		}
 	}
 
 	// méthode privée qui fait léviter le spaceship
 	private void Levitate()
 	{
-		ThrowRay(ref _onGround1, ref _fronthit, ref _rayDirFront, ref _front);
+		/*ThrowRay(ref _onGround1, ref _fronthit, ref _rayDirFront, ref _front);
 		ThrowRay(ref _onGround2, ref _backlefthit, ref _rayDirBackLeft, ref _backleft);
-		ThrowRay(ref _onGround3, ref _backrighthit, ref _rayDirBackRight, ref _backright);
+		ThrowRay(ref _onGround3, ref _backrighthit, ref _rayDirBackRight, ref _backright);*/
 
 		_onGround3 = _onGround1 && _onGround2 && _onGround3;
 
@@ -167,7 +168,7 @@ public class SpaceShip : MonoBehaviour
 			_hauteur = hit.distance;
 			PID();
 			directionGrav *= -_PIDForce;
-			KeepUpright(false);
+			KeepUpright(_onGround3);
 			Debug.DrawLine(transform.position, hit.point, Color.red, Time.fixedDeltaTime);							// direction de la gravité
 			Debug.DrawLine(transform.position, transform.position + (hit.normal), Color.blue, Time.fixedDeltaTime);	// normale de la surface (inverse de la direction de la gravité)
 		} else {
@@ -217,15 +218,15 @@ public class SpaceShip : MonoBehaviour
 		}
 	}
 
-	private void KeepUpright(bool ground)
+	private void KeepUpright(bool onGround)
 	{
-		Vector3 direction; //= -_rayDir;
+		Vector3 direction = -_rayDir;
 
-		//if (ground) {
-		Vector3 frontToLeft = _fronthit - _backlefthit;
-		Vector3 frontToRight = _fronthit - _backrighthit;
-		direction = Vector3.Cross(frontToRight, frontToLeft);
-		//}
+		if (onGround) {
+			Vector3 frontToLeft = _fronthit - _backlefthit;
+			Vector3 frontToRight = _fronthit - _backrighthit;
+			direction = Vector3.Cross(frontToRight, frontToLeft);
+		}
 
 		Quaternion targetRotation = Quaternion.FromToRotation(transform.up, direction) * transform.rotation;
 		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 4f * Time.fixedDeltaTime);
@@ -266,7 +267,6 @@ public class SpaceShip : MonoBehaviour
 			}
 			GetComponent<Player>().enabled = false;
 			//GetComponent<testbot.Bot>().enabled = true;
-			// ajouter le spaceship du player dans botmanager
 			if(Bot.Instance) {
 				Bot.Instance.AddPlayerToBots();
 			}
@@ -393,16 +393,9 @@ public class SpaceShip : MonoBehaviour
 		int[] listWeight = new int[numPU];
 		float ratioPos = ((1f - (pos / (float)(numShip - 1))) * 2f) - 1f;
 
+		// si jamais il n'y a pas assez de spaceships
 		if(numShip < 2) {
-			_pu = Random.Range(0, numPU); // min inclusive et max exclusif https://docs.unity3d.com/ScriptReference/Random.Range.html#:~:text=public%20static%20int%20Range(int%20minInclusive%2C%20int%20maxExclusive)%3B
-			Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
-			if(_isPly) {
-				if(InGameHud.Instance) {
-					InGameHud.Instance.Item(_pu);
-				}
-			} else {
-				UsePU();
-			}
+			GiveRndPU(numPU);
 			return;
 		}
 
@@ -433,6 +426,20 @@ public class SpaceShip : MonoBehaviour
 				return;
 			}
 			random -= listWeight[i];
+		}
+	}
+
+	// méthode privée qui donne un item random (non pondéré)
+	private void GiveRndPU(int numPU)
+	{
+		_pu = Random.Range(0, numPU); // min inclusive et max exclusif https://docs.unity3d.com/ScriptReference/Random.Range.html#:~:text=public%20static%20int%20Range(int%20minInclusive%2C%20int%20maxExclusive)%3B
+		Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
+		if(_isPly) {
+			if(InGameHud.Instance) {
+				InGameHud.Instance.Item(_pu);
+			}
+		} else {
+			UsePU();
 		}
 	}
 

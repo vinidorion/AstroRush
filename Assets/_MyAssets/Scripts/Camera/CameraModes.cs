@@ -1,7 +1,7 @@
 public enum CameraMode
 {
-    Intro,
-    FirstPerson,
-    ThirdPerson,
-    Spectate
+	Intro,
+	FirstPerson,
+	ThirdPerson,
+	Spectate
 }

@@ -17,12 +17,6 @@ namespace testbot {
 		{
 			_spaceship = GetComponent<SpaceShip>();
 			_waypoint = GetComponent<WaypointFinder>();
-			if(!_spaceship) {
-				Debug.Log(this.gameObject + " N'A PAS DE SPACESHIP");
-			}
-			if(!_waypoint) {
-				Debug.Log(this.gameObject + " N'A PAS DE WAYPOINTFINDER");
-			}
 		}
 
 		void Update()
@@ -31,12 +25,8 @@ namespace testbot {
 				return;
 			}
 
-			//Debug.DrawLine(transform.position, transform.position + (GetGravDir() * 2f), Color.red, Time.deltaTime);
-
-			Debug.DrawLine(transform.position, transform.position + (transform.forward * 2f), Color.red, Time.deltaTime);
-
-			float angNxtWpt = Vector3.SignedAngle(transform.forward, GetNextPos() - transform.position, GetGravDir());
-			//Debug.Log($"angNxtWpt: {angNxtWpt.ToString("F2")}");
+			//Debug.DrawLine(transform.position, transform.position + (transform.forward * 2f), Color.red, Time.deltaTime);
+			float angNxtWpt = GetAngNxtWpt();
 
 			// FORWARD
 			if (angNxtWpt > -_angAccel && angNxtWpt < _angAccel) {
@@ -59,16 +49,12 @@ namespace testbot {
 			}
 		}
 
-		// get la position du next waypoint
-		private Vector3 GetNextPos()
+		// méthode privée qui retourne l'angle vers le prochain waypoint
+		private float GetAngNxtWpt()
 		{
-			return WaypointManager.Instance.GetWaypointPos(_waypoint.GetWaypoint() + 1);
-		}
-
-		// get la direction de la gravité
-		private Vector3 GetGravDir()
-		{
-			return -_spaceship.GetVecGrav();
+			Vector3 vecNextPos = WaypointManager.Instance.GetWaypointPos(_waypoint.GetWaypoint() + 1);
+			Vector3 vecGravDir = -_spaceship.GetVecGrav();
+			return Vector3.SignedAngle(transform.forward, vecNextPos - transform.position, vecGravDir);
 		}
 
 		// méthode publique qui assigne niveau de difficulté

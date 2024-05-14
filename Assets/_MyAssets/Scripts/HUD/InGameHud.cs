@@ -89,7 +89,7 @@ public class InGameHud : MonoBehaviour
 					break;
 				case "HealthBar":
 					foreach (Transform grandchild in child) {
-						if (grandchild.name == "HealthBarFill") {
+						if (grandchild.name == "Image") {
 							_healthBar = grandchild.GetComponent<Image>();
 						}
 					}
@@ -114,6 +114,7 @@ public class InGameHud : MonoBehaviour
 		if(camMode == CameraMode.Intro || camMode == CameraMode.Spectate) {
 			return; // ne pas draw le hud dans l'intro ou spectate
 		}
+		HP();
 		Speed();
 		Pos();
 		if(_hasStarted) {
@@ -128,7 +129,7 @@ public class InGameHud : MonoBehaviour
 	private void HP()
 	{
 		int hp = _plyShip.GetHP();
-		_healthBar.fillAmount = hp / maxHP; // TODO: si ça marche pas, il faut probablement cast en float
+		_healthBar.fillAmount = hp / (float)maxHP;
 	}
 
 	private void Speed()
@@ -248,7 +249,7 @@ public class InGameHud : MonoBehaviour
 	}
 
 	// méthode publique qui permet de turn on/off le hud
-	// (c'est juste l'alpha du canvasgroup qui et set à 0 ou 1)
+	// (c'est juste l'alpha du canvasgroup qui est set à 0 ou 1)
 	// true :	afficher
 	// false :	enlever
 	public void ToggleDrawHUD(bool drawHUD)

@@ -73,7 +73,7 @@ public class CameraController : MonoBehaviour
 	// méthode privée qui trouve le transform du joueur
 	private void FindPly() {
 		if(Player.Instance) {
-			_plyPos = FindObjectsOfType<SpaceShip>()[1].transform;//Player.Instance.transform; // TODO: PAS LAISSER COMME ÇA
+			_plyPos = Player.Instance.transform;
 		} else {
 			Debug.Log("PLAYER NOT FOUND");
 		}
