@@ -20,6 +20,7 @@ public class TopCamera : MonoBehaviour
         
     }
 
+    // trouve l'instance du joueur dans la scene
     private void FindPly()
     {
         if (Player.Instance)

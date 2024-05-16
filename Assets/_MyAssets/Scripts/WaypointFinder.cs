@@ -38,13 +38,7 @@ public class WaypointFinder : MonoBehaviour
 		}
 	}
 
-	public void SetWaypoint(int waypoint)
-	{
-		_waypoint = waypoint;
-	}
+	public void SetWaypoint(int waypoint) { _waypoint = waypoint; }
 
-	public int GetWaypoint()
-	{
-		return _waypoint;
-	}
+	public int GetWaypoint() { return _waypoint; }
 }

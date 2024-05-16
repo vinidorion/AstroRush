@@ -33,10 +33,12 @@ public class CameraController : MonoBehaviour
 
 		_cam = GetComponent<Camera>();
 
+		// va chercher les camera pour l'intro
 		foreach (Transform child in GameObject.Find("IntroAnim").transform) {
 			_listCamIntro.Add(child);
 			child.GetComponent<MeshRenderer>().enabled = false;
 		}
+		// va chercher les cameras pour les vue apres la course
 		foreach (Transform child in GameObject.Find("SpectateAnim").transform) {
 			_listCamSpecPos.Add(child.position);
 			child.GetComponent<MeshRenderer>().enabled = false;

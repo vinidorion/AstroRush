@@ -27,6 +27,7 @@ public class ShineText : MonoBehaviour
 		}
 	}
 
+	// fait briller le texte
 	public void Shine()
 	{
 		_startTime = Time.time;

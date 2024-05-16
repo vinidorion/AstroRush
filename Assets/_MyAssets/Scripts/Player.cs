@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	// Envoie l'information au spaceship pour si il doit bouger d'une certaine facon
 	private void Move()
 	{
 		float inputx = Input.GetAxis("Horizontal");
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
 		if (Input.GetKey(KeyCode.X)) _spaceship.Orbit();
 	}
 
+	// Dit au spaceship qu'il peut utiliser son PU
 	private void UsePU()
 	{
 		if (Input.GetKeyDown(KeyCode.Space)) { // deja un check isFrozen() avant l'utilisation de cette méthode
@@ -47,6 +49,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	// Permet au joueur de changer le point de vue
 	private void ChangeCameraMode()
 	{
 		if (Input.GetKeyDown(KeyCode.C)) { CameraController.Instance.RotateCameraMode(); }

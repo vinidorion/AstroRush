@@ -56,6 +56,7 @@ public class InGameHud : MonoBehaviour
 		// changer la propriété alpha de cette variable permet de turn on/off (1f / 0f) le hud au complet (tous les child objects de cet objet)
 		_canvasGroup = GetComponent<CanvasGroup>(); 
 
+		// va chercher tout les element du HUD pour pouvoir les utiliser individuellement
 		foreach (Transform child in transform) {
 			switch (child.name)
 			{
@@ -132,6 +133,7 @@ public class InGameHud : MonoBehaviour
 		_healthBar.fillAmount = hp / (float)maxHP;
 	}
 
+	// affiche la vitesse du joueur avec un nombre et avec la barre de progression
 	private void Speed()
 	{
 		float speed = _plyShip.GetForwardSpeed();
@@ -267,8 +269,5 @@ public class InGameHud : MonoBehaviour
 		return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
 	}
 
-	public string GetPosOrdinal()
-	{
-		return _posText.text;
-	}
+	public string GetPosOrdinal() { return _posText.text; }
 }
