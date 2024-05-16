@@ -11,7 +11,7 @@ namespace poly
 		{
 			base.Start();
 
-			Debug.Log("HPBoost: Start()");
+			//Debug.Log("HPBoost: Start()");
 			_owner.GetComponent<SpaceShip>().GiveHP(10);
 		}
 	}

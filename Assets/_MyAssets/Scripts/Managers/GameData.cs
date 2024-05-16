@@ -30,6 +30,7 @@ public class GameData : MonoBehaviour
 		//StartCoroutine(Temp()); -- uncomment to test the save system
 	}
 
+	// coroutine avec délai pour tester système de sauvegarde
 	IEnumerator Temp()
 	{
 		yield return new WaitForSeconds(2f);
@@ -114,7 +115,6 @@ public class GameData : MonoBehaviour
 		List<SaveData> savesCopy = new List<SaveData>(saveList.saves);
 
 		foreach(SaveData saveData in savesCopy) {
-
 			// skip if not the same track name
 			if(saveData.trackName != sceneName) {
 				continue;
@@ -139,6 +139,8 @@ public class GameData : MonoBehaviour
 
 			// remove best score from save data
 			saveList.saves.Remove(saveData);
+
+			return true; // end the loop early
 		}
 
 		return savesCopy.Count > 0;

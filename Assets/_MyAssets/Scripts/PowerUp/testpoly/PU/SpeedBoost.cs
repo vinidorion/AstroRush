@@ -13,7 +13,7 @@ namespace poly
 		{
 			base.Start();
 
-			Debug.Log("SpeedBoost: Start()");
+			//Debug.Log("SpeedBoost: Start()");
 			Rigidbody rb = _owner.GetComponent<Rigidbody>();
 			rb.AddForce(transform.forward * THRUST, ForceMode.Impulse);
 		}

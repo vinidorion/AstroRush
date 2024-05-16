@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -48,15 +49,6 @@ public class GameManager : MonoBehaviour
 		FreezeAll(true);
 		if(InGameHud.Instance) {
 			InGameHud.Instance.ToggleDrawHUD(false);
-		}
-
-		// TODO: NE PAS OUBLIER D'ENLEVER
-		if(GameData.Instance) {
-			int nbdelap = 1;
-			GameData.Instance.SetNumLap(nbdelap);
-			Debug.Log($"nombre de lap: {nbdelap}");
-		} else {
-			Debug.Log("NO GAMEDATA OBJECT");
 		}
 	}
 
@@ -141,4 +133,8 @@ public class GameManager : MonoBehaviour
 		return _numSpaceship;
 	}
 
+	public void ReturnToMenu()
+	{
+		SceneManager.LoadScene("Menu");
+	}
 }

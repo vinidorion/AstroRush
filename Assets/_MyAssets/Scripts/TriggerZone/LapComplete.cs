@@ -6,7 +6,7 @@ public class LapComplete : MonoBehaviour
 {
 	void Awake()
 	{
-		//GetComponent<MeshRenderer>().enabled = false;
+		GetComponent<MeshRenderer>().enabled = false;
 	}
 
 	void OnTriggerEnter(Collider other)

@@ -266,12 +266,20 @@ public class SpaceShip : MonoBehaviour
 				InGameHud.Instance.ToggleDrawHUD(false);
 			}
 			GetComponent<Player>().enabled = false;
-			//GetComponent<testbot.Bot>().enabled = true;
+
+			testbot.Bot botComponent = GetComponent<testbot.Bot>();
+			if(botComponent) {
+				botComponent.enabled = true;
+			}
+
 			if(Bot.Instance) {
 				Bot.Instance.AddPlayerToBots();
 			}
 			NumberCountdown.Instance.Position(); // c'est le NumberCountdown qui affiche la position finale (1st, 2nd, 3rd, etc.)
-			// save _listLapTime si le joueur bat son record
+			// TODO: save _listLapTime si le joueur bat son record (GameData/SaveData)
+			if(Fin.Instance) {
+				Fin.Instance.Draw();
+			}
 		}
 
 		if (!InGameHud.Instance) {
@@ -415,7 +423,7 @@ public class SpaceShip : MonoBehaviour
 		for (int i = 0; i < numPU; i++) {
 			if (random < listWeight[i]) {
 				_pu = i;
-				Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
+				//Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
 				if(_isPly) {
 					if(InGameHud.Instance) {
 						InGameHud.Instance.Item(_pu);

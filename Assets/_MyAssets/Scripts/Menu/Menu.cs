@@ -25,12 +25,12 @@ public class Menu : MonoBehaviour
 	private Fade _fadeOut;
 	private AudioFade _music;
 
-	private int _trackIndex = 0;
-
+	/**** OPTIONS ****/
 	private int _numLap = 1;
 	private TextMeshProUGUI _txtNumLap;
-
+	private int _trackIndex = 0;
 	private List<string> _listSceneName = new List<string>();
+	private TextMeshProUGUI _txtTrackName;
 
 	void Awake()
 	{
@@ -54,13 +54,25 @@ public class Menu : MonoBehaviour
 		}
 
 		_txtNumLap = GameObject.Find("txt_nbLap").GetComponent<TextMeshProUGUI>();
+		_txtTrackName = GameObject.Find("txt_trackName").GetComponent<TextMeshProUGUI>();
 
-		foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes) {
-			string sceneName = System.IO.Path.GetFileNameWithoutExtension(scene.path);
-			if(sceneName.Contains("track")) {
+		for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++) {
+			string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+			string sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+			if (sceneName.Contains("track")) {
 				_listSceneName.Add(sceneName);
 			}
 		}
+
+		/*foreach (string name in _listSceneName) {
+			Debug.Log($"found track: {name}");
+		}*/
+	}
+
+	void Start()
+	{
+		SetTrack(0);	// default track
+		GameData.Instance.SetNumLap(_numLap);
 	}
 
 	void Update()
@@ -138,25 +150,21 @@ public class Menu : MonoBehaviour
 		}
 	}
 
-	public void PlayButton()
-	{
-		if(!_playCalledOnce) {
-			return;
-		}
-		_playCalledOnce = false;
-
-		StartCoroutine(FadeOutPlayCoroutine());
-	}
-
 	public void NextMapButton()
 	{
 		_trackIndex++;
 		if(_trackIndex >= _listSceneName.Count) {
 			_trackIndex = 0;
 		}
+		SetTrack(_trackIndex);
+	}
+
+	private void SetTrack(int trackIndex)
+	{
 		string trackName = _listSceneName[_trackIndex];//"test_track_loop 1";
 		GameData.Instance.SetTrackName(trackName);
-		Debug.Log($"selected map: {trackName}");
+		_txtTrackName.text = trackName;
+		//Debug.Log($"selected map: {trackName}");
 	}
 
 	public void IncrementLapNum()
@@ -166,6 +174,16 @@ public class Menu : MonoBehaviour
 		text = text.Substring(0, 7) + _numLap.ToString() + text.Substring(8);
 		_txtNumLap.text = text;
 		GameData.Instance.SetNumLap(_numLap);
+	}
+
+	public void PlayButton()
+	{
+		if(!_playCalledOnce) {
+			return;
+		}
+		_playCalledOnce = false;
+
+		StartCoroutine(FadeOutPlayCoroutine());
 	}
 
 	IEnumerator FadeOutPlayCoroutine()
