@@ -4,7 +4,7 @@ Jeu de course similaire à [Wipeout](https://en.wikipedia.org/wiki/Wipeout_(vide
 ### Création de piste de course
 - Il est recommandé d'utiliser Blender pour faciliter le placement des waypoints.
 - Une fois le modèle fait dans Blender, on peut simplement l'importer en format FBX.
-- Doit avoir un mesh collider component, convex et sur la layer `track`.
+- Doit avoir un [mesh collider](https://docs.unity3d.com/ScriptReference/MeshCollider.html) component, [NON convex](https://docs.unity3d.com/ScriptReference/MeshCollider-convex.html) et sur la layer `track`.
 
 ### Items
 - De nouveaux items (préfab) peuvent être ajoutés dans le dossier `AstroRush\Assets\_MyAssets\Prefabs\Resources\PUs`.
@@ -19,5 +19,5 @@ Les scores sont tous sauvegardés à cet emplacement de fichier.
 ```bash
   Application.persistentDataPath + "/save.json"
 ```
-- Ce qui devrait être `C:\Users\<user>\AppData\LocalLow\<company name>\AstroRush` sur windows.
+- Ce qui devrait être `C:\Users\<user>\AppData\LocalLow\<company name>\AstroRush\save.json` sur windows.
 - Voir [Application.persistentDataPath](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html) pour plus d'informations.
