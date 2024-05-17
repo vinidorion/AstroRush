@@ -6,8 +6,6 @@ public class WaypointManager : MonoBehaviour
 {
 	public static WaypointManager Instance; // Singleton
 
-	[SerializeField] private Transform _parentWaypoint; // l'object parent des waypoints
-
 	private List<Vector3> _listWaypoint = new List<Vector3>();
 
 	void Awake()
@@ -19,7 +17,7 @@ public class WaypointManager : MonoBehaviour
 		}
 
 		// trouve tous les waypoints
-		foreach (Transform waypoint in _parentWaypoint) {
+		foreach (Transform waypoint in GameObject.Find("test_waypoints").transform) {
 			waypoint.GetComponent<MeshRenderer>().enabled = false;
 			_listWaypoint.Add(waypoint.position);
 		}

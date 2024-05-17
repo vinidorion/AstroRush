@@ -81,6 +81,7 @@ public class GameData : MonoBehaviour
 	}
 
 	// méthode privée pour save le score du joueur
+	// voir SaveData.cs
 	public void SaveData(string name, List<float> lapTimes)
 	{
 		string sceneName = SceneManager.GetActiveScene().name;
@@ -144,5 +145,12 @@ public class GameData : MonoBehaviour
 		}
 
 		return savesCopy.Count > 0;
+	}
+
+	// méthode publique pour obtenir le file path de save.json
+	// on s'en sert dans le menu pour faire le leaderboard 
+	public string GetSavePath()
+	{
+		return saveFilePath;
 	}
 }

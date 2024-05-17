@@ -17,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_MyAssets/Scenes/tracks/track_hsr.unity
     guid: 9fc275e13c8f9da4abe64c2dadc76c06
+  - enabled: 1
+    path: Assets/_MyAssets/Scenes/Test_David.unity
+    guid: d3542894038c72c418a07ea071cf2017
+  - enabled: 1
+    path: Assets/_MyAssets/Scenes/Test_Vincent.unity
+    guid: 39d5338be2ae0134c8229e3599b0b0d8
   m_configObjects: {}

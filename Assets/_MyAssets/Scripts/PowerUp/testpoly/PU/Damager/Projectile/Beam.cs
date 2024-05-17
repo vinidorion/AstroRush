@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+// using Unity.VisualScripting; -- ne pas importer de package inutile
 using UnityEngine;
 
 namespace poly
@@ -41,7 +41,7 @@ namespace poly
         protected override void OnTriggerEnter(Collider other)
         {
             //empeche le beam de destroy on hit par override de la fonction OnTriggerEnter de Projectile
-            // faire les dégâts sur le other.GetComponent<Spaceship>()
+            // faire les dï¿½gï¿½ts sur le other.GetComponent<Spaceship>()
             SpaceShip _ship = other.GetComponent<SpaceShip>();
             if (_ship != null)
             {

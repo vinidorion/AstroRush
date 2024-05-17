@@ -18,12 +18,14 @@ public class Fin : MonoBehaviour
 		} else {
 			Destroy(this.gameObject);
 		}
+
 		_canvas = GetComponent<CanvasGroup>();
 		_canvas.alpha = 0f;
 
 		foreach(Transform child in transform) {
 			if(child.name == "InputField") {
 				_inputField = child.GetComponent<TMP_InputField>();
+				break;	// no need to keep iterating
 			}
 		}
 	}
@@ -32,5 +34,24 @@ public class Fin : MonoBehaviour
 	{
 		_inputField.text = "";
 		_canvas.alpha = 1f;
+	}
+
+	public void OkButton()
+	{
+		if(GameData.Instance) {
+			// player's name
+			string name = _inputField.text;
+			// player's list of lap times
+			List<float> listLapTime = Player.Instance.GetComponent<SpaceShip>().GetListLapTime();
+			GameData.Instance.SaveData(name, listLapTime);
+		}
+		StartCoroutine(GoBackToMenu());
+	}
+
+	IEnumerator GoBackToMenu()
+	{
+		// give it a sec to save
+		yield return new WaitForSeconds(1f);
+		GameManager.Instance.ReturnToMenu();
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;
+// using Unity.VisualScripting; -- ne pas importer de package inutile
 using System.Linq;
 using System;
 
@@ -129,6 +129,9 @@ public class InGameHud : MonoBehaviour
 	// draw la vie du joueur
 	private void HP()
 	{
+		if(!_healthBar) {
+			return;
+		}
 		int hp = _plyShip.GetHP();
 		_healthBar.fillAmount = hp / (float)maxHP;
 	}
@@ -176,13 +179,6 @@ public class InGameHud : MonoBehaviour
 
 		_lapTimeText.text = strLapTime + "\n" + formatedStr;
 		last_lap_time = formatedStr;
-	}
-
-	// TODO: delete si on s'en sert pas
-	// draw la map en 2D (vue de haut)
-	private void Map()
-	{
-
 	}
 
 	// draw la progression sur la track (utiliser le current waypoint du joueur sur le nb total de waypoint)
@@ -237,8 +233,7 @@ public class InGameHud : MonoBehaviour
 	// vert si plus rapide (ex: -00:01:00 si une seconde plus court que le meilleur score)
 	public void DrawTimeComp()
 	{
-		//LapTimes(timeDiff);
-		Debug.Log($"GetLastLapTime() : {_plyShip.GetLastLapTime()}");
+		//Debug.Log($"GetLastLapTime() : {_plyShip.GetLastLapTime()}");
 
 		float myLap = _plyShip.GetLastLapTime();
 		float bestLap = 0f;		// TODO: trouver best lap
@@ -260,7 +255,6 @@ public class InGameHud : MonoBehaviour
 	}
 
 	// format time 00:00:00
-	// mettre publique si on veut format le temps comme ça en dehors de cette classe
 	private string FormatTime(float time)
 	{
 		int minutes = Mathf.FloorToInt(time / 60f);

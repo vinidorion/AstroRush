@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.PackageManager;
+// using Unity.VisualScripting; -- ne pas importer de package inutile
+//using UnityEditor.PackageManager; -- empêche de build: Assets\_MyAssets\Scripts\Bot.cs(4,19): error CS0234: The type or namespace name 'PackageManager' does not exist in the namespace 'UnityEditor' (are you missing an assembly reference?)
 using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;

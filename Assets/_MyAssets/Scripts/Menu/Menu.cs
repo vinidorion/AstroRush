@@ -4,33 +4,42 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEditor;
+using System.IO;
+using System.Linq;
 
 public class Menu : MonoBehaviour
 {
 	public static Menu Instance; // Singleton
 
+	/******** CAMERA ********/
+	private const float CAM_SPEED = 5f;
 	private bool _isCameraMoving = false;
 	private int _pos = 0;
 	private Transform _cam;
+	private List<Transform> _camList = new List<Transform>();	// doit être Transform pour qu'on puisse aussi prendre sa rotation
 
-	private List<Transform> _camList = new List<Transform>();		// doit être Transform pour qu'on puisse aussi prendre sa rotation
-
+	/******** UI ELEMENTS ********/
 	private const float BUTTON_SPEED = 6f;
-	private const float CAM_SPEED = 5f;
-
 	private List<UIElement> _listUIElement = new List<UIElement>();
 	private string[] _arrUIElementNames = { "choix", "bt_retour", "bt_play", "options", "leaderboard", "credits" };
 
+	/******** OPTIONS ********/
+	// tracks
+	private readonly HashSet<string> AVAILABLE_TRACKS = new HashSet<string> { "test_track_loop 1", "Test_Vincent", "Test_David" };
+	private List<string> _listSceneName = new List<string>();
+	private int _trackIndex = 0;
+	private TextMeshProUGUI _txtTrackName;
+	// nb laps
+	private int _numLap = 1;
+	private TextMeshProUGUI _txtNumLap;
+
+	/******** LEADERBOARD ********/
+	private TextMeshProUGUI _txtLeaderboard;
+
+	/******** PLAY BUTTON ********/
 	private bool _playCalledOnce = true;
 	private Fade _fadeOut;
 	private AudioFade _music;
-
-	/**** OPTIONS ****/
-	private int _numLap = 1;
-	private TextMeshProUGUI _txtNumLap;
-	private int _trackIndex = 0;
-	private List<string> _listSceneName = new List<string>();
-	private TextMeshProUGUI _txtTrackName;
 
 	void Awake()
 	{
@@ -40,39 +49,44 @@ public class Menu : MonoBehaviour
 			Destroy(this.gameObject);
 		}
 
-		_cam = GameObject.Find("Main Camera").transform;
 		_fadeOut = GameObject.Find("FadeOut").GetComponent<Fade>();
 		_music = GameObject.Find("Opening").GetComponent<AudioFade>();
 
-		foreach (string name in _arrUIElementNames) {
-			_listUIElement.Add(UIElementInit(name));
-		}
-
+		// camera
+		_cam = GameObject.Find("Main Camera").transform;
 		foreach (Transform camPos in GameObject.Find("CamPosList").transform) {
 			camPos.GetComponent<MeshRenderer>().enabled = false;
 			_camList.Add(camPos);
 		}
 
+		// UIElement
+		foreach (string name in _arrUIElementNames) {
+			_listUIElement.Add(UIElementInit(name));
+		}
+
+		// options
 		_txtNumLap = GameObject.Find("txt_nbLap").GetComponent<TextMeshProUGUI>();
 		_txtTrackName = GameObject.Find("txt_trackName").GetComponent<TextMeshProUGUI>();
 
 		for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++) {
 			string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
-			string sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
-			if (sceneName.Contains("track")) {
+			string sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);			
+			if (AVAILABLE_TRACKS.Contains(sceneName)) {
 				_listSceneName.Add(sceneName);
+				//Debug.Log($"found track: {name}");
 			}
 		}
 
-		/*foreach (string name in _listSceneName) {
-			Debug.Log($"found track: {name}");
-		}*/
+		// leaderboard
+		_txtLeaderboard = GameObject.Find("txt_leaderboard").GetComponent<TextMeshProUGUI>();
+		_txtLeaderboard.text = "";
 	}
 
 	void Start()
 	{
 		SetTrack(0);	// default track
 		GameData.Instance.SetNumLap(_numLap);
+		InitLeaderboard();
 	}
 
 	void Update()
@@ -96,8 +110,7 @@ public class Menu : MonoBehaviour
 	private UIElement UIElementInit(string obName)
 	{
 		Transform tf = GameObject.Find(obName).transform;
-		UIElement uiElement = new UIElement(obName, tf, Vector3.zero, Vector3.zero);
-		uiElement.obPos = tf.localPosition;
+		UIElement uiElement = new UIElement(obName, tf, tf.localPosition, Vector3.zero);
 		uiElement.obTargetPos = obName != "bt_play" ? new Vector3(-1400f, uiElement.obPos.y, uiElement.obPos.z) : new Vector3(uiElement.obPos.x, -700f, uiElement.obPos.z);  
 		uiElement.tf.localPosition = uiElement.obTargetPos;
 		return uiElement;
@@ -184,6 +197,63 @@ public class Menu : MonoBehaviour
 		_playCalledOnce = false;
 
 		StartCoroutine(FadeOutPlayCoroutine());
+	}
+
+	private void InitLeaderboard()
+	{
+		if(!GameData.Instance) {
+			return;
+		}
+
+		string strSaveFilePath = GameData.Instance.GetSavePath();
+
+		if(!File.Exists(strSaveFilePath)) {
+			_txtLeaderboard.text = "AUCUN SCORE";
+			return;
+		}
+
+		List<SaveData> saveList = JsonUtility.FromJson<SaveDataList>(File.ReadAllText(strSaveFilePath)).saves;
+
+		// formated leaderboard
+		Dictionary<string, SortedDictionary<int, string>> fmtLB = new Dictionary<string, SortedDictionary<int, string>>();
+
+		foreach(SaveData saveData in saveList) {
+			string trackName = saveData.trackName;
+			string formatedTotalTime = FormatTime(saveData.lapTimes.Sum());
+			string formatedPlyName = saveData.plyName.ToUpper().PadRight(12, '_');		// l'inputfield utilisé pour enregistrer son nom a 8 char max
+			string formatedScore = formatedPlyName + formatedTotalTime;
+			int nbLap = saveData.lapTimes.Count;
+
+			if(!fmtLB.ContainsKey(trackName)) {
+				fmtLB.Add(trackName, new SortedDictionary<int, string> { { nbLap, formatedScore } });
+			} else {
+				fmtLB[trackName][nbLap] = formatedScore;
+			}
+		}
+
+		/*foreach (var track in fmtLB) {
+			Debug.Log("track: " + track.Key);
+			foreach (var nbLaps in track.Value) {
+				Debug.Log("nbLaps: " + nbLaps.Key + ", ply and his score: " + nbLaps.Value);
+			}
+		}*/
+
+		foreach (var track in fmtLB) {
+			_txtLeaderboard.text += $"{track.Key}<br>";
+			foreach (var nbLaps in track.Value) {
+				_txtLeaderboard.text += $"        {nbLaps.Key} tours:        {nbLaps.Value}<br>";
+			}
+			_txtLeaderboard.text += "<br>";
+		}
+	}
+
+	// format time 00:00:00
+	private string FormatTime(float time)
+	{
+		int minutes = Mathf.FloorToInt(time / 60f);
+		int seconds = Mathf.FloorToInt(time % 60f);
+		int milliseconds = Mathf.FloorToInt((time * 1000f) % 1000f);
+		return string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds / 10);
 	}
 
 	IEnumerator FadeOutPlayCoroutine()

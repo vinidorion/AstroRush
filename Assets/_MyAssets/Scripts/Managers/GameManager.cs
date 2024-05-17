@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+// using Unity.VisualScripting; -- ne pas importer de package inutile
 using UnityEngine;
 using System.Linq;
 using UnityEngine.SceneManagement;
@@ -25,9 +25,7 @@ public class GameManager : MonoBehaviour
 
 		// get les PUs sans utiliser SerializeField,
 		// les PUs dans l'array seront dans le même ordre
-		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/
-		//_arrPUs = Resources.LoadAll("PUs/", typeof(GameObject)).Cast<GameObject>().ToArray();
-
+		// qu'ils étaient dans le dossier Prefabs/Resources/PUs/poly/
 		_arrPUs = Resources.LoadAll("PUs/poly/", typeof(GameObject)).Cast<GameObject>().ToArray();
 
 		// print la liste de PU pour debug

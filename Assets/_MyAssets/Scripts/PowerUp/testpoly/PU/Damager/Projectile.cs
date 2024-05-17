@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+// using Unity.VisualScripting; -- ne pas importer de package inutile
 using UnityEngine;
 
 namespace poly

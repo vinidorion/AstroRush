@@ -239,7 +239,7 @@ public class SpaceShip : MonoBehaviour
 	// utilisé dans la classe LapComplete
 	public void LapCompleted()
 	{
-		Debug.Log("LapCompleted() called");
+		//Debug.Log("LapCompleted() called");
 		_waypoint.SetWaypoint(0);
 
 		_listLapTime.Add(Time.time);
@@ -276,7 +276,6 @@ public class SpaceShip : MonoBehaviour
 				Bot.Instance.AddPlayerToBots();
 			}
 			NumberCountdown.Instance.Position(); // c'est le NumberCountdown qui affiche la position finale (1st, 2nd, 3rd, etc.)
-			// TODO: save _listLapTime si le joueur bat son record (GameData/SaveData)
 			if(Fin.Instance) {
 				Fin.Instance.Draw();
 			}
@@ -360,6 +359,9 @@ public class SpaceShip : MonoBehaviour
 
 	public void Orbit()
 	{
+		if(!Orbite.Instance) {
+			return;
+		}
 		Debug.Log(Orbite.Instance.GetListCount());
 		for(int i=0; i<Orbite.Instance.GetListCount(); i++) 
 		{
@@ -438,10 +440,11 @@ public class SpaceShip : MonoBehaviour
 	}
 
 	// méthode privée qui donne un item random (non pondéré)
+	// utilisé si jamais il y a un seul spaceship dans le jeu
 	private void GiveRndPU(int numPU)
 	{
 		_pu = Random.Range(0, numPU); // min inclusive et max exclusif https://docs.unity3d.com/ScriptReference/Random.Range.html#:~:text=public%20static%20int%20Range(int%20minInclusive%2C%20int%20maxExclusive)%3B
-		Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
+		//Debug.Log($"PU PICKED: {_gm.GetGameObjectPU(_pu).name.Substring(3)}");
 		if(_isPly) {
 			if(InGameHud.Instance) {
 				InGameHud.Instance.Item(_pu);
@@ -510,6 +513,21 @@ public class SpaceShip : MonoBehaviour
 		float timeWhenLastLap = _listLapTime[_listLapTime.Count - 1];
 		timeWhenLastLap -= _listLapTime.Count == 1 ? GameManager.Instance.GetStartTime() : _listLapTime[_listLapTime.Count - 2];
 		return timeWhenLastLap;
+	}
+
+	// méthode publique qui convertit _listLapTime (Time.time quand un tour est complété)
+	// en liste qui contient la durée de chaque tour
+	public List<float> GetListLapTime()
+	{
+		List<float> listLapTime = new List<float>();
+
+		listLapTime.Add(_listLapTime[0] - GameManager.Instance.GetStartTime());
+
+		for(int i = 1; i < _listLapTime.Count; i++) {
+			listLapTime.Add(_listLapTime[i] - _listLapTime[i - 1]);
+		}
+
+		return listLapTime;
 	}
 
 	// méthode publique qui permet de ralentir le spaceship (par les PU)
