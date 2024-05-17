@@ -21,6 +21,5 @@ Les scores sont tous sauvegardés à cet emplacement de fichier.
 ```
 - Ce qui devrait être `C:\Users\<user>\AppData\LocalLow\<company name>\AstroRush\save.json` sur windows.
 - Voir [Application.persistentDataPath](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html) pour plus d'informations.
-À gauche : l'affichage des scores dans le jeu.\
-À droite : le score enregistré en JSON.
+- À gauche : l'affichage des scores dans le jeu. À droite : le score enregistré en JSON.
 ![App Screenshot](https://i.gyazo.com/ec174adcbe9597581790f80e6e81e48a.png)
